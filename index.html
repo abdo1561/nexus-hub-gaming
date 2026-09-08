@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Arcade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0e1a;
+    --panel: #141a2e;
+    --cyan: #35e7ff;
+    --magenta: #ff2fb0;
+    --yellow: #ffcc00;
+    --green: #4fff8b;
+    --ink: #e8ecf5;
+    --dim: #8891ab;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(53,231,255,0.08), transparent 35%),
+      radial-gradient(circle at 90% 30%, rgba(255,47,176,0.10), transparent 40%),
+      radial-gradient(circle at 50% 90%, rgba(255,204,0,0.06), transparent 40%);
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+  }
+  .scanlines{
+    position: fixed; inset:0; pointer-events:none; z-index: 5;
+    background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode: overlay;
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 1.2rem 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky; top:0; background: rgba(11,14,26,0.85); backdrop-filter: blur(6px); z-index: 10;
+  }
+  .logo{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.85rem;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    text-decoration:none;
+  }
+  .navlinks a{
+    color: var(--dim);
+    text-decoration:none;
+    margin-left: 1.6rem;
+    font-size: 0.95rem;
+    transition: color 0.15s ease;
+  }
+  .navlinks a:hover{ color: var(--cyan); }
+
+  header.hero{
+    text-align:center;
+    padding: 5rem 1.5rem 3rem;
+  }
+  header.hero h1{
+    font-family: 'Press Start 2P', cursive;
+    font-size: clamp(1.4rem, 5vw, 2.6rem);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+    color: var(--ink);
+    text-shadow: 3px 3px 0 var(--magenta), 6px 6px 0 rgba(53,231,255,0.35);
+  }
+  header.hero p{
+    color: var(--dim);
+    max-width: 520px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+  }
+
+  main{ max-width: 1080px; margin: 0 auto; padding: 1rem 1.5rem 5rem; }
+
+  .cabinets{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.6rem;
+    margin-top: 2rem;
+  }
+  .cabinet{
+    background: linear-gradient(180deg, var(--panel), #0f1424);
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 1.8rem 1.5rem;
+    text-decoration: none;
+    color: var(--ink);
+    display: block;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .cabinet::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:4px;
+    background: var(--accent, var(--cyan));
+  }
+  .cabinet:hover{ transform: translateY(-5px); border-color: var(--accent, var(--cyan)); }
+  .cabinet .icon{ font-size: 2.4rem; display:block; margin-bottom: 1rem; }
+  .cabinet h3{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    color: var(--accent, var(--cyan));
+    margin-bottom: 0.7rem;
+    line-height: 1.5;
+  }
+  .cabinet p{ color: var(--dim); font-size: 0.9rem; line-height: 1.5; }
+  .cabinet .play{
+    display:inline-block; margin-top:1.1rem; font-size:0.85rem; color: var(--ink);
+    border: 1px solid var(--accent, var(--cyan)); padding: 0.4rem 0.9rem; border-radius: 999px;
+  }
+
+  #shoot{ --accent: var(--magenta); }
+  #build{ --accent: var(--green); }
+  #trivia{ --accent: var(--yellow); }
+  #stocks{ --accent: var(--cyan); }
+
+  .ticker-wrap{
+    margin-top: 4rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0.9rem 0;
+    overflow: hidden;
+  }
+  .ticker{
+    display: inline-flex;
+    white-space: nowrap;
+    animation: scroll 20s linear infinite;
+    font-size: 0.85rem;
+    color: var(--dim);
+  }
+  .ticker span{ margin-right: 2.4rem; }
+  @keyframes scroll{ from{transform: translateX(0);} to{transform: translateX(-50%);} }
+  @media (prefers-reduced-motion: reduce){ .ticker{ animation:none; } }
+
+  footer{
+    text-align:center; padding: 2rem; color: var(--dim); font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+
+<nav>
+  <a href="index.html" class="logo">🕹 PIXEL ARCADE</a>
+  <div class="navlinks">
+    <a href="shooter.html">Shoot</a>
+    <a href="sandbox.html">Build</a>
+    <a href="trivia.html">Trivia</a>
+    <a href="stocks.html">Stocks</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1>FOUR GAMES.<br>ZERO QUARTERS.</h1>
+  <p>An original mini-arcade you can play right in the browser — no downloads, no accounts. Pick a cabinet.</p>
+</header>
+
+<main>
+  <div class="cabinets">
+    <a id="shoot" class="cabinet" href="shooter.html">
+      <span class="icon">🎯</span>
+      <h3>TARGET<br>STRIKE</h3>
+      <p>Fast-reflex target shooter. 60 seconds on the clock, targets get faster as your streak grows.</p>
+      <span class="play">Play →</span>
+    </a>
+    <a id="build" class="cabinet" href="sandbox.html">
+      <span class="icon">⛏️</span>
+      <h3>BLOCK<br>WORLD</h3>
+      <p>A voxel-style building sandbox. Place, paint, and dig blocks in an isometric grid.</p>
+      <span class="play">Play →</span>
+    </a>
+    <a id="trivia" class="cabinet" href="trivia.html">
+      <span class="icon">🧠</span>
+      <h3>TRIVIA<br>RUSH</h3>
+      <p>Multiple-choice trivia across science, history, geography and pop culture, with a running streak bonus.</p>
+      <span class="play">Play →</span>
+    </a>
+    <a id="stocks" class="cabinet" href="stocks.html">
+      <span class="icon">📈</span>
+      <h3>TICKER<br>TYCOON</h3>
+      <p>A simulated stock market. Start with $10,000 and trade fictional stocks as prices move live.</p>
+      <span class="play">Play →</span>
+    </a>
+  </div>
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>⚡ NEW HIGH SCORE POSSIBLE ON TARGET STRIKE</span>
+      <span>🧱 BLOCK WORLD SAVES YOUR BUILD IN-SESSION</span>
+      <span>🧠 TRIVIA RUSH — 40+ QUESTIONS ACROSS 4 CATEGORIES</span>
+      <span>📈 TICKER TYCOON — PRICES MOVE EVERY 2 SECONDS</span>
+      <span>⚡ NEW HIGH SCORE POSSIBLE ON TARGET STRIKE</span>
+      <span>🧱 BLOCK WORLD SAVES YOUR BUILD IN-SESSION</span>
+      <span>🧠 TRIVIA RUSH — 40+ QUESTIONS ACROSS 4 CATEGORIES</span>
+      <span>📈 TICKER TYCOON — PRICES MOVE EVERY 2 SECONDS</span>
+    </div>
+  </div>
+</main>
+
+<footer>All games are original and self-contained — no accounts, no data leaves your browser.</footer>
+
+</body>
+</html>
