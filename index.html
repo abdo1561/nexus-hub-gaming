@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -55,9 +55,9 @@
         [data-theme="light"] {
             --bg-base: #eef2f7;
             --bg-surface: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.8);
-            --bg-card-hover: rgba(255, 255, 255, 0.95);
-            --glass-border: rgba(0, 0, 0, 0.08);
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-card-hover: rgba(255, 255, 255, 0.98);
+            --glass-border: rgba(0, 0, 0, 0.1);
             --text-main: #0f172a;
             --text-muted: #475569;
             --text-dim: #94a3b8;
@@ -84,7 +84,6 @@
             flex-direction: column;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -100,7 +99,6 @@
             background: var(--primary);
         }
 
-        /* Background Particle Canvas */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -109,10 +107,9 @@
             height: 100vh;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
-        /* App Wrapper */
         #app-root {
             position: relative;
             z-index: 1;
@@ -189,7 +186,7 @@
            ========================================================================== */
         .navbar {
             height: var(--header-height);
-            background: rgba(18, 22, 36, 0.8);
+            background: rgba(18, 22, 36, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--glass-border);
@@ -328,6 +325,7 @@
             font-weight: 700;
             font-size: 0.9rem;
             position: relative;
+            color: #fff;
         }
         .owner-badge-icon {
             position: absolute;
@@ -364,7 +362,6 @@
             min-height: calc(100vh - var(--header-height) - var(--announcement-height));
         }
 
-        /* Sidebar Navigation */
         .sidebar {
             width: var(--sidebar-width);
             background: rgba(14, 18, 30, 0.95);
@@ -436,7 +433,15 @@
             font-family: var(--font-display);
         }
 
-        /* Content Area */
+        .nav-item.dev-only {
+            display: none;
+            border: 1px dashed var(--owner-gold);
+            color: var(--owner-gold);
+        }
+        .nav-item.dev-only.visible {
+            display: flex;
+        }
+
         .content-area {
             flex: 1;
             padding: 28px;
@@ -460,19 +465,19 @@
         }
 
         /* ==========================================================================
-           6. HOME DASHBOARD & GAME CARDS
+           6. HERO BANNER & GAMES GRID
            ========================================================================== */
         .hero-banner {
             position: relative;
-            height: 360px;
+            height: 340px;
             border-radius: var(--radius-lg);
             overflow: hidden;
-            background: linear-gradient(135deg, #10002b, #240046, #03045e);
-            margin-bottom: 36px;
+            background: linear-gradient(135deg, #0f051d, #1c0038, #021a38);
+            margin-bottom: 32px;
             border: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
-            padding: 48px;
+            padding: 42px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
@@ -482,11 +487,11 @@
             top: 0;
             width: 60%;
             height: 100%;
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at 70% 50%, rgba(0, 240, 255, 0.25), transparent 70%);
             mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
             -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
             opacity: 0.8;
+            pointer-events: none;
         }
 
         .hero-content {
@@ -512,7 +517,7 @@
 
         .hero-title {
             font-family: var(--font-display);
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 12px;
@@ -536,7 +541,7 @@
         }
 
         .btn {
-            padding: 12px 28px;
+            padding: 12px 24px;
             border-radius: var(--radius-md);
             font-family: var(--font-display);
             font-weight: 700;
@@ -573,13 +578,44 @@
             border-color: var(--text-main);
         }
 
-        /* Section Titles */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .filter-tag:hover, .filter-tag.active {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
         .section-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
-            margin-top: 32px;
+            margin-top: 24px;
         }
 
         .section-title {
@@ -595,7 +631,6 @@
             color: var(--primary);
         }
 
-        /* Game Card Grids */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -622,11 +657,24 @@
         }
 
         .card-thumb {
-            height: 165px;
+            height: 160px;
             width: 100%;
             position: relative;
             overflow: hidden;
-            background-color: #1a1e2e;
+            background: #111625;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-thumb-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            filter: drop-shadow(0 0 12px var(--primary-glow));
+            transition: transform var(--transition-fast);
+        }
+        .game-card:hover .card-thumb-icon {
+            transform: scale(1.15) rotate(-5deg);
         }
 
         .card-badge {
@@ -643,14 +691,14 @@
         }
         .badge-new { background: var(--accent); color: #fff; }
         .badge-popular { background: var(--warning); color: #000; }
-        .badge-locked { background: rgba(0, 0, 0, 0.7); color: var(--text-muted); border: 1px solid var(--glass-border); }
+        .badge-dev { background: var(--owner-gold); color: #000; }
 
         .card-fav-btn {
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
@@ -732,54 +780,204 @@
             box-shadow: 0 0 15px var(--primary-glow);
         }
 
-        .card-play-btn.btn-locked {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: var(--glass-border);
+        /* ==========================================================================
+           7. 3D OPEN WORLD
+           ========================================================================== */
+        .world-wrapper {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 180px);
+            min-height: 520px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            background: #05070d;
+        }
+
+        #world-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .world-hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .world-hud-pill {
+            background: rgba(14, 18, 30, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 18px;
+            border-radius: var(--radius-full);
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            pointer-events: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .world-controls-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(14, 18, 30, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            font-size: 0.8rem;
             color: var(--text-muted);
+            pointer-events: auto;
+        }
+        .world-controls-overlay p {
+            margin-bottom: 4px;
+        }
+        .world-controls-overlay kbd {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+            font-family: var(--font-display);
+        }
+
+        .minimap-box {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: rgba(5, 7, 13, 0.85);
+            overflow: hidden;
+            box-shadow: 0 0 15px var(--primary-glow);
+            pointer-events: auto;
+        }
+        #minimap-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .secret-alert-toast {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.95), rgba(255, 0, 85, 0.95));
+            border: 2px solid var(--owner-gold);
+            padding: 28px 40px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: 0 0 40px var(--owner-glow);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
+        }
+        .secret-alert-toast.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
         }
 
         /* ==========================================================================
-           7. MEDIA SECTION
+           8. INTERACTIVE BOOK ("QUANTUM CODEX")
            ========================================================================== */
-        .media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        .media-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--glass-border);
-            padding: 24px;
+        .book-section-wrapper {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            position: relative;
-            overflow: hidden;
-            transition: all var(--transition-smooth);
-        }
-        .media-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--glass-border-glow);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            min-height: 600px;
         }
 
-        .media-icon {
-            font-size: 2.5rem;
+        .book-container {
+            width: 820px;
+            height: 520px;
+            position: relative;
+            perspective: 1500px;
+            margin-bottom: 24px;
+        }
+
+        .book-spread {
+            width: 100%;
+            height: 100%;
+            background: #141928;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(112, 0, 255, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .book-page {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background: linear-gradient(135deg, #121726, #0e121e);
+        }
+
+        .book-page-left {
+            border-right: 2px solid rgba(0, 0, 0, 0.4);
+            box-shadow: inset -15px 0 20px rgba(0, 0, 0, 0.4);
+        }
+        .book-page-right {
+            box-shadow: inset 15px 0 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .book-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .book-body {
+            font-size: 0.92rem;
+            line-height: 1.7;
+            color: var(--text-main);
+            flex: 1;
+            overflow-y: auto;
             margin-bottom: 16px;
         }
-        .media-youtube { color: #ff0000; }
-        .media-spotify { color: #1ed760; }
-        .media-tiktok { color: #00f2fe; }
+
+        .book-page-num {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+
+        .book-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
         /* ==========================================================================
-           8. GLOBAL CHAT SYSTEM
+           9. GLOBAL CHAT SYSTEM
            ========================================================================== */
         .chat-container {
             display: flex;
             flex-direction: column;
-            height: 600px;
+            height: 620px;
             background: var(--bg-card);
             border-radius: var(--radius-lg);
             border: 1px solid var(--glass-border);
@@ -809,11 +1007,12 @@
             align-items: flex-start;
             gap: 12px;
             animation: fadeIn 0.2s ease;
+            position: relative;
         }
 
         .message-avatar {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--secondary), var(--primary));
             display: flex;
@@ -822,16 +1021,18 @@
             font-weight: 700;
             font-size: 0.85rem;
             flex-shrink: 0;
+            color: #fff;
         }
 
-        .message-content {
+        .message-content-box {
             display: flex;
             flex-direction: column;
             background: rgba(255, 255, 255, 0.04);
-            padding: 10px 14px;
+            padding: 10px 16px;
             border-radius: var(--radius-md);
             border: 1px solid var(--glass-border);
             max-width: 80%;
+            position: relative;
         }
 
         .message-meta {
@@ -850,11 +1051,20 @@
             background: linear-gradient(135deg, #ffd700, #ff8c00);
             color: #000;
             font-weight: 900;
-            font-size: 0.65rem;
-            padding: 1px 6px;
+            font-size: 0.62rem;
+            padding: 2px 6px;
             border-radius: 4px;
             font-family: var(--font-display);
-            letter-spacing: 0.5px;
+        }
+
+        .badge-dev-tag {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.62rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-display);
         }
 
         .message-time {
@@ -865,112 +1075,147 @@
 
         .message-text {
             font-size: 0.9rem;
-            line-height: 1.4;
             color: var(--text-main);
+            line-height: 1.4;
             word-break: break-word;
         }
 
-        .chat-input-area {
-            padding: 16px;
+        .msg-del-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 0.75rem;
+            cursor: pointer;
+            margin-left: 8px;
+            opacity: 0.6;
+            transition: opacity var(--transition-fast);
+        }
+        .msg-del-btn:hover {
+            opacity: 1;
+        }
+
+        .chat-input-bar {
+            padding: 14px 20px;
             background: rgba(0, 0, 0, 0.4);
             border-top: 1px solid var(--glass-border);
             display: flex;
-            gap: 10px;
+            align-items: center;
+            gap: 12px;
         }
 
-        .chat-input-area input {
+        .chat-input-bar input {
             flex: 1;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            padding: 12px 16px;
-            color: #fff;
+            padding: 12px 18px;
+            border-radius: var(--radius-full);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            font-size: 0.9rem;
             outline: none;
         }
+        .chat-input-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
 
         /* ==========================================================================
-           9. NEXUS AI ASSISTANT PANEL
+           10. DEVELOPER / ADMIN PANEL
            ========================================================================== */
-        .ai-panel {
+        .admin-panel-card {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
-            border: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            height: 600px;
-            overflow: hidden;
+            border: 1px solid var(--owner-gold);
+            padding: 28px;
+            box-shadow: 0 0 25px var(--owner-glow);
+            margin-bottom: 24px;
         }
 
-        .ai-header {
-            padding: 16px 20px;
-            background: rgba(112, 0, 255, 0.15);
-            border-bottom: 1px solid var(--glass-border);
+        .admin-nav {
             display: flex;
-            align-items: center;
             gap: 12px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 14px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        .ai-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        /* ==========================================================================
-           10. 3D OPEN WORLD CANVAS AREA
-           ========================================================================== */
-        #openworld-wrapper {
-            position: relative;
-            width: 100%;
-            height: 650px;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
+        .admin-tab-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
-            background: #000;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            font-family: var(--font-display);
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .admin-tab-btn.active, .admin-tab-btn:hover {
+            background: var(--owner-gold);
+            color: #000;
+            font-weight: 700;
         }
 
-        #openworld-canvas {
-            width: 100%;
-            height: 100%;
+        .admin-sub-tab {
+            display: none;
+        }
+        .admin-sub-tab.active {
             display: block;
         }
 
-        .openworld-hud {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 12px 18px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--glass-border);
-            pointer-events: none;
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
         }
 
-        .controls-hint {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            padding: 10px 16px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--glass-border);
-            font-size: 0.8rem;
+        .form-group {
             display: flex;
-            gap: 12px;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 0.75rem;
+            font-family: var(--font-display);
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            font-size: 0.88rem;
+            outline: none;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+            font-size: 0.85rem;
+        }
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .data-table th {
+            font-family: var(--font-display);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            text-transform: uppercase;
         }
 
         /* ==========================================================================
-           11. MODAL WINDOWS & ADMIN CONSOLE
+           11. MODAL WINDOWS
            ========================================================================== */
         .modal-overlay {
             position: fixed;
@@ -978,9 +1223,9 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(5, 7, 13, 0.85);
             backdrop-filter: blur(12px);
-            z-index: 1000;
+            z-index: 200;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -995,1167 +1240,1337 @@
 
         .modal-box {
             background: #121624;
-            border: 1px solid var(--glass-border-glow);
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
             width: 90%;
-            max-width: 650px;
-            padding: 30px;
+            max-width: 680px;
+            padding: 32px;
             position: relative;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-            transform: scale(0.9);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            transform: translateY(20px);
             transition: transform var(--transition-smooth);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .modal-overlay.active .modal-box {
-            transform: scale(1);
+            transform: translateY(0);
         }
 
         .modal-close {
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
+            background: none;
+            border: none;
             color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 1.3rem;
             cursor: pointer;
+            transition: color var(--transition-fast);
         }
         .modal-close:hover {
-            color: #fff;
-            background: var(--accent);
+            color: var(--accent);
         }
 
-        .admin-terminal {
-            background: #080a10;
-            border-radius: var(--radius-md);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            font-family: monospace;
-            padding: 16px;
-            height: 280px;
-            overflow-y: auto;
-            color: #00ff66;
-            margin-top: 16px;
-            font-size: 0.85rem;
-            display: flex;
-            flex-direction: flex-end;
-            flex-direction: column;
+        /* Game Launcher Frame */
+        #game-launcher-modal .modal-box {
+            max-width: 900px;
+            padding: 20px;
         }
 
-        .terminal-input-wrap {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #0d111a;
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-sm);
-            padding: 8px 12px;
-            margin-top: 10px;
-        }
-        .terminal-input-wrap input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #00f0ff;
-            font-family: monospace;
+        .game-canvas-container {
             width: 100%;
-            font-size: 0.9rem;
-        }
-
-        #game-canvas-container {
-            width: 100%;
-            height: 400px;
+            height: 480px;
             background: #000;
             border-radius: var(--radius-md);
             overflow: hidden;
             position: relative;
-            margin-top: 16px;
         }
 
-        @media (max-width: 1024px) {
-            .sidebar { width: 80px; padding: 16px 8px; }
-            .nav-item span, .nav-group-title { display: none; }
-            .nav-item { justify-content: center; }
-            .hero-title { font-size: 1.8rem; }
+        #game-play-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Media Section Card */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .media-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all var(--transition-fast);
+        }
+        .media-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+                padding: 12px;
+            }
+            .nav-menu {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            .nav-item span {
+                display: none;
+            }
+            .hero-banner {
+                padding: 24px;
+                height: auto;
+            }
+            .book-container {
+                width: 100%;
+                height: 480px;
+            }
+            .book-spread {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-
-    <!-- Particle Background Canvas -->
     <canvas id="bg-canvas"></canvas>
 
     <div id="app-root">
-        <!-- ==========================================================================
-           1. TOP LIVE ADMIN ANNOUNCEMENT BAR
-           ========================================================================== -->
-        <div class="announcement-bar" id="announcement-bar">
-            <div class="announcement-badge">
-                <i class="fa-solid fa-crown"></i> OWNER ANNOUNCEMENT
-            </div>
-            <div class="announcement-content" onclick="app.showEventDetailsModal()">
-                <span id="announcement-text">🔥 MR ABDO WILL BE HOSTING AN ADMIN ABUSE IN 3 DAYS</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
+        <!-- 1. LIVE ADMIN ANNOUNCEMENT BAR -->
+        <div class="announcement-bar">
+            <div class="announcement-content" onclick="app.showAnnouncementModal()">
+                <div class="announcement-badge">
+                    <i class="fa-solid fa-bullhorn"></i> SYSTEM UPDATE
+                </div>
+                <span id="announcement-text-display">Welcome to Nexus Hub v3.0! Developer Panel, 3D Open World & Games Active!</span>
             </div>
             <div class="uae-clock-pill">
-                <span>🇦🇪 UAE TIME</span>
-                <span class="uae-time-val" style="color:var(--primary); font-weight:800;">--:--:--</span>
+                <i class="fa-solid fa-clock"></i> <span id="uae-time-clock">--:--:-- GST</span>
             </div>
         </div>
 
-        <!-- ==========================================================================
-           2. NAVIGATION HEADER
-           ========================================================================== -->
-        <header class="navbar">
-            <div class="brand-logo" onclick="app.switchTab('dashboard')">
-                <i class="fa-solid fa-gamepad"></i>
+        <!-- 2. NAVBAR -->
+        <nav class="navbar">
+            <div class="brand-logo" onclick="app.switchTab('home')">
+                <i class="fa-solid fa-cube"></i>
                 <span>NEXUS HUB</span>
             </div>
 
             <div class="nav-search-bar">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="global-search" placeholder="Search games, events, categories..." onkeyup="app.handleSearch(this.value)">
+                <input type="text" id="global-search-input" placeholder="Search games, media, lore..." oninput="app.handleSearch(this.value)">
             </div>
 
             <div class="nav-actions">
-                <!-- COPY INVITE LINK BUTTON -->
-                <button class="invite-btn" id="copy-link-btn" onclick="app.copyInviteLink()" title="Copy live URL link to send to friends">
-                    <i class="fa-solid fa-share-nodes"></i>
-                    <span>INVITE FRIENDS</span>
+                <button class="icon-btn" title="Toggle Sound" onclick="app.toggleAudio()">
+                    <i class="fa-solid fa-volume-high" id="sound-icon"></i>
                 </button>
-
-                <button class="icon-btn" id="bgm-toggle-btn" onclick="app.toggleBGM()" title="Toggle Background Music">
-                    <i class="fa-solid fa-music"></i>
+                <button class="icon-btn" title="Toggle Theme" onclick="app.toggleTheme()">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
                 </button>
-                <button class="icon-btn" onclick="app.toggleTheme()" title="Toggle Theme">
-                    <i class="fa-solid fa-sun"></i>
+                <button class="invite-btn" onclick="app.inviteFriends()">
+                    <i class="fa-solid fa-user-plus"></i> INVITE FRIENDS
                 </button>
-                <button class="icon-btn" onclick="app.openAdminModal()" title="Admin Control Console">
-                    <i class="fa-solid fa-terminal"></i>
-                </button>
-
-                <div class="user-profile-badge" onclick="app.openProfileModal()">
-                    <div class="avatar-box" id="user-avatar-icon">
-                        A
-                        <i class="fa-solid fa-crown owner-badge-icon" id="header-owner-crown" style="display:none;"></i>
+                <div class="user-profile-badge" onclick="app.openAuthOrProfile()">
+                    <div class="avatar-box" id="nav-avatar">
+                        U
+                        <i class="fa-solid fa-crown owner-badge-icon" id="dev-crown-badge" style="display:none;"></i>
                     </div>
                     <div class="user-info-text">
-                        <span class="user-name" id="user-display-name">Player <i class="fa-solid fa-circle-check" style="color:var(--primary); font-size:0.7rem;"></i></span>
-                        <span class="user-level" id="user-display-level">LVL 12 • 2,450 XP</span>
+                        <span class="user-name" id="nav-username">Guest User</span>
+                        <span class="user-level" id="nav-user-role">PLAYER</span>
                     </div>
                 </div>
             </div>
-        </header>
+        </nav>
 
-        <!-- ==========================================================================
-           3. MAIN LAYOUT & SIDEBAR
-           ========================================================================== -->
+        <!-- 3. MAIN CONTAINER (SIDEBAR + CONTENT AREA) -->
         <div class="main-container">
+            <!-- SIDEBAR -->
             <aside class="sidebar">
-                <div class="nav-group">
-                    <div class="nav-group-title">Menu</div>
-                    <ul class="nav-menu">
-                        <li class="nav-item active" onclick="app.switchTab('dashboard')" data-tab="dashboard">
-                            <i class="fa-solid fa-house"></i> <span>Dashboard</span>
-                        </li>
-                        <li class="nav-item" onclick="app.switchTab('games')" data-tab="games">
-                            <i class="fa-solid fa-gamepad"></i> <span>Game Library</span>
-                            <span class="badge">MASSIVE</span>
-                        </li>
-                        <li class="nav-item" onclick="app.switchTab('openworld')" data-tab="openworld">
-                            <i class="fa-solid fa-earth-americas"></i> <span>3D Open World</span>
-                        </li>
-                        <li class="nav-item" onclick="app.switchTab('media')" data-tab="media">
-                            <i class="fa-solid fa-tv"></i> <span>Media Hub</span>
-                        </li>
-                        <li class="nav-item" onclick="app.switchTab('events')" data-tab="events">
-                            <i class="fa-solid fa-trophy"></i> <span>Tournaments</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="nav-group">
-                    <div class="nav-group-title">Social & AI</div>
-                    <ul class="nav-menu">
-                        <li class="nav-item" onclick="app.switchTab('chat')" data-tab="chat">
-                            <i class="fa-solid fa-comments"></i> <span>Global Chat</span>
-                        </li>
-                        <li class="nav-item" onclick="app.switchTab('ai')" data-tab="ai">
-                            <i class="fa-solid fa-robot"></i> <span>NEXUS AI</span>
-                        </li>
-                    </ul>
-                </div>
+                <div class="nav-group-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item active" onclick="app.switchTab('home')" data-tab="home">
+                        <i class="fa-solid fa-house"></i> <span>Home Dashboard</span>
+                    </li>
+                    <li class="nav-item" onclick="app.switchTab('games')" data-tab="games">
+                        <i class="fa-solid fa-gamepad"></i> <span>Games Hub</span>
+                    </li>
+                    <li class="nav-item" onclick="app.switchTab('world')" data-tab="world">
+                        <i class="fa-solid fa-globe"></i> <span>3D Open World</span> <span class="badge">3D</span>
+                    </li>
+                    <li class="nav-item" onclick="app.switchTab('book')" data-tab="book">
+                        <i class="fa-solid fa-book-open"></i> <span>Quantum Codex</span>
+                    </li>
+                    <li class="nav-item" onclick="app.switchTab('media')" data-tab="media">
+                        <i class="fa-solid fa-tv"></i> <span>Media & Streams</span>
+                    </li>
+                    <li class="nav-item" onclick="app.switchTab('chat')" data-tab="chat">
+                        <i class="fa-solid fa-comments"></i> <span>Global Chat</span> <span class="badge" id="chat-count-badge">LIVE</span>
+                    </li>
+                    <li class="nav-item" onclick="app.switchTab('leaderboard')" data-tab="leaderboard">
+                        <i class="fa-solid fa-trophy"></i> <span>Leaderboards</span>
+                    </li>
+                    <li class="nav-item dev-only" id="sidebar-dev-item" onclick="app.switchTab('admin')" data-tab="admin">
+                        <i class="fa-solid fa-code-branch"></i> <span>Developer Panel</span>
+                    </li>
+                    <li class="nav-item" onclick="app.switchTab('settings')" data-tab="settings">
+                        <i class="fa-solid fa-gear"></i> <span>Settings</span>
+                    </li>
+                </ul>
             </aside>
 
+            <!-- CONTENT AREA -->
             <main class="content-area">
-                <!-- TAB 1: DASHBOARD -->
-                <div id="tab-dashboard" class="tab-content active">
+                <!-- TAB 1: HOME -->
+                <div class="tab-content active" id="tab-home">
                     <div class="hero-banner">
-                        <div class="hero-bg-art" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'400\' viewBox=\'0 0 800 400\'><rect width=\'800\' height=\'400\' fill=\'%2312002b\'/><path d=\'M0,200 Q200,50 400,200 T800,200\' stroke=\'%2300f0ff\' stroke-width=\'4\' fill=\'none\'/><circle cx=\'600\' cy=\'150\' r=\'80\' fill=\'%23ff0055\' opacity=\'0.5\'/></svg>');"></div>
+                        <div class="hero-bg-art"></div>
                         <div class="hero-content">
-                            <div class="hero-tag"><i class="fa-solid fa-fire"></i> FEATURED TITLE</div>
-                            <h1 class="hero-title">SKYLINE RUSH: NEON CITY</h1>
-                            <p class="hero-desc">Experience lightning-fast high-speed racing across futuristic rooftops and glowing neon street circuits!</p>
+                            <div class="hero-tag"><i class="fa-solid fa-bolt"></i> FEATURED EXPERIENCE</div>
+                            <h1 class="hero-title">EXPLORE THE CYBER NEXUS WORLD</h1>
+                            <p class="hero-desc">Enter a next-generation 3D open world environment, play mini-games, decode secret codices, and chat live with gamers worldwide.</p>
                             <div class="btn-group">
-                                <button class="btn btn-primary" onclick="app.launchGame('skyline-rush')"><i class="fa-solid fa-play"></i> PLAY NOW</button>
-                                <button class="btn btn-glass" onclick="app.toggleFavorite('skyline-rush')"><i class="fa-solid fa-star"></i> FAVORITE</button>
+                                <button class="btn btn-primary" onclick="app.switchTab('world')"><i class="fa-solid fa-play"></i> LAUNCH 3D WORLD</button>
+                                <button class="btn btn-glass" onclick="app.switchTab('games')"><i class="fa-solid fa-gamepad"></i> BROWSE GAMES</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-fire"></i> TRENDING NOW</div>
+                        <div class="section-title"><i class="fa-solid fa-fire"></i> POPULAR GAMES</div>
                     </div>
-                    <div class="games-grid" id="grid-trending"></div>
-
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-sparkles"></i> NEW THIS UPDATE</div>
-                    </div>
-                    <div class="games-grid" id="grid-new"></div>
-
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-lock"></i> COMING SOON</div>
-                    </div>
-                    <div class="games-grid" id="grid-comingsoon"></div>
+                    <div class="games-grid" id="home-featured-games-grid"></div>
                 </div>
 
-                <!-- TAB 2: GAME LIBRARY -->
-                <div id="tab-games" class="tab-content">
+                <!-- TAB 2: GAMES HUB -->
+                <div class="tab-content" id="tab-games">
                     <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-gamepad"></i> ALL GAMES LIBRARY</div>
+                        <div class="section-title"><i class="fa-solid fa-gamepad"></i> GAMES HUB LIBRARY</div>
                     </div>
-                    <div class="games-grid" id="grid-all-games"></div>
+
+                    <div class="filter-bar">
+                        <div class="filter-tags">
+                            <button class="filter-tag active" onclick="app.filterGames('all', this)">All Games</button>
+                            <button class="filter-tag" onclick="app.filterGames('action', this)">Action</button>
+                            <button class="filter-tag" onclick="app.filterGames('arcade', this)">Arcade</button>
+                            <button class="filter-tag" onclick="app.filterGames('puzzle', this)">Puzzle</button>
+                            <button class="filter-tag" onclick="app.filterGames('favorites', this)">Favorites</button>
+                        </div>
+                    </div>
+
+                    <div class="games-grid" id="all-games-grid"></div>
                 </div>
 
                 <!-- TAB 3: 3D OPEN WORLD -->
-                <div id="tab-openworld" class="tab-content">
+                <div class="tab-content" id="tab-world">
                     <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-earth-americas"></i> 3D OPEN WORLD HUB</div>
+                        <div class="section-title"><i class="fa-solid fa-globe"></i> 3D OPEN WORLD EXPLORER</div>
+                        <button class="btn btn-glass" onclick="app.resetWorldPosition()"><i class="fa-solid fa-location-crosshairs"></i> Reset Spawn</button>
                     </div>
-                    <div id="openworld-wrapper">
-                        <div class="openworld-hud">
-                            <div style="font-family:var(--font-display); font-weight:800; color:var(--primary);">ISLAND PLAZA ZONING</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted);" id="ow-coords">X: 0 | Y: 0 | Z: 0</div>
+
+                    <div class="world-wrapper">
+                        <canvas id="world-canvas"></canvas>
+
+                        <div class="world-hud">
+                            <div class="world-hud-pill">
+                                <i class="fa-solid fa-gem" style="color:var(--primary);"></i>
+                                <span>Crystals: <strong id="hud-crystals">0 / 10</strong></span>
+                            </div>
+                            <div class="world-hud-pill">
+                                <i class="fa-solid fa-sun" style="color:var(--warning);"></i>
+                                <span id="hud-tod">Day Mode</span>
+                            </div>
                         </div>
-                        <div class="controls-hint">
-                            <span><b style="color:var(--primary);">WASD / ARROWS</b> : MOVE</span>
-                            <span><b style="color:var(--primary);">SPACE</b> : BOOST</span>
-                            <span><b style="color:var(--primary);">COLLECT GEMS</b> : +50 XP</span>
+
+                        <div class="world-controls-overlay">
+                            <p><strong>Controls:</strong> <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or Arrow Keys to move</p>
+                            <p><kbd>SPACE</kbd> Jump | <kbd>E</kbd> Interact with Secrets / NPCs</p>
                         </div>
-                        <canvas id="openworld-canvas"></canvas>
+
+                        <div class="minimap-box">
+                            <canvas id="minimap-canvas"></canvas>
+                        </div>
+
+                        <div class="secret-alert-toast" id="secret-toast">
+                            <h2 style="color:var(--owner-gold); font-family:var(--font-display);"><i class="fa-solid fa-key"></i> SECRET LOCATION DISCOVERED!</h2>
+                            <p style="margin-top:8px;">You found the Ancient Quantum Vault! Unlocked 500 XP!</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- TAB 4: MEDIA HUB -->
-                <div id="tab-media" class="tab-content">
+                <!-- TAB 4: INTERACTIVE BOOK -->
+                <div class="tab-content" id="tab-book">
                     <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-tv"></i> OFFICIAL MEDIA INTEGRATIONS</div>
+                        <div class="section-title"><i class="fa-solid fa-book-open"></i> QUANTUM CODEX - LORE & SECRETS</div>
                     </div>
+
+                    <div class="book-section-wrapper">
+                        <div class="book-container">
+                            <div class="book-spread">
+                                <div class="book-page book-page-left">
+                                    <div>
+                                        <h3 class="book-title" id="book-page-left-title">Chapter I: The Inception</h3>
+                                        <div class="book-body" id="book-page-left-body">
+                                            Loading book pages...
+                                        </div>
+                                    </div>
+                                    <div class="book-page-num" id="book-page-left-num">Page 1</div>
+                                </div>
+                                <div class="book-page book-page-right">
+                                    <div>
+                                        <h3 class="book-title" id="book-page-right-title">Chapter II: The Quantum Grid</h3>
+                                        <div class="book-body" id="book-page-right-body">
+                                            Loading book pages...
+                                        </div>
+                                    </div>
+                                    <div class="book-page-num" id="book-page-right-num">Page 2</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="book-controls">
+                            <button class="btn btn-glass" onclick="app.prevBookPage()"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+                            <span id="book-progress-text" style="font-family:var(--font-display);">Page 1-2 of 6</span>
+                            <button class="btn btn-primary" onclick="app.nextBookPage()">Next <i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: MEDIA & STREAMS -->
+                <div class="tab-content" id="tab-media">
+                    <div class="section-header">
+                        <div class="section-title"><i class="fa-solid fa-tv"></i> MEDIA & STREAMING HUB</div>
+                    </div>
+
                     <div class="media-grid">
                         <div class="media-card">
                             <i class="fa-brands fa-youtube media-icon media-youtube"></i>
-                            <h3 style="font-family:var(--font-display); margin-bottom:8px;">YOUTUBE GAMING</h3>
-                            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Watch official tournament streams, updates, and highlights.</p>
-                            <a href="https://www.youtube.com" target="_blank" class="btn btn-primary" style="text-decoration:none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> OPEN YOUTUBE</a>
+                            <h3>Nexus Hub Official Trailer</h3>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">Watch the official launch cinematic for the Cyber Nexus ecosystem.</p>
+                            <button class="btn btn-glass" onclick="alert('Playing Stream Preview...')"><i class="fa-solid fa-play"></i> Watch Stream</button>
                         </div>
                         <div class="media-card">
                             <i class="fa-brands fa-spotify media-icon media-spotify"></i>
-                            <h3 style="font-family:var(--font-display); margin-bottom:8px;">SPOTIFY GAMING</h3>
-                            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Listen to official synthwave, lounge, and high-energy soundtracks.</p>
-                            <a href="https://www.spotify.com" target="_blank" class="btn btn-primary" style="text-decoration:none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> OPEN SPOTIFY</a>
+                            <h3>Cyberpunk Synthwave Playlist</h3>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">High-octane synthwave beats curated for gaming sessions.</p>
+                            <button class="btn btn-glass" onclick="app.playSynthMusic()"><i class="fa-solid fa-music"></i> Listen Live</button>
                         </div>
                         <div class="media-card">
                             <i class="fa-brands fa-tiktok media-icon media-tiktok"></i>
-                            <h3 style="font-family:var(--font-display); margin-bottom:8px;">TIKTOK HUB</h3>
-                            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Catch community clips, short highlights, and admin abuse teasers.</p>
-                            <a href="https://www.tiktok.com" target="_blank" class="btn btn-primary" style="text-decoration:none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> OPEN TIKTOK</a>
+                            <h3>Community Highlights</h3>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">Short gaming clips and high score record breaks.</p>
+                            <button class="btn btn-glass" onclick="alert('Loading TikTok feed...')"><i class="fa-solid fa-fire"></i> View Clips</button>
                         </div>
-                    </div>
-                </div>
-
-                <!-- TAB 5: TOURNAMENTS -->
-                <div id="tab-events" class="tab-content">
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-trophy"></i> LIVE TOURNAMENTS & EVENTS</div>
-                    </div>
-                    <div class="media-card" style="width:100%; max-width:800px;">
-                        <span class="hero-tag"><i class="fa-solid fa-crown"></i> OWNER FEATURED EVENT</span>
-                        <h2 style="font-family:var(--font-display); margin:12px 0;">ADMIN ABUSE EXTRAVAGANZA</h2>
-                        <p style="color:var(--text-muted); margin-bottom:20px;">Hosted live by MR ABDO. Join for exclusive cosmetic rewards, title unlocks, and high XP bonuses!</p>
-                        <div id="event-timer-large" style="font-family:var(--font-display); font-size:1.8rem; color:var(--primary); font-weight:900; margin-bottom:20px;">CALCULATING...</div>
-                        <button class="btn btn-primary" onclick="alert('Registered! You will receive notification when event launches.')"><i class="fa-solid fa-check-circle"></i> REGISTER ATTENDANCE</button>
                     </div>
                 </div>
 
                 <!-- TAB 6: GLOBAL CHAT -->
-                <div id="tab-chat" class="tab-content">
+                <div class="tab-content" id="tab-chat">
                     <div class="chat-container">
                         <div class="chat-header">
-                            <div style="font-family:var(--font-display); font-weight:800; display:flex; align-items:center; gap:8px;">
-                                <i class="fa-solid fa-earth-americas" style="color:var(--primary);"></i> GLOBAL SYNCED CHAT
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <i class="fa-solid fa-comments" style="color:var(--primary);"></i>
+                                <span style="font-family:var(--font-display); font-weight:700;">NEXUS GLOBAL CHAT</span>
                             </div>
-                            <div style="font-size:0.75rem; color:var(--text-muted);">
-                                🇦🇪 TIMESTAMPS IN UAE TIME
-                            </div>
+                            <span style="font-size:0.8rem; color:var(--success);"><i class="fa-solid fa-circle" style="font-size:0.6rem;"></i> Live Persistent DB Channel</span>
                         </div>
-                        <div class="chat-messages" id="chat-messages-list"></div>
-                        <div class="chat-input-area">
-                            <input type="text" id="chat-input" placeholder="Type a global message..." onkeydown="if(event.key==='Enter') app.sendChatMessage()">
-                            <button class="btn btn-primary" onclick="app.sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+
+                        <div class="chat-messages" id="chat-messages-container"></div>
+
+                        <div class="chat-input-bar">
+                            <input type="text" id="chat-message-input" placeholder="Type your message..." onkeypress="if(event.key==='Enter') app.sendChatMessage()">
+                            <button class="btn btn-primary" onclick="app.sendChatMessage()"><i class="fa-solid fa-paper-plane"></i> SEND</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- TAB 7: NEXUS AI -->
-                <div id="tab-ai" class="tab-content">
-                    <div class="ai-panel">
-                        <div class="ai-header">
-                            <div class="ai-avatar"><i class="fa-solid fa-brain"></i></div>
-                            <div>
-                                <h3 style="font-family:var(--font-display);">NEXUS AI ASSISTANT</h3>
-                                <p style="font-size:0.75rem; color:var(--text-muted);">Smart non-repetitive gaming companion</p>
-                            </div>
+                <!-- TAB 7: LEADERBOARDS -->
+                <div class="tab-content" id="tab-leaderboard">
+                    <div class="section-header">
+                        <div class="section-title"><i class="fa-solid fa-trophy"></i> GLOBAL LEADERBOARDS</div>
+                    </div>
+
+                    <table class="data-table" style="background:var(--bg-card); border-radius:var(--radius-md); overflow:hidden;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Player</th>
+                                <th>Game</th>
+                                <th>Score</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-table-body"></tbody>
+                    </table>
+                </div>
+
+                <!-- TAB 8: DEVELOPER / ADMIN PANEL -->
+                <div class="tab-content" id="tab-admin">
+                    <div class="admin-panel-card">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+                            <h2 style="font-family:var(--font-display); color:var(--owner-gold); display:flex; align-items:center; gap:10px;">
+                                <i class="fa-solid fa-shield-halved"></i> SECURE DEVELOPER CONTROL PANEL
+                            </h2>
+                            <button class="btn btn-glass" onclick="app.logoutDev()"><i class="fa-solid fa-lock"></i> Lock Admin Panel</button>
                         </div>
-                        <div class="chat-messages" id="ai-messages-list">
-                            <div class="message-item">
-                                <div class="message-avatar">AI</div>
-                                <div class="message-content">
-                                    <div class="message-meta"><span class="message-author" style="color:var(--primary);">NEXUS AI</span></div>
-                                    <div class="message-text">Greetings! I'm tracking your gaming session. What would you like to explore today? Need game suggestions or tournament info?</div>
+
+                        <div class="admin-nav">
+                            <button class="admin-tab-btn active" onclick="app.switchAdminSubTab('stats', this)">Platform Stats</button>
+                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('games', this)">Manage Games</button>
+                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('users', this)">Manage Users</button>
+                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('book', this)">Manage Codex</button>
+                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('chat', this)">Chat Moderation</button>
+                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('announcement', this)">Announcements</button>
+                        </div>
+
+                        <!-- SUB-TAB: STATS -->
+                        <div class="admin-sub-tab active" id="admin-sub-stats">
+                            <div class="form-grid">
+                                <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:var(--radius-md); text-align:center;">
+                                    <h1 id="stat-total-users" style="color:var(--primary); font-family:var(--font-display);">0</h1>
+                                    <p style="font-size:0.8rem; color:var(--text-muted);">Registered Users</p>
+                                </div>
+                                <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:var(--radius-md); text-align:center;">
+                                    <h1 id="stat-total-games" style="color:var(--secondary); font-family:var(--font-display);">0</h1>
+                                    <p style="font-size:0.8rem; color:var(--text-muted);">Active Games</p>
+                                </div>
+                                <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:var(--radius-md); text-align:center;">
+                                    <h1 id="stat-total-chat" style="color:var(--accent); font-family:var(--font-display);">0</h1>
+                                    <p style="font-size:0.8rem; color:var(--text-muted);">Stored Messages</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="chat-input-area">
-                            <input type="text" id="ai-input" placeholder="Ask NEXUS AI something..." onkeydown="if(event.key==='Enter') app.sendAIMessage()">
-                            <button class="btn btn-primary" onclick="app.sendAIMessage()"><i class="fa-solid fa-robot"></i></button>
+
+                        <!-- SUB-TAB: GAMES -->
+                        <div class="admin-sub-tab" id="admin-sub-games">
+                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">Add / Edit Game</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Game Title</label>
+                                    <input type="text" id="dev-game-title" placeholder="e.g. Cyber Runner">
+                                </div>
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select id="dev-game-category">
+                                        <option value="action">Action</option>
+                                        <option value="arcade">Arcade</option>
+                                        <option value="puzzle">Puzzle</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Icon Class (FontAwesome)</label>
+                                    <input type="text" id="dev-game-icon" placeholder="fa-solid fa-gamepad">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:16px;">
+                                <label>Description</label>
+                                <textarea id="dev-game-desc" rows="2" placeholder="Brief game summary..."></textarea>
+                            </div>
+                            <button class="btn btn-primary" onclick="app.devAddGame()"><i class="fa-solid fa-plus"></i> Save Game to DB</button>
                         </div>
+
+                        <!-- SUB-TAB: USERS -->
+                        <div class="admin-sub-tab" id="admin-sub-users">
+                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">User Accounts</h3>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Role</th>
+                                        <th>Score</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dev-users-table-body"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- SUB-TAB: CODEX -->
+                        <div class="admin-sub-tab" id="admin-sub-book">
+                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">Add Codex Page</h3>
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label>Page Title</label>
+                                <input type="text" id="dev-book-title" placeholder="Chapter Title...">
+                            </div>
+                            <div class="form-group" style="margin-bottom:16px;">
+                                <label>Page Content</label>
+                                <textarea id="dev-book-content" rows="4" placeholder="Page body text..."></textarea>
+                            </div>
+                            <button class="btn btn-primary" onclick="app.devAddBookPage()"><i class="fa-solid fa-plus"></i> Add Page</button>
+                        </div>
+
+                        <!-- SUB-TAB: CHAT MODERATION -->
+                        <div class="admin-sub-tab" id="admin-sub-chat">
+                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">Chat Moderation</h3>
+                            <button class="btn btn-primary" style="background:var(--accent);" onclick="app.devPurgeChat()"><i class="fa-solid fa-trash"></i> Purge All Messages</button>
+                        </div>
+
+                        <!-- SUB-TAB: ANNOUNCEMENT -->
+                        <div class="admin-sub-tab" id="admin-sub-announcement">
+                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">Broadcast System Announcement</h3>
+                            <div class="form-group" style="margin-bottom:16px;">
+                                <label>Announcement Text</label>
+                                <input type="text" id="dev-announcement-input" placeholder="Type global announcement header text...">
+                            </div>
+                            <button class="btn btn-primary" onclick="app.devUpdateAnnouncement()"><i class="fa-solid fa-bullhorn"></i> Update Announcement</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 9: SETTINGS -->
+                <div class="tab-content" id="tab-settings">
+                    <div class="section-header">
+                        <div class="section-title"><i class="fa-solid fa-gear"></i> PLATFORM SETTINGS</div>
+                    </div>
+
+                    <div style="background:var(--bg-card); border:1px solid var(--glass-border); border-radius:var(--radius-lg); padding:28px; max-width:600px;">
+                        <h3 style="font-family:var(--font-display); margin-bottom:20px;">Profile Customization</h3>
+                        <div class="form-group" style="margin-bottom:16px;">
+                            <label>Display Username</label>
+                            <input type="text" id="settings-username-input" placeholder="Enter your username...">
+                        </div>
+                        <button class="btn btn-primary" onclick="app.saveProfileSettings()"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button>
+
+                        <hr style="border:none; border-top:1px solid var(--glass-border); margin:24px 0;">
+
+                        <h3 style="font-family:var(--font-display); margin-bottom:16px; color:var(--accent);">Danger Zone</h3>
+                        <button class="btn btn-glass" style="border-color:var(--accent); color:var(--accent);" onclick="app.clearAppData()"><i class="fa-solid fa-trash-can"></i> Reset Local Storage & Data</button>
                     </div>
                 </div>
             </main>
         </div>
     </div>
 
-    <!-- MODAL WINDOWS -->
-    <div class="modal-overlay" id="admin-modal">
+    <!-- MODAL 1: AUTH / DEVELOPER LOGIN MODAL -->
+    <div class="modal-overlay" id="auth-modal">
         <div class="modal-box">
-            <div class="modal-close" onclick="app.closeModals()"><i class="fa-solid fa-xmark"></i></div>
-            <h2 style="font-family:var(--font-display); color:var(--owner-gold); display:flex; align-items:center; gap:10px;">
-                <i class="fa-solid fa-crown"></i> OWNER ADMIN CONTROL TERMINAL
-            </h2>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Verified Security Auth • Session Authoritative Validation</p>
+            <button class="modal-close" onclick="app.closeModal('auth-modal')">&times;</button>
+            <h2 style="font-family:var(--font-display); margin-bottom:10px; color:var(--primary);"><i class="fa-solid fa-user-shield"></i> AUTHENTICATION</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">Log in with your Developer credentials or enter guest mode.</p>
 
-            <div class="admin-terminal" id="admin-terminal-output">
-                <div>[SYSTEM] SECURE OWNER TERMINAL INITIALIZED.</div>
-                <div>[AUTH] LOGGED IN AS: MR ABDO (VERIFIED OWNER)</div>
-                <div>Type /help for list of available server commands.</div>
+            <div class="form-group" style="margin-bottom:14px;">
+                <label>Username</label>
+                <input type="text" id="login-username" placeholder="Username (e.g. Developer)">
+            </div>
+            <div class="form-group" style="margin-bottom:20px;">
+                <label>Developer Passkey</label>
+                <input type="password" id="login-password" placeholder="Enter password (e.g. dev123)">
             </div>
 
-            <div class="terminal-input-wrap">
-                <span style="color:var(--owner-gold); font-weight:800;">MR_ABDO@NEXUS:~#</span>
-                <input type="text" id="admin-cmd-input" placeholder="Enter owner command (e.g. /announce Hello world)" onkeydown="if(event.key==='Enter') app.executeAdminCommand()">
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="game-modal">
-        <div class="modal-box" style="max-width:800px;">
-            <div class="modal-close" onclick="app.closeGameModal()"><i class="fa-solid fa-xmark"></i></div>
-            <h2 style="font-family:var(--font-display); color:var(--primary);" id="game-modal-title">GAME TITLE</h2>
-            <p style="font-size:0.8rem; color:var(--text-muted);" id="game-modal-desc">Game description text</p>
-
-            <div id="game-canvas-container">
-                <canvas id="active-game-canvas" width="740" height="400"></canvas>
+            <div style="display:flex; gap:12px;">
+                <button class="btn btn-primary" onclick="app.loginUser()"><i class="fa-solid fa-right-to-bracket"></i> Login / Register</button>
+                <button class="btn btn-glass" onclick="app.loginAsGuest()">Continue as Guest</button>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="comingsoon-modal">
-        <div class="modal-box" style="text-align:center;">
-            <div class="modal-close" onclick="app.closeModals()"><i class="fa-solid fa-xmark"></i></div>
-            <i class="fa-solid fa-rocket" style="font-size:3rem; color:var(--accent); margin-bottom:16px;"></i>
-            <h2 style="font-family:var(--font-display);" id="cs-title">GAME TITLE</h2>
-            <span class="hero-tag" style="margin-top:10px;"><i class="fa-solid fa-lock"></i> COMING SOON</span>
-            <p style="color:var(--text-muted); margin:16px 0;" id="cs-desc">This game is currently being prepared for the next update.</p>
-            <button class="btn btn-primary" onclick="alert('Notification set! You will be alerted upon release.'); app.closeModals();">NOTIFY ME ON RELEASE</button>
+    <!-- MODAL 2: GAME LAUNCHER MODAL -->
+    <div class="modal-overlay" id="game-launcher-modal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="app.closeGameModal()">&times;</button>
+            <h2 id="game-launcher-title" style="font-family:var(--font-display); color:var(--primary); margin-bottom:12px;">Playing Game</h2>
+            <div class="game-canvas-container">
+                <canvas id="game-play-canvas"></canvas>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px;">
+                <span id="game-launcher-score" style="font-family:var(--font-display); font-size:1.1rem; color:var(--success);">Score: 0</span>
+                <span style="font-size:0.8rem; color:var(--text-muted);">Controls: Arrow Keys / WASD / Mouse</span>
+            </div>
         </div>
     </div>
 
-    <!-- APPLICATION LOGIC -->
+    <!-- JS SCRIPT CORE ENGINE -->
     <script>
-        const SoundEngine = {
-            ctx: null,
-            bgmGain: null,
-            sfxGain: null,
-            isMuted: false,
-            bgmInterval: null,
+        /* ==========================================================================
+           1. DATABASE ENGINE (PERSISTENT INDEXEDDB / LOCALSTORAGE)
+           ========================================================================== */
+        class NexusDB {
+            constructor() {
+                this.dbName = 'NexusHubDB_v3';
+                this.prefix = 'nexushub_';
+            }
+
+            async init() {
+                // Ensure initial seed data exists
+                if (!this.get('users')) {
+                    this.set('users', [
+                        { id: 1, username: 'Developer', role: 'developer', score: 1250, passHash: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' }, // SHA-256 of 'admin'
+                        { id: 2, username: 'CyberGamer', role: 'player', score: 840 }
+                    ]);
+                }
+
+                if (!this.get('games')) {
+                    this.set('games', [
+                        { id: 'cyber-runner', title: 'Cyber Runner 2D', category: 'action', difficulty: 'Medium', desc: 'Jump over obstacles and dodge laser barriers in futuristic Neo-City.', icon: 'fa-solid fa-person-running', played: 1420 },
+                        { id: 'space-defender', title: 'Space Defender', category: 'arcade', difficulty: 'Hard', desc: 'Blast incoming alien invaders and protect the Nexus station.', icon: 'fa-solid fa-shuttle-space', played: 980 },
+                        { id: 'quantum-dodge', title: 'Quantum Dodge', category: 'action', difficulty: 'Easy', desc: 'Avoid energetic orb spikes with precision micro-maneuvers.', icon: 'fa-solid fa-atom', played: 610 },
+                        { id: 'neon-memory', title: 'Neon Memory Match', category: 'puzzle', difficulty: 'Easy', desc: 'Test your cognitive memory grid skills with cyberpunk cards.', icon: 'fa-solid fa-brain', played: 430 }
+                    ]);
+                }
+
+                if (!this.get('chat')) {
+                    this.set('chat', [
+                        { id: 101, author: 'Developer', role: 'developer', text: 'Welcome to Nexus Hub v3.0! Explore the 3D Open World and check out our Games Hub!', timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) },
+                        { id: 102, author: 'CyberGamer', role: 'player', text: 'The 3D open world is awesome! Found the secret vault!', timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) }
+                    ]);
+                }
+
+                if (!this.get('book')) {
+                    this.set('book', [
+                        { title: 'Chapter I: The Inception', content: 'In the year 2099, the digital landscape morphed into a living matrix known as Nexus. Here, artificial intelligences and human wanderers coexist in harmonic grid lines.' },
+                        { title: 'Chapter II: The Quantum Grid', content: 'The open world is anchored by the Central Node. Legend speaks of an Ancient Quantum Vault hidden beyond the eastern cyber mountains.' },
+                        { title: 'Chapter III: Master Controls', content: 'Use your skills in the Games Hub to earn high scores and climb the global leaderboards. Upgrade your developer status to unlock system administration.' }
+                    ]);
+                }
+
+                if (!this.get('announcement')) {
+                    this.set('announcement', 'Welcome to Nexus Hub v3.0! Developer Panel, 3D Open World & Games Active!');
+                }
+            }
+
+            get(key) {
+                const data = localStorage.getItem(this.prefix + key);
+                return data ? JSON.parse(data) : null;
+            }
+
+            set(key, val) {
+                localStorage.setItem(this.prefix + key, JSON.stringify(val));
+            }
+        }
+
+        /* ==========================================================================
+           2. SOUND ENGINE (WEB AUDIO API SYNTHESIZER)
+           ========================================================================== */
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.enabled = true;
+            }
+
             init() {
-                if (this.ctx) return;
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                this.ctx = new AudioContext();
-                this.bgmGain = this.ctx.createGain();
-                this.sfxGain = this.ctx.createGain();
-                this.bgmGain.gain.value = 0.08;
-                this.sfxGain.gain.value = 0.25;
-                this.bgmGain.connect(this.ctx.destination);
-                this.sfxGain.connect(this.ctx.destination);
-            },
-            playClick() {
-                if (!this.ctx || this.isMuted) return;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1200, this.ctx.currentTime + 0.04);
-                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.04);
-                osc.connect(gain);
-                gain.connect(this.sfxGain);
-                osc.start();
-                osc.stop(this.ctx.currentTime + 0.04);
-            },
-            playScore() {
-                if (!this.ctx || this.isMuted) return;
-                const freqs = [523.25, 659.25, 783.99, 1046.50];
-                freqs.forEach((f, idx) => {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+
+            playTone(freq, duration, type='sine') {
+                if (!this.enabled) return;
+                this.init();
+                try {
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(f, this.ctx.currentTime + idx * 0.05);
-                    gain.gain.setValueAtTime(0.15, this.ctx.currentTime + idx * 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + idx * 0.05 + 0.12);
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
                     osc.connect(gain);
-                    gain.connect(this.sfxGain);
-                    osc.start(this.ctx.currentTime + idx * 0.05);
-                    osc.stop(this.ctx.currentTime + idx * 0.05 + 0.12);
-                });
-            },
-            startBGM() {
-                if (!this.ctx || this.bgmInterval) return;
-                const chords = [
-                    [130.81, 164.81, 196.00],
-                    [146.83, 174.61, 220.00],
-                    [174.61, 220.00, 261.63],
-                    [196.00, 246.94, 293.66]
-                ];
-                let step = 0;
-                const playNextChord = () => {
-                    if (this.isMuted) return;
-                    const chord = chords[step % chords.length];
-                    chord.forEach(freq => {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-                        gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 2.5);
-                        osc.connect(gain);
-                        gain.connect(this.bgmGain);
-                        osc.start();
-                        osc.stop(this.ctx.currentTime + 2.5);
-                    });
-                    step++;
-                };
-                playNextChord();
-                this.bgmInterval = setInterval(playNextChord, 2800);
-            },
-            toggleMute() {
-                this.isMuted = !this.isMuted;
-                if (this.bgmGain) this.bgmGain.gain.value = this.isMuted ? 0 : 0.08;
-                return this.isMuted;
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch(e) {}
             }
-        };
 
-        const currentUser = {
-            username: "MR ABDO",
-            isOwner: true,
-            level: 24,
-            xp: 14850,
-            favorites: new Set(["skyline-rush"])
-        };
+            click() { this.playTone(800, 0.05, 'sine'); }
+            jump() { this.playTone(400, 0.15, 'square'); }
+            pickup() { this.playTone(1200, 0.2, 'triangle'); }
+            win() { this.playTone(900, 0.4, 'sine'); }
+        }
 
-        let eventTargetDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
-
-        const gamesDatabase = [
-            {
-                id: "skyline-rush",
-                title: "SKYLINE RUSH",
-                desc: "Race across futuristic city rooftops in high-speed neon vehicles.",
-                category: "Racing",
-                players: "1,240 Playing",
-                difficulty: "Medium",
-                playTime: "5 mins",
-                status: "playable",
-                badge: "HOT",
-                visualHue: "190"
-            },
-            {
-                id: "hoop-legends",
-                title: "HOOP LEGENDS 3D",
-                desc: "Precision 3-point basketball challenge with arc trajectory physics.",
-                category: "Sports",
-                players: "890 Playing",
-                difficulty: "Hard",
-                playTime: "3 mins",
-                status: "playable",
-                badge: "POPULAR",
-                visualHue: "30"
-            },
-            {
-                id: "cyber-mind",
-                title: "CYBER MIND TRIVIA",
-                desc: "Test your gaming and sports trivia knowledge under rapid countdowns.",
-                category: "Trivia",
-                players: "430 Playing",
-                difficulty: "Easy",
-                playTime: "4 mins",
-                status: "playable",
-                badge: "NEW",
-                visualHue: "280"
-            },
-            {
-                id: "reflex-pulse",
-                title: "REFLEX PULSE",
-                desc: "High precision millisecond reaction speed and target test.",
-                category: "Arcade",
-                players: "620 Playing",
-                difficulty: "Hard",
-                playTime: "2 mins",
-                status: "playable",
-                badge: "NEW",
-                visualHue: "340"
-            },
-            {
-                id: "skyline-rush-2",
-                title: "SKYLINE RUSH 2: OVERDRIVE",
-                desc: "The hyper-speed sequel featuring vertical wall runs and gravity boosters.",
-                category: "Racing",
-                players: "0 Playing",
-                difficulty: "Expert",
-                playTime: "--",
-                status: "comingsoon",
-                badge: "COMING SOON",
-                visualHue: "210"
-            },
-            {
-                id: "street-football-3v3",
-                title: "STREET FOOTBALL 3V3",
-                desc: "Fast-paced street soccer arena with dynamic trick shots.",
-                category: "Sports",
-                players: "0 Playing",
-                difficulty: "Medium",
-                playTime: "--",
-                status: "comingsoon",
-                badge: "COMING SOON",
-                visualHue: "120"
+        /* ==========================================================================
+           3. MAIN APP CONTROLLER
+           ========================================================================== */
+        class NexusApp {
+            constructor() {
+                this.db = new NexusDB();
+                this.sound = new SoundEngine();
+                this.currentUser = { username: 'Guest', role: 'player' };
+                this.bookIndex = 0;
+                this.chatBroadcast = new BroadcastChannel('nexus_chat_channel');
+                this.activeGameLoop = null;
+                this.gameCanvas = null;
+                this.gameCtx = null;
             }
-        ];
 
-        const app = {
-            activeGameLoop: null,
+            async init() {
+                await this.db.init();
 
-            init() {
-                this.setupUAEClock();
-                this.setupParticleBackground();
+                // Setup UAE Clock
+                setInterval(() => this.updateClock(), 1000);
+                this.updateClock();
+
+                // Load User State
+                const savedUser = this.db.get('currentUser');
+                if (savedUser) {
+                    this.currentUser = savedUser;
+                }
+                this.updateUserUI();
+
+                // Load Announcements
+                const ann = this.db.get('announcement');
+                if (ann) {
+                    document.getElementById('announcement-text-display').innerText = ann;
+                }
+
+                // Render Sections
                 this.renderGames();
-                this.initChat();
-                this.initOpenWorld();
-                
-                if (currentUser.isOwner) {
-                    document.getElementById('header-owner-crown').style.display = 'block';
-                }
+                this.renderChat();
+                this.renderBook();
+                this.renderLeaderboard();
+                this.init3DWorld();
 
-                window.addEventListener('click', () => {
-                    SoundEngine.init();
-                    SoundEngine.startBGM();
-                }, { once: true });
-            },
+                // Listen for Broadcast Chat
+                this.chatBroadcast.onmessage = () => this.renderChat();
 
-            // COPY INVITE LINK LOGIC
-            copyInviteLink() {
-                SoundEngine.playClick();
-                const url = window.location.href;
-                const btn = document.getElementById('copy-link-btn');
-                const originalHTML = btn.innerHTML;
+                // Background Animation Canvas
+                this.initBgCanvas();
+            }
 
-                const copySuccess = () => {
-                    if (window.confetti) {
-                        confetti({ particleCount: 50, spread: 60, origin: { y: 0.1 } });
-                    }
-                    btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>LINK COPIED!</span>`;
-                    btn.style.background = 'var(--success)';
-                    btn.style.color = '#000';
+            updateClock() {
+                const now = new Date();
+                const uaeTime = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Dubai', hour12: false });
+                document.getElementById('uae-time-clock').innerText = uaeTime + ' GST';
+            }
 
-                    setTimeout(() => {
-                        btn.innerHTML = originalHTML;
-                        btn.style.background = '';
-                        btn.style.color = '';
-                    }, 2500);
-                };
+            updateUserUI() {
+                document.getElementById('nav-username').innerText = this.currentUser.username;
+                document.getElementById('nav-user-role').innerText = this.currentUser.role.toUpperCase();
+                document.getElementById('nav-avatar').childNodes[0].nodeValue = this.currentUser.username.charAt(0).toUpperCase();
 
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(url).then(copySuccess).catch(() => this.fallbackCopy(url, copySuccess));
+                const devCrown = document.getElementById('dev-crown-badge');
+                const sidebarDev = document.getElementById('sidebar-dev-item');
+
+                if (this.currentUser.role === 'developer') {
+                    devCrown.style.display = 'block';
+                    sidebarDev.classList.add('visible');
                 } else {
-                    this.fallbackCopy(url, copySuccess);
+                    devCrown.style.display = 'none';
+                    sidebarDev.classList.remove('visible');
                 }
-            },
-
-            fallbackCopy(text, callback) {
-                const textArea = document.createElement("textarea");
-                textArea.value = text;
-                textArea.style.position = "fixed";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    callback();
-                } catch (err) {
-                    alert("Share this URL: " + text);
-                }
-                document.body.removeChild(textArea);
-            },
-
-            setupUAEClock() {
-                const updateClocks = () => {
-                    const now = new Date();
-                    const timeStr = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Dubai', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-                    document.querySelectorAll('.uae-time-val').forEach(el => el.textContent = timeStr);
-
-                    const diffMs = eventTargetDate - now;
-                    const barText = document.getElementById('announcement-text');
-                    const timerLarge = document.getElementById('event-timer-large');
-
-                    if (diffMs <= 0) {
-                        const msg = "🔥 MR ABDO IS HOSTING AN ADMIN ABUSE TODAY 🔥";
-                        if (barText) barText.innerHTML = msg;
-                        if (timerLarge) timerLarge.innerHTML = "EVENT IS LIVE NOW!";
-                    } else {
-                        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
-                        const mins = Math.floor((diffMs / (1000 * 60)) % 60);
-                        const secs = Math.floor((diffMs / 1000) % 60);
-
-                        let text = "";
-                        if (days > 1) {
-                            text = `🔥 MR ABDO WILL BE HOSTING AN ADMIN ABUSE IN ${days} DAYS (${hours}h ${mins}m ${secs}s)`;
-                        } else if (days === 1) {
-                            text = `🔥 MR ABDO WILL BE HOSTING AN ADMIN ABUSE TOMORROW (${hours}h ${mins}m ${secs}s)`;
-                        } else {
-                            text = `🔥 MR ABDO IS HOSTING AN ADMIN ABUSE TODAY (${hours}h ${mins}m ${secs}s) 🔥`;
-                        }
-
-                        if (barText) barText.innerHTML = text;
-                        if (timerLarge) timerLarge.innerHTML = `${days}d ${hours}h ${mins}m ${secs}s`;
-                    }
-                };
-                setInterval(updateClocks, 1000);
-                updateClocks();
-            },
-
-            toggleBGM() {
-                const muted = SoundEngine.toggleMute();
-                const btn = document.getElementById('bgm-toggle-btn');
-                btn.style.color = muted ? 'var(--accent)' : 'var(--text-main)';
-            },
-
-            toggleTheme() {
-                const current = document.documentElement.getAttribute('data-theme');
-                document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-            },
+            }
 
             switchTab(tabId) {
-                SoundEngine.playClick();
-                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.sound.click();
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
-                const targetTab = document.getElementById(`tab-${tabId}`);
+                const targetTab = document.getElementById('tab-' + tabId);
+                const targetNavItem = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+
                 if (targetTab) targetTab.classList.add('active');
+                if (targetNavItem) targetNavItem.classList.add('active');
 
-                const navEl = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
-                if (navEl) navEl.classList.add('active');
-            },
+                if (tabId === 'admin') {
+                    this.renderAdminPanel();
+                }
+            }
 
-            renderGames() {
-                const trendingContainer = document.getElementById('grid-trending');
-                const newContainer = document.getElementById('grid-new');
-                const comingsoonContainer = document.getElementById('grid-comingsoon');
-                const allContainer = document.getElementById('grid-all-games');
+            /* --- GAMES SECTION --- */
+            renderGames(filterCategory = 'all', searchQuery = '') {
+                const games = this.db.get('games') || [];
+                const homeGrid = document.getElementById('home-featured-games-grid');
+                const allGrid = document.getElementById('all-games-grid');
 
-                if (!trendingContainer) return;
-
-                trendingContainer.innerHTML = '';
-                newContainer.innerHTML = '';
-                comingsoonContainer.innerHTML = '';
-                allContainer.innerHTML = '';
-
-                gamesDatabase.forEach(game => {
-                    const cardHTML = this.createGameCardHTML(game);
-                    allContainer.insertAdjacentHTML('beforeend', cardHTML);
-
-                    if (game.badge === 'HOT' || game.badge === 'POPULAR') {
-                        trendingContainer.insertAdjacentHTML('beforeend', cardHTML);
-                    }
-                    if (game.badge === 'NEW') {
-                        newContainer.insertAdjacentHTML('beforeend', cardHTML);
-                    }
-                    if (game.status === 'comingsoon') {
-                        comingsoonContainer.insertAdjacentHTML('beforeend', cardHTML);
-                    }
+                let filtered = games.filter(g => {
+                    const matchCat = filterCategory === 'all' || g.category === filterCategory;
+                    const matchSearch = g.title.toLowerCase().includes(searchQuery.toLowerCase()) || g.desc.toLowerCase().includes(searchQuery.toLowerCase());
+                    return matchCat && matchSearch;
                 });
-            },
 
-            createGameCardHTML(game) {
-                const isFav = currentUser.favorites.has(game.id);
-                const isPlayable = game.status === 'playable';
-
-                const svgCover = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 300 165">
-                    <defs>
-                        <linearGradient id="grad-${game.id}" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="hsl(${game.visualHue}, 80%, 15%)"/>
-                            <stop offset="100%" stop-color="hsl(${game.visualHue}, 90%, 40%)"/>
-                        </linearGradient>
-                    </defs>
-                    <rect width="300" height="165" fill="url(#grad-${game.id})"/>
-                    <circle cx="150" cy="82" r="50" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-                    <path d="M0 165 L120 80 L180 110 L300 40 L300 165 Z" fill="rgba(0,0,0,0.3)"/>
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-family="Orbitron" font-weight="900" font-size="16" opacity="0.9">${game.title}</text>
-                </svg>`;
-
-                return `
-                <div class="game-card" onclick="app.onCardClick('${game.id}')">
-                    <div class="card-thumb">
-                        ${svgCover}
-                        <span class="card-badge ${game.status === 'comingsoon' ? 'badge-locked' : (game.badge === 'NEW' ? 'badge-new' : 'badge-popular')}">${game.badge}</span>
-                        <button class="card-fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); app.toggleFavorite('${game.id}')">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-title">${game.title}</div>
-                        <div class="card-desc">${game.desc}</div>
-                        <div class="card-meta">
-                            <span><i class="fa-solid fa-users"></i> ${game.players}</span>
-                            <span><i class="fa-solid fa-gauge"></i> ${game.difficulty}</span>
+                const createCardHtml = (game) => `
+                    <div class="game-card" onclick="app.launchGame('${game.id}')">
+                        <div class="card-thumb">
+                            <i class="${game.icon} card-thumb-icon"></i>
+                            <span class="card-badge badge-popular">${game.difficulty}</span>
+                            <div class="card-fav-btn" onclick="event.stopPropagation(); app.toggleFavorite('${game.id}')">
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
                         </div>
-                        <button class="card-play-btn ${isPlayable ? '' : 'btn-locked'}">
-                            <i class="fa-solid ${isPlayable ? 'fa-play' : 'fa-lock'}"></i>
-                            ${isPlayable ? 'PLAY NOW' : 'COMING SOON'}
-                        </button>
+                        <div class="card-body">
+                            <h4 class="card-title">${game.title}</h4>
+                            <p class="card-desc">${game.desc}</p>
+                            <div class="card-meta">
+                                <span><i class="fa-solid fa-gamepad"></i> ${game.category.toUpperCase()}</span>
+                                <span><i class="fa-solid fa-fire"></i> ${game.played} PLAYS</span>
+                            </div>
+                            <button class="card-play-btn"><i class="fa-solid fa-play"></i> PLAY NOW</button>
+                        </div>
                     </div>
-                </div>`;
-            },
+                `;
 
-            onCardClick(gameId) {
-                const game = gamesDatabase.find(g => g.id === gameId);
-                if (!game) return;
+                if (homeGrid) homeGrid.innerHTML = games.slice(0, 3).map(createCardHtml).join('');
+                if (allGrid) allGrid.innerHTML = filtered.map(createCardHtml).join('');
+            }
 
-                if (game.status === 'comingsoon') {
-                    document.getElementById('cs-title').textContent = game.title;
-                    document.getElementById('cs-desc').textContent = game.desc;
-                    document.getElementById('comingsoon-modal').classList.add('active');
-                } else {
-                    this.launchGame(gameId);
-                }
-            },
+            filterGames(cat, btnEl) {
+                this.sound.click();
+                document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+                btnEl.classList.add('active');
+                this.renderGames(cat);
+            }
 
-            toggleFavorite(gameId) {
-                if (currentUser.favorites.has(gameId)) {
-                    currentUser.favorites.delete(gameId);
-                } else {
-                    currentUser.favorites.add(gameId);
-                }
-                this.renderGames();
-            },
+            handleSearch(query) {
+                this.renderGames('all', query);
+            }
 
-            closeModals() {
-                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-            },
+            /* --- GAME LAUNCHER ENGINE --- */
+            launchGame(gameId) {
+                this.sound.click();
+                const modal = document.getElementById('game-launcher-modal');
+                modal.classList.add('active');
+
+                this.gameCanvas = document.getElementById('game-play-canvas');
+                this.gameCtx = this.gameCanvas.getContext('2d');
+                this.gameCanvas.width = 860;
+                this.gameCanvas.height = 460;
+
+                const game = (this.db.get('games') || []).find(g => g.id === gameId);
+                document.getElementById('game-launcher-title').innerText = game ? game.title : 'Playing Game';
+
+                // Increment play count
+                const games = this.db.get('games') || [];
+                const gObj = games.find(g => g.id === gameId);
+                if (gObj) { gObj.played = (gObj.played || 0) + 1; this.db.set('games', games); }
+
+                this.startCyberRunnerGame();
+            }
+
+            startCyberRunnerGame() {
+                let score = 0;
+                let playerY = 320;
+                let isJumping = false;
+                let jumpVel = 0;
+                let obstacles = [{ x: 800, w: 20, h: 40 }];
+
+                const keys = {};
+                const keyDownHandler = (e) => { keys[e.code] = true; };
+                const keyUpHandler = (e) => { keys[e.code] = false; };
+
+                window.addEventListener('keydown', keyDownHandler);
+                window.addEventListener('keyup', keyUpHandler);
+
+                const loop = () => {
+                    this.gameCtx.fillStyle = '#0a0d18';
+                    this.gameCtx.fillRect(0, 0, 860, 460);
+
+                    // Ground
+                    this.gameCtx.fillStyle = '#00f0ff';
+                    this.gameCtx.fillRect(0, 380, 860, 4);
+
+                    // Jump Physics
+                    if ((keys['Space'] || keys['ArrowUp'] || keys['KeyW']) && !isJumping) {
+                        isJumping = true;
+                        jumpVel = -14;
+                        this.sound.jump();
+                    }
+
+                    if (isJumping) {
+                        playerY += jumpVel;
+                        jumpVel += 0.7;
+                        if (playerY >= 320) {
+                            playerY = 320;
+                            isJumping = false;
+                        }
+                    }
+
+                    // Player
+                    this.gameCtx.fillStyle = '#ff0055';
+                    this.gameCtx.fillRect(100, playerY, 30, 60);
+
+                    // Obstacles
+                    for (let i = 0; i < obstacles.length; i++) {
+                        obstacles[i].x -= 6;
+                        this.gameCtx.fillStyle = '#00f0ff';
+                        this.gameCtx.fillRect(obstacles[i].x, 340, obstacles[i].w, obstacles[i].h);
+
+                        // Collision Check
+                        if (100 < obstacles[i].x + obstacles[i].w &&
+                            100 + 30 > obstacles[i].x &&
+                            playerY + 60 > 340) {
+                            // Game Over
+                            this.saveScore(score);
+                            alert('Game Over! Final Score: ' + score);
+                            this.closeGameModal();
+                            window.removeEventListener('keydown', keyDownHandler);
+                            window.removeEventListener('keyup', keyUpHandler);
+                            return;
+                        }
+
+                        if (obstacles[i].x < -30) {
+                            obstacles[i].x = 860 + Math.random() * 200;
+                            score += 100;
+                            document.getElementById('game-launcher-score').innerText = 'Score: ' + score;
+                        }
+                    }
+
+                    this.activeGameLoop = requestAnimationFrame(loop);
+                };
+
+                loop();
+            }
 
             closeGameModal() {
-                if (this.activeGameLoop) {
-                    cancelAnimationFrame(this.activeGameLoop);
-                    this.activeGameLoop = null;
-                }
-                this.closeModals();
-            },
+                if (this.activeGameLoop) cancelAnimationFrame(this.activeGameLoop);
+                document.getElementById('game-launcher-modal').classList.remove('active');
+            }
 
-            openAdminModal() {
-                if (!currentUser.isOwner) {
-                    alert('Access Denied: Owner Permissions Required.');
-                    return;
-                }
-                document.getElementById('admin-modal').classList.add('active');
-            },
-
-            openProfileModal() {
-                alert(`PLAYER PROFILE:\nUsername: ${currentUser.username}\nRole: Verified Owner 👑\nLevel: ${currentUser.level}\nXP: ${currentUser.xp}`);
-            },
-
-            showEventDetailsModal() {
-                this.switchTab('events');
-            },
-
-            executeAdminCommand() {
-                const input = document.getElementById('admin-cmd-input');
-                const cmd = input.value.trim();
-                if (!cmd) return;
-
-                const output = document.getElementById('admin-terminal-output');
-                output.insertAdjacentHTML('beforeend', `<div><b style="color:#fff;">> ${cmd}</b></div>`);
-
-                const parts = cmd.split(' ');
-                const action = parts[0].toLowerCase();
-
-                if (action === '/announce' && parts.length > 1) {
-                    const msg = parts.slice(1).join(' ');
-                    document.getElementById('announcement-text').innerHTML = `👑 MR ABDO: ${msg}`;
-                    output.insertAdjacentHTML('beforeend', `<div style="color:var(--primary);">[SUCCESS] Announcement updated globally.</div>`);
-                } else if (action === '/game' && parts[1] === 'release' && parts[2]) {
-                    const targetId = parts[2];
-                    const game = gamesDatabase.find(g => g.id === targetId);
-                    if (game) {
-                        game.status = 'playable';
-                        game.badge = 'NEW';
-                        this.renderGames();
-                        output.insertAdjacentHTML('beforeend', `<div style="color:var(--success);">[SUCCESS] Game '${game.title}' released!</div>`);
-                    } else {
-                        output.insertAdjacentHTML('beforeend', `<div style="color:var(--accent);">[ERROR] Game ID not found.</div>`);
+            saveScore(score) {
+                if (score <= 0) return;
+                const users = this.db.get('users') || [];
+                const user = users.find(u => u.username === this.currentUser.username);
+                if (user) {
+                    if (score > (user.score || 0)) {
+                        user.score = score;
+                        this.db.set('users', users);
+                        this.renderLeaderboard();
                     }
-                } else if (action === '/help') {
-                    output.insertAdjacentHTML('beforeend', `<div>Available Commands:<br>/announce &lt;msg&gt; - Update announcement bar<br>/game release &lt;game-id&gt; - Unlock Coming Soon game<br>/clear - Clear terminal log</div>`);
-                } else if (action === '/clear') {
-                    output.innerHTML = '';
-                } else {
-                    output.insertAdjacentHTML('beforeend', `<div style="color:var(--warning);">[UNKNOWN COMMAND] Type /help for assistance.</div>`);
                 }
+            }
 
-                input.value = '';
-                output.scrollTop = output.scrollHeight;
-            },
+            /* --- GLOBAL CHAT SYSTEM --- */
+            renderChat() {
+                const chatList = this.db.get('chat') || [];
+                const container = document.getElementById('chat-messages-container');
+                if (!container) return;
 
-            initChat() {
-                const chatList = document.getElementById('chat-messages-list');
-                if (!chatList) return;
-
-                const defaultMessages = [
-                    { author: "MR ABDO", isOwner: true, text: "Welcome everyone to NEXUS Hub! Admin event in 3 days 🔥", level: 24 },
-                    { author: "CyberRider", isOwner: false, text: "Who's up for a Skyline Rush time trial challenge?", level: 9 },
-                    { author: "FalconUAE", isOwner: false, text: "Open world island plaza looks super smooth today!", level: 15 }
-                ];
-
-                defaultMessages.forEach(m => this.appendChatMessage(m));
-            },
-
-            appendChatMessage(data) {
-                const chatList = document.getElementById('chat-messages-list');
-                const now = new Date();
-                const uaeTime = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Dubai', hour: '2-digit', minute: '2-digit', hour12: true });
-
-                const msgHTML = `
-                <div class="message-item">
-                    <div class="message-avatar">${data.author.charAt(0)}</div>
-                    <div class="message-content">
-                        <div class="message-meta">
-                            <span class="message-author">${data.author}</span>
-                            ${data.isOwner ? '<span class="badge-owner-tag">👑 OWNER</span>' : `<span style="font-size:0.65rem; color:var(--primary); font-family:var(--font-display);">LVL ${data.level}</span>`}
-                            <span class="message-time">${uaeTime}</span>
+                container.innerHTML = chatList.map(msg => `
+                    <div class="message-item">
+                        <div class="message-avatar">${msg.author.charAt(0).toUpperCase()}</div>
+                        <div class="message-content-box">
+                            <div class="message-meta">
+                                <span class="message-author">${msg.author}</span>
+                                ${msg.role === 'developer' ? '<span class="badge-dev-tag">DEV</span>' : ''}
+                                <span class="message-time">${msg.timestamp}</span>
+                                ${(this.currentUser.role === 'developer' || this.currentUser.username === msg.author) ?
+                                    `<button class="msg-del-btn" onclick="app.deleteChatMessage(${msg.id})"><i class="fa-solid fa-trash"></i></button>` : ''}
+                            </div>
+                            <div class="message-text">${this.escapeHtml(msg.text)}</div>
                         </div>
-                        <div class="message-text">${data.text}</div>
                     </div>
-                </div>`;
-                chatList.insertAdjacentHTML('beforeend', msgHTML);
-                chatList.scrollTop = chatList.scrollHeight;
-            },
+                `).join('');
+
+                container.scrollTop = container.scrollHeight;
+            }
 
             sendChatMessage() {
-                const input = document.getElementById('chat-input');
+                const input = document.getElementById('chat-message-input');
                 const text = input.value.trim();
                 if (!text) return;
 
-                this.appendChatMessage({
-                    author: currentUser.username,
-                    isOwner: currentUser.isOwner,
+                const chatList = this.db.get('chat') || [];
+                const newMsg = {
+                    id: Date.now(),
+                    author: this.currentUser.username,
+                    role: this.currentUser.role,
                     text: text,
-                    level: currentUser.level
+                    timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+                };
+
+                chatList.push(newMsg);
+                this.db.set('chat', chatList);
+                input.value = '';
+
+                this.renderChat();
+                this.chatBroadcast.postMessage('new_chat');
+                this.sound.click();
+            }
+
+            deleteChatMessage(msgId) {
+                let chatList = this.db.get('chat') || [];
+                chatList = chatList.filter(m => m.id !== msgId);
+                this.db.set('chat', chatList);
+                this.renderChat();
+                this.chatBroadcast.postMessage('del_chat');
+            }
+
+            escapeHtml(str) {
+                return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            }
+
+            /* --- INTERACTIVE BOOK ("QUANTUM CODEX") --- */
+            renderBook() {
+                const book = this.db.get('book') || [];
+                if (book.length === 0) return;
+
+                const leftPage = book[this.bookIndex] || { title: 'End of Book', content: 'No further entries.' };
+                const rightPage = book[this.bookIndex + 1] || { title: '---', content: '---' };
+
+                document.getElementById('book-page-left-title').innerText = leftPage.title;
+                document.getElementById('book-page-left-body').innerText = leftPage.content;
+                document.getElementById('book-page-left-num').innerText = `Page ${this.bookIndex + 1}`;
+
+                document.getElementById('book-page-right-title').innerText = rightPage.title;
+                document.getElementById('book-page-right-body').innerText = rightPage.content;
+                document.getElementById('book-page-right-num').innerText = `Page ${this.bookIndex + 2}`;
+
+                document.getElementById('book-progress-text').innerText = `Pages ${this.bookIndex + 1}-${this.bookIndex + 2} of ${book.length}`;
+            }
+
+            nextBookPage() {
+                const book = this.db.get('book') || [];
+                if (this.bookIndex + 2 < book.length) {
+                    this.bookIndex += 2;
+                    this.renderBook();
+                    this.sound.click();
+                }
+            }
+
+            prevBookPage() {
+                if (this.bookIndex >= 2) {
+                    this.bookIndex -= 2;
+                    this.renderBook();
+                    this.sound.click();
+                }
+            }
+
+            /* --- LEADERBOARD SECTION --- */
+            renderLeaderboard() {
+                const users = (this.db.get('users') || []).sort((a,b) => (b.score||0) - (a.score||0));
+                const tbody = document.getElementById('leaderboard-table-body');
+                if (!tbody) return;
+
+                tbody.innerHTML = users.map((u, idx) => `
+                    <tr>
+                        <td><strong>#${idx + 1}</strong></td>
+                        <td>${u.username} ${u.role === 'developer' ? '<span class="badge-dev-tag">DEV</span>' : ''}</td>
+                        <td>Cyber Runner</td>
+                        <td style="color:var(--primary); font-family:var(--font-display); font-weight:700;">${u.score || 0} PTS</td>
+                        <td>2026-09-08</td>
+                    </tr>
+                `).join('');
+            }
+
+            /* --- DEVELOPER PANEL & AUTHENTICATION --- */
+            openAuthOrProfile() {
+                if (this.currentUser.role === 'developer') {
+                    this.switchTab('admin');
+                } else {
+                    document.getElementById('auth-modal').classList.add('active');
+                }
+            }
+
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
+            }
+
+            async loginUser() {
+                const userVal = document.getElementById('login-username').value.trim();
+                const passVal = document.getElementById('login-password').value.trim();
+
+                if (!userVal) { alert('Please enter a username.'); return; }
+
+                // Check hashed developer passkey using Web Crypto API SHA-256
+                if (passVal) {
+                    const msgBuffer = new TextEncoder().encode(passVal);
+                    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+                    // SHA-256 for 'admin' is '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' or 'dev123'
+                    if (hashHex === '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' || passVal === 'dev123') {
+                        this.currentUser = { username: userVal || 'Developer', role: 'developer' };
+                        this.db.set('currentUser', this.currentUser);
+                        this.updateUserUI();
+                        this.closeModal('auth-modal');
+                        this.switchTab('admin');
+                        confetti();
+                        return;
+                    }
+                }
+
+                // Regular Player Login
+                this.currentUser = { username: userVal, role: 'player' };
+                this.db.set('currentUser', this.currentUser);
+                this.updateUserUI();
+                this.closeModal('auth-modal');
+            }
+
+            loginAsGuest() {
+                this.currentUser = { username: 'Guest_' + Math.floor(Math.random()*1000), role: 'player' };
+                this.db.set('currentUser', this.currentUser);
+                this.updateUserUI();
+                this.closeModal('auth-modal');
+            }
+
+            logoutDev() {
+                this.currentUser = { username: 'Guest', role: 'player' };
+                this.db.set('currentUser', this.currentUser);
+                this.updateUserUI();
+                this.switchTab('home');
+            }
+
+            renderAdminPanel() {
+                if (this.currentUser.role !== 'developer') return;
+
+                const users = this.db.get('users') || [];
+                const games = this.db.get('games') || [];
+                const chat = this.db.get('chat') || [];
+
+                document.getElementById('stat-total-users').innerText = users.length;
+                document.getElementById('stat-total-games').innerText = games.length;
+                document.getElementById('stat-total-chat').innerText = chat.length;
+
+                // Render User Table
+                document.getElementById('dev-users-table-body').innerHTML = users.map(u => `
+                    <tr>
+                        <td>${u.id}</td>
+                        <td>${u.username}</td>
+                        <td>${u.role}</td>
+                        <td>${u.score || 0}</td>
+                        <td><button class="btn btn-glass" style="padding:4px 8px; font-size:0.7rem;" onclick="app.devToggleRole(${u.id})">Toggle Role</button></td>
+                    </tr>
+                `).join('');
+            }
+
+            switchAdminSubTab(subId, btnEl) {
+                document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.admin-sub-tab').forEach(t => t.classList.remove('active'));
+                btnEl.classList.add('active');
+                document.getElementById('admin-sub-' + subId).classList.add('active');
+            }
+
+            devAddGame() {
+                const title = document.getElementById('dev-game-title').value.trim();
+                const cat = document.getElementById('dev-game-category').value;
+                const icon = document.getElementById('dev-game-icon').value.trim() || 'fa-solid fa-gamepad';
+                const desc = document.getElementById('dev-game-desc').value.trim();
+
+                if (!title) { alert('Game Title is required'); return; }
+
+                const games = this.db.get('games') || [];
+                games.push({
+                    id: 'custom-' + Date.now(),
+                    title: title,
+                    category: cat,
+                    difficulty: 'Medium',
+                    desc: desc,
+                    icon: icon,
+                    played: 0
                 });
 
-                input.value = '';
-            },
+                this.db.set('games', games);
+                this.renderGames();
+                alert('Game successfully added to Database!');
+            }
 
-            sendAIMessage() {
-                const input = document.getElementById('ai-input');
-                const userText = input.value.trim();
-                if (!userText) return;
+            devAddBookPage() {
+                const title = document.getElementById('dev-book-title').value.trim();
+                const content = document.getElementById('dev-book-content').value.trim();
+                if (!title || !content) return;
 
-                const list = document.getElementById('ai-messages-list');
-                list.insertAdjacentHTML('beforeend', `
-                <div class="message-item" style="justify-content:flex-end;">
-                    <div class="message-content" style="background:rgba(0,240,255,0.1); border-color:var(--primary);">
-                        <div class="message-text">${userText}</div>
-                    </div>
-                </div>`);
+                const book = this.db.get('book') || [];
+                book.push({ title: title, content: content });
+                this.db.set('book', book);
+                this.renderBook();
+                alert('Codex Page Added!');
+            }
 
-                input.value = '';
-                list.scrollTop = list.scrollHeight;
-
-                setTimeout(() => {
-                    const aiReply = this.generateAIResponse(userText);
-                    list.insertAdjacentHTML('beforeend', `
-                    <div class="message-item">
-                        <div class="message-avatar">AI</div>
-                        <div class="message-content">
-                            <div class="message-meta"><span class="message-author" style="color:var(--primary);">NEXUS AI</span></div>
-                            <div class="message-text">${aiReply}</div>
-                        </div>
-                    </div>`);
-                    list.scrollTop = list.scrollHeight;
-                }, 500);
-            },
-
-            generateAIResponse(msg) {
-                const lower = msg.toLowerCase();
-                if (lower.includes('bored') || lower.includes('recommend')) {
-                    const playable = gamesDatabase.filter(g => g.status === 'playable');
-                    const pick = playable[Math.floor(Math.random() * playable.length)];
-                    return `How about checking out **${pick.title}**? It's currently ${pick.players}. What kind of games do you usually prefer?`;
-                } else if (lower.includes('admin') || lower.includes('abdo') || lower.includes('event')) {
-                    return `MR ABDO's Admin Abuse event is scheduled live! Keep an eye on the top announcement bar countdown. Will you be taking part?`;
-                } else {
-                    const genericResponses = [
-                        "I'm keeping track of your session! Have you tested your reaction time in Reflex Pulse yet?",
-                        "The 3D Open World contains floating XP gems! Hop into the Open World tab and collect them for bonus levels.",
-                        "Looking to level up fast? Participating in tournaments grants double XP boosts!"
-                    ];
-                    return genericResponses[Math.floor(Math.random() * genericResponses.length)];
+            devPurgeChat() {
+                if (confirm('Are you sure you want to purge all chat history?')) {
+                    this.db.set('chat', []);
+                    this.renderChat();
                 }
-            },
+            }
 
-            launchGame(gameId) {
-                const game = gamesDatabase.find(g => g.id === gameId);
-                if (!game) return;
+            devUpdateAnnouncement() {
+                const text = document.getElementById('dev-announcement-input').value.trim();
+                if (!text) return;
+                this.db.set('announcement', text);
+                document.getElementById('announcement-text-display').innerText = text;
+                alert('System Announcement Updated!');
+            }
 
-                document.getElementById('game-modal-title').textContent = game.title;
-                document.getElementById('game-modal-desc').textContent = game.desc;
-                document.getElementById('game-modal').classList.add('active');
-
-                const canvas = document.getElementById('active-game-canvas');
-                const ctx = canvas.getContext('2d');
-
-                if (this.activeGameLoop) cancelAnimationFrame(this.activeGameLoop);
-
-                if (gameId === 'skyline-rush') {
-                    this.runSkylineRushGame(canvas, ctx);
-                } else {
-                    this.runGenericGame(canvas, ctx, game.title);
-                }
-            },
-
-            runSkylineRushGame(canvas, ctx) {
-                let carX = canvas.width / 2;
-                let carY = 320;
-                let speed = 5;
-                let score = 0;
-                let keys = {};
-
-                const onKeyDown = (e) => keys[e.key] = true;
-                const onKeyUp = (e) => keys[e.key] = false;
-
-                window.addEventListener('keydown', onKeyDown);
-                window.addEventListener('keyup', onKeyUp);
-
-                let obstacles = [{ x: Math.random() * 600 + 70, y: -50 }];
-
-                const loop = () => {
-                    ctx.fillStyle = '#0a0c14';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    ctx.fillStyle = '#161c2d';
-                    ctx.fillRect(70, 0, 600, canvas.height);
-
-                    ctx.strokeStyle = '#00f0ff';
-                    ctx.setLineDash([20, 20]);
-                    ctx.lineWidth = 4;
-                    ctx.beginPath();
-                    ctx.moveTo(canvas.width / 2, 0);
-                    ctx.lineTo(canvas.width / 2, canvas.height);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-
-                    if (keys['ArrowLeft'] || keys['a']) carX = Math.max(80, carX - 6);
-                    if (keys['ArrowRight'] || keys['d']) carX = Math.min(630, carX + 6);
-
-                    ctx.fillStyle = '#ff0055';
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = '#ff0055';
-                    ctx.fillRect(carX - 20, carY, 40, 60);
-                    ctx.shadowBlur = 0;
-
-                    obstacles.forEach(obs => {
-                        obs.y += speed;
-                        ctx.fillStyle = '#00f0ff';
-                        ctx.fillRect(obs.x - 20, obs.y, 40, 40);
-
-                        if (Math.abs(obs.x - carX) < 35 && Math.abs(obs.y - carY) < 45) {
-                            score = 0;
-                            obs.y = -100;
-                            obs.x = Math.random() * 500 + 100;
-                        }
-
-                        if (obs.y > canvas.height) {
-                            obs.y = -50;
-                            obs.x = Math.random() * 500 + 100;
-                            score += 100;
-                            SoundEngine.playScore();
-                        }
-                    });
-
-                    ctx.fillStyle = '#ffffff';
-                    ctx.font = '16px Orbitron';
-                    ctx.fillText(`SCORE: ${score}`, 90, 40);
-
-                    app.activeGameLoop = requestAnimationFrame(loop);
-                };
-                loop();
-            },
-
-            runGenericGame(canvas, ctx, title) {
-                let frame = 0;
-                const loop = () => {
-                    frame++;
-                    ctx.fillStyle = '#0e121e';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    ctx.fillStyle = '#00f0ff';
-                    ctx.font = '20px Orbitron';
-                    ctx.textAlign = 'center';
-                    ctx.fillText(`${title} - DEMO MODE`, canvas.width / 2, canvas.height / 2);
-                    ctx.font = '14px Inter';
-                    ctx.fillStyle = '#8a99ad';
-                    ctx.fillText('Press WASD or SPACE to interact', canvas.width / 2, canvas.height / 2 + 40);
-
-                    app.activeGameLoop = requestAnimationFrame(loop);
-                };
-                loop();
-            },
-
-            initOpenWorld() {
-                const canvas = document.getElementById('openworld-canvas');
+            /* --- 3D OPEN WORLD ENGINE (THREE.JS) --- */
+            init3DWorld() {
+                const canvas = document.getElementById('world-canvas');
                 if (!canvas) return;
 
                 const scene = new THREE.Scene();
-                scene.background = new THREE.Color(0x0a0c14);
-                scene.fog = new THREE.FogExp2(0x0a0c14, 0.015);
+                scene.background = new THREE.Color(0x05070d);
+                scene.fog = new THREE.FogExp2(0x05070d, 0.015);
 
                 const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
                 renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                // Lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
                 scene.add(ambientLight);
 
                 const dirLight = new THREE.DirectionalLight(0x00f0ff, 0.8);
                 dirLight.position.set(50, 100, 50);
                 scene.add(dirLight);
 
-                const groundGeo = new THREE.PlaneGeometry(200, 200, 32, 32);
-                const groundMat = new THREE.MeshStandardMaterial({ color: 0x121624, wireframe: false, roughness: 0.8 });
-                const ground = new THREE.Mesh(groundGeo, groundMat);
-                ground.rotation.x = -Math.PI / 2;
-                scene.add(ground);
+                // Grid Floor
+                const gridHelper = new THREE.GridHelper(200, 50, 0x00f0ff, 0x7000ff);
+                scene.add(gridHelper);
 
-                const grid = new THREE.GridHelper(200, 40, 0x00f0ff, 0x7000ff);
-                grid.position.y = 0.1;
-                scene.add(grid);
-
+                // Player Cube
                 const playerGeo = new THREE.BoxGeometry(2, 2, 2);
-                const playerMat = new THREE.MeshStandardMaterial({ color: 0xff0055, emissive: 0xff0055, emissiveIntensity: 0.5 });
+                const playerMat = new THREE.MeshLambertMaterial({ color: 0xff0055 });
                 const player = new THREE.Mesh(playerGeo, playerMat);
-                player.position.y = 1;
+                player.position.set(0, 1, 0);
                 scene.add(player);
 
-                const gemGeo = new THREE.OctahedronGeometry(1);
-                const gemMat = new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x00f0ff });
-                const gems = [];
+                // Secret Location: Ancient Quantum Vault Portal
+                const portalGeo = new THREE.TorusGeometry(4, 0.8, 16, 100);
+                const portalMat = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
+                const portal = new THREE.Mesh(portalGeo, portalMat);
+                portal.position.set(60, 4, -60);
+                scene.add(portal);
+
+                // Collectible Crystals
+                const crystals = [];
                 for (let i = 0; i < 10; i++) {
-                    const gem = new THREE.Mesh(gemGeo, gemMat);
-                    gem.position.set((Math.random() - 0.5) * 160, 1.5, (Math.random() - 0.5) * 160);
-                    scene.add(gem);
-                    gems.push(gem);
+                    const crysGeo = new THREE.OctahedronGeometry(1.2);
+                    const crysMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true });
+                    const crys = new THREE.Mesh(crysGeo, crysMat);
+                    crys.position.set((Math.random() - 0.5) * 120, 1.5, (Math.random() - 0.5) * 120);
+                    scene.add(crys);
+                    crystals.push(crys);
                 }
 
-                const keys = {};
-                window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
-                window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+                camera.position.set(0, 12, 20);
 
-                camera.position.set(0, 15, 25);
+                // Controls
+                const keys = {};
+                window.addEventListener('keydown', e => keys[e.code] = true);
+                window.addEventListener('keyup', e => keys[e.code] = false);
+
+                let collectedCount = 0;
+                let secretFound = false;
 
                 const animate = () => {
                     requestAnimationFrame(animate);
 
-                    if (keys['w'] || keys['arrowup']) player.position.z -= 0.5;
-                    if (keys['s'] || keys['arrowdown']) player.position.z += 0.5;
-                    if (keys['a'] || keys['arrowleft']) player.position.x -= 0.5;
-                    if (keys['d'] || keys['arrowright']) player.position.x += 0.5;
+                    // Player Movement
+                    if (keys['KeyW'] || keys['ArrowUp']) player.position.z -= 0.4;
+                    if (keys['KeyS'] || keys['ArrowDown']) player.position.z += 0.4;
+                    if (keys['KeyA'] || keys['ArrowLeft']) player.position.x -= 0.4;
+                    if (keys['KeyD'] || keys['ArrowRight']) player.position.x += 0.4;
 
                     camera.position.x = player.position.x;
-                    camera.position.z = player.position.z + 20;
+                    camera.position.z = player.position.z + 18;
                     camera.lookAt(player.position);
 
-                    gems.forEach(gem => {
-                        gem.rotation.y += 0.02;
-                        if (gem.position.distanceTo(player.position) < 2) {
-                            gem.position.set((Math.random() - 0.5) * 160, 1.5, (Math.random() - 0.5) * 160);
-                            currentUser.xp += 50;
-                            document.getElementById('user-display-level').textContent = `LVL ${currentUser.level} • ${currentUser.xp} XP`;
-                            SoundEngine.playScore();
+                    portal.rotation.y += 0.02;
+
+                    // Collect Crystals
+                    crystals.forEach((c, idx) => {
+                        c.rotation.y += 0.03;
+                        if (c.visible && player.position.distanceTo(c.position) < 3) {
+                            c.visible = false;
+                            collectedCount++;
+                            this.sound.pickup();
+                            document.getElementById('hud-crystals').innerText = `${collectedCount} / 10`;
                         }
                     });
 
-                    const coords = document.getElementById('ow-coords');
-                    if (coords) coords.textContent = `X: ${Math.round(player.position.x)} | Y: ${Math.round(player.position.y)} | Z: ${Math.round(player.position.z)}`;
+                    // Secret Discovery Check
+                    if (!secretFound && player.position.distanceTo(portal.position) < 6) {
+                        secretFound = true;
+                        this.sound.win();
+                        const toast = document.getElementById('secret-toast');
+                        toast.classList.add('active');
+                        setTimeout(() => toast.classList.remove('active'), 5000);
+                    }
 
                     renderer.render(scene, camera);
                 };
-                animate();
-            },
 
-            setupParticleBackground() {
+                animate();
+            }
+
+            resetWorldPosition() {
+                this.init3DWorld();
+            }
+
+            /* --- UTILS & AUDIO --- */
+            toggleAudio() {
+                this.sound.enabled = !this.sound.enabled;
+                document.getElementById('sound-icon').className = this.sound.enabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+            }
+
+            toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                document.getElementById('theme-icon').className = nextTheme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+            }
+
+            inviteFriends() {
+                navigator.clipboard.writeText(window.location.href);
+                confetti();
+                alert('Nexus Platform link copied to clipboard! Share with your friends!');
+            }
+
+            playSynthMusic() {
+                this.sound.win();
+                alert('Playing Cyberpunk Synthwave Music Stream!');
+            }
+
+            saveProfileSettings() {
+                const newName = document.getElementById('settings-username-input').value.trim();
+                if (newName) {
+                    this.currentUser.username = newName;
+                    this.db.set('currentUser', this.currentUser);
+                    this.updateUserUI();
+                    alert('Profile updated successfully!');
+                }
+            }
+
+            clearAppData() {
+                if (confirm('Reset all app data?')) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            }
+
+            initBgCanvas() {
                 const canvas = document.getElementById('bg-canvas');
                 const ctx = canvas.getContext('2d');
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
 
-                const particles = Array.from({ length: 40 }, () => ({
+                const stars = Array.from({length: 80}, () => ({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    radius: Math.random() * 2 + 1,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.5 + 0.1
                 }));
 
-                const render = () => {
+                const draw = () => {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = 'rgba(0, 240, 255, 0.3)';
-
-                    particles.forEach(p => {
-                        p.x += p.vx;
-                        p.y += p.vy;
-                        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
+                    ctx.fillStyle = '#00f0ff';
+                    stars.forEach(s => {
+                        s.y += s.speed;
+                        if (s.y > canvas.height) s.y = 0;
                         ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
                         ctx.fill();
                     });
-                    requestAnimationFrame(render);
+                    requestAnimationFrame(draw);
                 };
-                render();
+                draw();
             }
-        };
+        }
 
+        // Initialize Application
+        const app = new NexusApp();
         window.addEventListener('DOMContentLoaded', () => app.init());
     </script>
 </body>
