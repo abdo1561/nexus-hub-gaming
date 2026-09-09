@@ -1,15 +1,16 @@
 /* ==========================================================================
-   NEXUS: MARKET TYCOON — STANDALONE CLIENT SCRIPT
+   NEXUS: MARKET TYCOON — FULL CLIENT ENGINE (app.js)
+   Connected to Supabase Project: yvgbcckemyrqrjpbvzyn
    ========================================================================== */
 
-const SUPABASE_URL = "https://YOUR_SUPABASE_URL.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://yvgbcckemyrqrjpbvzyn.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_98Q1xbAaSOd2GwYAwCfCpg_AU487UEm";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 let activeChatTargetId = null;
 
-// SHA-256 password hash utility
+// SHA-256 hash helper for password verification
 async function hashString(str) {
     const buffer = new TextEncoder().encode(str);
     const hash = await crypto.subtle.digest('SHA-256', buffer);
@@ -36,7 +37,7 @@ async function handleLogin() {
         return showAuthError('Invalid username or password.');
     }
 
-    if (!user.is_enabled) return showAuthError('This account is disabled by server administrator.');
+    if (!user.is_enabled) return showAuthError('This operative account has been disabled.');
 
     currentUser = user;
     sessionStorage.setItem('nexus_user_id', user.id);
@@ -67,7 +68,7 @@ async function handleRegister() {
 
     if (error) return showAuthError(error.message);
 
-    // Starter Items Drop
+    // Starter items drop
     await supabase.from('inventories').insert([
         { owner_id: newUser.id, name: 'Cyberblade Prototype', rarity: 'RARE', icon: '🗡️', value: 35000, discovered_by: newUser.display_name },
         { owner_id: newUser.id, name: 'Neural Chipset', rarity: 'COMMON', icon: '💾', value: 12000, discovered_by: newUser.display_name }
@@ -171,7 +172,7 @@ async function renderAllSections() {
 }
 
 /* ==========================================================================
-   MARKETPLACE & AUCTION CONTROLLERS
+   MARKETPLACE & AUCTIONS
    ========================================================================== */
 async function renderMarketplace() {
     const grid = document.getElementById('market-listings-grid');
@@ -340,7 +341,7 @@ async function submitAuctionCreation() {
 }
 
 /* ==========================================================================
-   INVENTORY & FORGE
+   INVENTORY & LAB FORGE
    ========================================================================== */
 async function renderInventory() {
     const grid = document.getElementById('inventory-grid');
@@ -393,7 +394,7 @@ async function executeEvolveItem(itemId, currentValue, currentName) {
 }
 
 /* ==========================================================================
-   PRODUCTION FACILITIES
+   BUSINESS EMPIRE
    ========================================================================== */
 async function renderBusinesses() {
     const grid = document.getElementById('businesses-grid');
@@ -461,7 +462,7 @@ async function upgradeFacility(bizId, currentLevel) {
 }
 
 /* ==========================================================================
-   CHAT MESSAGING
+   CHAT SYSTEM
    ========================================================================== */
 async function renderMessagesContacts() {
     const sidebar = document.getElementById('chat-contacts-list');
@@ -495,8 +496,4 @@ async function renderMessagesFeed() {
         .from('messages')
         .select('*')
         .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatTargetId}),and(sender_id.eq.${activeChatTargetId},receiver_id.eq.${currentUser.id})`)
-        .order('created_at', { ascending: true });
-
-    if (!msgs) return;
-    msgs.forEach(m => {
-        const bubble =
+        .order('created_at', { ascending: tr
