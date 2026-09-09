@@ -1,12 +1,11 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS: MARKET TYCOON — SUPABASE EDITION</title>
-    <!-- Fonts & Supabase SDK -->
+    <title>NEXUS: MARKET TYCOON — FULL MULTIPLAYER + WORLD EXPANSION</title>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-dark: #07090e;
@@ -43,6 +42,7 @@
             overflow-x: hidden;
         }
 
+        /* --- TYPOGRAPHY & BUTTONS --- */
         h1, h2, h3, h4 { font-family: var(--font-head); text-transform: uppercase; letter-spacing: 1px; }
         .mono { font-family: var(--font-mono); }
         .text-cyan { color: var(--accent-cyan); }
@@ -91,6 +91,7 @@
         }
         .btn-sm { padding: 5px 10px; font-size: 0.75rem; }
 
+        /* --- HEADER & STATS BAR --- */
         #top-header {
             position: sticky;
             top: 0;
@@ -125,10 +126,15 @@
             border-radius: 30px;
         }
 
-        .stat-item { display: flex; flex-direction: column; align-items: flex-start; }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
         .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
         .stat-val { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; }
 
+        /* --- NAVIGATION TABS --- */
         #nav-tabs-bar {
             background: rgba(12, 17, 28, 0.9);
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -136,6 +142,7 @@
             overflow-x: auto;
             padding: 0 20px;
             gap: 4px;
+            scrollbar-width: thin;
         }
         .nav-tab {
             padding: 14px 18px;
@@ -159,6 +166,7 @@
             text-shadow: 0 0 8px rgba(0,240,255,0.4);
         }
 
+        /* --- MAIN VIEW CONTAINER --- */
         #app-viewport {
             max-width: 1600px;
             margin: 0 auto;
@@ -168,8 +176,10 @@
 
         .view-panel { display: none; }
         .view-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- CARDS & GRID LAYOUTS --- */
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
@@ -189,9 +199,18 @@
             border-radius: 12px;
             padding: 20px;
             backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
             position: relative;
+            overflow: hidden;
+        }
+        .nexus-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
         }
 
+        /* --- RARITY COLORS --- */
         .rarity-COMMON { color: #9e9e9e; border-color: #9e9e9e; }
         .rarity-RARE { color: #00b0ff; border-color: #00b0ff; }
         .rarity-EPIC { color: #aa00ff; border-color: #aa00ff; }
@@ -208,6 +227,7 @@
             text-transform: uppercase;
         }
 
+        /* --- ITEM CARDS --- */
         .item-card {
             background: rgba(10, 15, 25, 0.8);
             border: 1px solid rgba(255,255,255,0.1);
@@ -225,15 +245,16 @@
         }
         .item-icon {
             width: 100%;
-            height: 90px;
+            height: 100px;
             background: rgba(0,0,0,0.4);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
         }
 
+        /* --- MODAL DIALOGS --- */
         .modal-backdrop {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -252,10 +273,12 @@
             box-shadow: 0 0 40px rgba(0,240,255,0.2);
             border-radius: 14px;
             width: 90%;
-            max-width: 500px;
+            max-width: 520px;
             padding: 28px;
+            position: relative;
         }
 
+        /* --- LIVE TICKER & ACTIVITY FEED --- */
         .live-ticker {
             background: rgba(0,0,0,0.6);
             border-bottom: 1px solid var(--border-glow);
@@ -264,15 +287,16 @@
             font-size: 0.8rem;
             display: flex;
             gap: 30px;
-            overflow-x: auto;
+            overflow: hidden;
             white-space: nowrap;
         }
         .ticker-item { display: inline-flex; gap: 8px; align-items: center; }
 
+        /* --- CHAT SYSTEM --- */
         .chat-container {
             display: grid;
-            grid-template-columns: 240px 1fr;
-            height: 550px;
+            grid-template-columns: 280px 1fr;
+            height: 680px;
             background: rgba(10, 15, 25, 0.9);
             border: 1px solid var(--border-glow);
             border-radius: 12px;
@@ -284,11 +308,17 @@
             overflow-y: auto;
         }
         .chat-contact {
-            padding: 12px;
+            padding: 14px 18px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s;
         }
-        .chat-contact.active { background: rgba(0,240,255,0.1); }
+        .chat-contact:hover, .chat-contact.active {
+            background: rgba(0,240,255,0.1);
+        }
         .chat-main { display: flex; flex-direction: column; height: 100%; }
         .chat-messages {
             flex: 1;
@@ -296,204 +326,495 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
-        .msg-bubble { max-width: 75%; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; }
-        .msg-player { align-self: flex-end; background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); }
-        .msg-other { align-self: flex-start; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); }
+        .msg-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .msg-player {
+            align-self: flex-end;
+            background: rgba(0, 240, 255, 0.15);
+            border: 1px solid var(--accent-cyan);
+            border-bottom-right-radius: 2px;
+        }
+        .msg-other {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom-left-radius: 2px;
+        }
+
+        /* --- STOCK CHART CANVAS --- */
+        #stock-chart-canvas {
+            width: 100%;
+            height: 280px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        /* --- CITY MAP GRID --- */
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+        .city-location {
+            background: rgba(15, 22, 38, 0.9);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .city-location:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.2);
+        }
+        .city-icon { font-size: 3rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <!-- TICKER -->
-    <div class="live-ticker" id="ticker-bar"></div>
+    <!-- LIVE WORLD EVENT BANNER -->
+    <div id="world-event-banner" style="display:none; background: linear-gradient(90deg, #ff0055, #9d4edd); text-align: center; padding: 8px; font-weight: 800; font-family: var(--font-head); letter-spacing: 1px;">
+        🚨 GLOBAL EVENT ACTIVE: <span id="event-title-text">MARKET APOCALYPSE</span> — <span id="event-desc-text">Extreme price volatility across all stock indices!</span>
+    </div>
+
+    <!-- LIVE TICKER BAR -->
+    <div class="live-ticker">
+        <div class="ticker-item"><span class="text-cyan">NEXUS TECH (NXT):</span> <span id="ticker-nxt" class="mono text-green">$420.50 (+4.2%)</span></div>
+        <div class="ticker-item"><span class="text-cyan">QUANTUM MOTORS (QTM):</span> <span id="ticker-qtm" class="mono text-red">$185.10 (-1.8%)</span></div>
+        <div class="ticker-item"><span class="text-cyan">TITAN ELECTRONICS (TTE):</span> <span id="ticker-tte" class="mono text-green">$890.00 (+8.5%)</span></div>
+        <div class="ticker-item"><span class="text-cyan">NOVA GAMING (NVG):</span> <span id="ticker-nvg" class="mono text-green">$112.40 (+0.4%)</span></div>
+        <div class="ticker-item"><span class="text-cyan">VERTEX ENERGY (VTE):</span> <span id="ticker-vte" class="mono text-red">$310.00 (-5.1%)</span></div>
+    </div>
 
     <!-- MAIN HEADER -->
     <header id="top-header">
         <div class="brand-logo">
-            <span>⚡</span>
-            <div>NEXUS <span style="font-size:0.7rem; color:var(--text-muted); display:block; letter-spacing:2px;">SUPABASE LIVE</span></div>
+            <span style="font-size:1.8rem;">⚡</span>
+            <div>NEXUS <span style="font-size:0.7rem; color:var(--text-muted); display:block; letter-spacing:2px;">MARKET TYCOON</span></div>
         </div>
 
         <div class="user-stats-bar">
             <div class="stat-item">
                 <span class="stat-label">OPERATIVE</span>
-                <span id="stat-username" class="stat-val text-cyan">Connecting...</span>
+                <span id="stat-username" class="stat-val text-cyan">Abdo (ADMIN)</span>
             </div>
             <div class="stat-item">
                 <span class="stat-label">CASH BALANCE</span>
-                <span id="stat-cash" class="stat-val text-gold">$0</span>
+                <span id="stat-cash" class="stat-val text-gold">$500,000</span>
             </div>
             <div class="stat-item">
                 <span class="stat-label">LEVEL / XP</span>
-                <span id="stat-level" class="stat-val text-green">Lvl 1</span>
+                <span id="stat-level" class="stat-val text-green">Lvl 15 (2,500 XP)</span>
             </div>
             <div class="stat-item">
                 <span class="stat-label">PRESTIGE</span>
-                <span id="stat-prestige" class="stat-val text-purple">Prestige 0</span>
+                <span id="stat-prestige" class="stat-val text-purple">Prestige I</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">STATUS</span>
+                <span class="stat-val text-green">🟢 ONLINE</span>
             </div>
         </div>
 
         <div style="display:flex; gap:10px;">
-            <button class="btn btn-sm btn-gold" onclick="openSwitchAccountModal()">🔄 SWITCH USER</button>
+            <button class="btn btn-sm btn-gold" onclick="openSwitchAccountModal()">🔄 SWITCH ACCOUNT</button>
             <button class="btn btn-sm btn-red" onclick="executeLogout()">LOG OUT</button>
         </div>
     </header>
 
     <!-- NAVIGATION TABS -->
     <nav id="nav-tabs-bar">
-        <div class="nav-tab active" data-tab="market" onclick="switchTab('market')">🛒 SHARED MARKET</div>
-        <div class="nav-tab" data-tab="auctions" onclick="switchTab('auctions')">🏛️ LIVE AUCTIONS</div>
-        <div class="nav-tab" data-tab="inventory" onclick="switchTab('inventory')">📦 INVENTORY & LAB</div>
-        <div class="nav-tab" data-tab="businesses" onclick="switchTab('businesses')">🏢 BUSINESS EMPIRE</div>
-        <div class="nav-tab" data-tab="messages" onclick="switchTab('messages')">💬 CLOUD CHAT</div>
-        <div class="nav-tab" data-tab="leaderboards" onclick="switchTab('leaderboards')">🏆 GLOBAL RANKS</div>
-        <div id="admin-nav-tab" class="nav-tab text-gold" data-tab="admin" style="display:none;" onclick="switchTab('admin')">👑 ADMIN DASHBOARD</div>
+        <div class="nav-tab active" onclick="switchTab('city')">🏙️ NEXUS CITY</div>
+        <div class="nav-tab" onclick="switchTab('market')">🛒 MARKETPLACE</div>
+        <div class="nav-tab" onclick="switchTab('auctions')">🏛️ AUCTIONS</div>
+        <div class="nav-tab" onclick="switchTab('trade')">🤝 DIRECT TRADE</div>
+        <div class="nav-tab" onclick="switchTab('businesses')">🏢 BUSINESSES</div>
+        <div class="nav-tab" onclick="switchTab('stocks')">📈 STOCKS & INVESTMENTS</div>
+        <div class="nav-tab" onclick="switchTab('inventory')">📦 INVENTORY & FACTORY</div>
+        <div class="nav-tab" onclick="switchTab('messages')">💬 MESSAGES <span id="unread-badge" style="background:var(--accent-red); color:#fff; border-radius:50%; padding:2px 6px; font-size:0.65rem; display:none;">0</span></div>
+        <div class="nav-tab" onclick="switchTab('collections')">🎨 COLLECTIONS</div>
+        <div class="nav-tab" onclick="switchTab('leaderboards')">🏆 LEADERBOARDS & RECORDS</div>
+        <div class="nav-tab" onclick="switchTab('challenges')">🎯 CHALLENGES & SEASONS</div>
+        <div class="nav-tab" onclick="switchTab('prestige')">🎖️ PRESTIGE 2.0</div>
+        <div id="admin-nav-tab" class="nav-tab text-gold" style="display:none;" onclick="switchTab('admin')">👑 ADMIN CONTROL</div>
     </nav>
 
-    <!-- VIEWPORTS -->
+    <!-- MAIN CONTENT VIEWPORT -->
     <main id="app-viewport">
-        <!-- 1. MARKETPLACE -->
-        <section id="view-market" class="view-panel active">
+
+        <!-- 1. NEXUS CITY MAP PANEL -->
+        <section id="view-city" class="view-panel active">
+            <h2 style="margin-bottom: 8px;">🏙️ NEXUS CITY DISTRICTS</h2>
+            <p style="color:var(--text-muted); margin-bottom: 24px;">Explore real-time facilities, industrial hub, and trading centers across the metropolis.</p>
+            
+            <div class="city-grid">
+                <div class="city-location" onclick="switchTab('market')">
+                    <div class="city-icon">🛒</div>
+                    <h3>Marketplace</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Buy & sell items with real friends and competitor NPCs.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('auctions')">
+                    <div class="city-icon">🏛️</div>
+                    <h3>Auction House</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">High-stakes competitive bidding arena for rare loot.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('businesses')">
+                    <div class="city-icon">🏢</div>
+                    <h3>Business District</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Build Warehouses, Factories, and Trading Firms.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('stocks')">
+                    <div class="city-icon">📈</div>
+                    <h3>Investment Center</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Trade 8 live corporate stock shares in real-time.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('inventory')">
+                    <div class="city-icon">🏭</div>
+                    <h3>Industrial District</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Evolve items from Prototype to Prime tier.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('collections')">
+                    <div class="city-icon">🎨</div>
+                    <h3>Collector District</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Display rare discoveries and complete set rewards.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('trade')">
+                    <div class="city-icon">🤝</div>
+                    <h3>Trade Exchange</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Atomic direct item-for-cash swaps between friends.</p>
+                </div>
+                <div class="city-location" onclick="alert('🏦 NEXUS BANK: Financial vault active. Earn 2.5% passive interest hourly on unspent cash balance!')">
+                    <div class="city-icon">🏦</div>
+                    <h3>Nexus Bank</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Secure cash reserves & vault protection.</p>
+                </div>
+                <div class="city-location" onclick="alert('🔬 RESEARCH LAB: Item evolution blueprints & discovery scanner active!')">
+                    <div class="city-icon">🔬</div>
+                    <h3>Research Lab</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Unlock hidden recipes and secret item discoveries.</p>
+                </div>
+                <div class="city-location" onclick="alert('🚗 VEHICLE MARKET: Hypercars & Flying Transport auctions coming next season!')">
+                    <div class="city-icon">🚗</div>
+                    <h3>Vehicle Market</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Luxury transport drops and vehicular collectibles.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MARKETPLACE PANEL -->
+        <section id="view-market" class="view-panel">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <div>
-                    <h2>🛒 SUPABASE LIVE MARKETPLACE</h2>
-                    <p style="color:var(--text-muted);">Atomic transactions synced directly across all players.</p>
+                    <h2>🛒 SHARED MARKETPLACE</h2>
+                    <p style="color:var(--text-muted);">Real player listings & intelligent NPC competitor offers.</p>
                 </div>
                 <button class="btn btn-gold" onclick="openListItemModal()">+ CREATE MARKET LISTING</button>
             </div>
-            <div id="market-listings-grid" class="grid-4"></div>
+
+            <div id="market-listings-grid" class="grid-4">
+                <!-- Populated dynamically -->
+            </div>
         </section>
 
-        <!-- 2. AUCTIONS -->
+        <!-- 3. AUCTIONS PANEL -->
         <section id="view-auctions" class="view-panel">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <div>
-                    <h2>🏛️ LIVE AUCTIONS</h2>
-                    <p style="color:var(--text-muted);">Synchronized high-stakes bidding.</p>
+                    <h2>🏛️ LIVE AUCTION HOUSE</h2>
+                    <p style="color:var(--text-muted);">Bid against friends and NPC competitors before the timer expires.</p>
                 </div>
                 <button class="btn btn-gold" onclick="openStartAuctionModal()">+ START NEW AUCTION</button>
             </div>
-            <div id="auctions-grid" class="grid-3"></div>
-        </section>
 
-        <!-- 3. INVENTORY -->
-        <section id="view-inventory" class="view-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <div>
-                    <h2>📦 INVENTORY & UPGRADE FORGE</h2>
-                    <p style="color:var(--text-muted);">Evolve prototypes to Prime artifacts.</p>
-                </div>
-                <button class="btn btn-gold" onclick="discoverNewItem()">🎲 DISCOVER NEW ITEM</button>
+            <div id="auctions-grid" class="grid-3">
+                <!-- Populated dynamically -->
             </div>
-            <div id="inventory-grid" class="grid-4"></div>
         </section>
 
-        <!-- 4. BUSINESSES -->
-        <section id="view-businesses" class="view-panel">
-            <h2>🏢 PRODUCTION FACILITIES</h2>
-            <p style="color:var(--text-muted); margin-bottom:20px;">Automated profit generated directly to your database balance.</p>
-            <div id="businesses-grid" class="grid-3"></div>
-        </section>
+        <!-- 4. DIRECT TRADE PANEL -->
+        <section id="view-trade" class="view-panel">
+            <h2>🤝 DIRECT PLAYER-TO-PLAYER TRADE</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Atomic lock-and-confirm trading system. No item duplication or race conditions.</p>
 
-        <!-- 5. CHAT -->
-        <section id="view-messages" class="view-panel">
-            <h2 style="margin-bottom:16px;">💬 GLOBAL & DIRECT MESSAGES</h2>
-            <div class="chat-container">
-                <div class="chat-sidebar" id="chat-contacts-list"></div>
-                <div class="chat-main">
-                    <div style="padding:14px; background:rgba(0,0,0,0.3); border-bottom:1px solid rgba(255,255,255,0.08);" id="chat-target-header" class="text-cyan">
-                        Select a contact
+            <div class="grid-2">
+                <div class="nexus-card">
+                    <h3 class="text-cyan">YOUR OFFERING</h3>
+                    <div style="margin: 15px 0;">
+                        <label class="stat-label">OFFER CASH ($)</label>
+                        <input type="number" id="trade-my-cash" placeholder="0" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" onchange="updateTradeState()" />
                     </div>
-                    <div class="chat-messages" id="chat-messages-box"></div>
+                    <label class="stat-label">SELECT ITEMS TO OFFER</label>
+                    <div id="trade-my-items-list" style="max-height:200px; overflow-y:auto; border:1px solid rgba(255,255,255,0.1); padding:10px; border-radius:6px; margin-top:8px;">
+                        <!-- Checkboxes dynamically -->
+                    </div>
+                </div>
+
+                <div class="nexus-card">
+                    <h3 class="text-gold">PARTNER TARGET & OFFER</h3>
+                    <div style="margin: 15px 0;">
+                        <label class="stat-label">SELECT TRADE PARTNER</label>
+                        <select id="trade-partner-select" style="width:100%; padding:10px; background:rgba(0,0,0,0.8); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" onchange="populatePartnerTradeItems()">
+                            <!-- Real players populate dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="stat-label">REQUESTED CASH ($)</label>
+                        <input type="number" id="trade-partner-cash" placeholder="0" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+                    </div>
+                    <label class="stat-label" style="margin-top:15px; display:block;">SELECT ITEMS TO REQUEST</label>
+                    <div id="trade-partner-items-list" style="max-height:200px; overflow-y:auto; border:1px solid rgba(255,255,255,0.1); padding:10px; border-radius:6px; margin-top:8px;">
+                        <!-- Partner items dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:24px;">
+                <button class="btn btn-gold" style="font-size:1.1rem; padding:14px 40px;" onclick="executeDirectTrade()">🔒 LOCK & EXECUTE ATOMIC TRADE</button>
+            </div>
+        </section>
+
+        <!-- 5. BUSINESSES PANEL -->
+        <section id="view-businesses" class="view-panel">
+            <h2>🏢 PLAYER-OWNED BUSINESS EMPIRE</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Purchase and upgrade revenue-generating facilities across Nexus City.</p>
+
+            <div id="businesses-grid" class="grid-3">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- 6. STOCKS & INVESTMENT MARKET PANEL -->
+        <section id="view-stocks" class="view-panel">
+            <h2>📈 NEXUS INVESTMENT EXCHANGE</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Buy and sell corporate shares using in-game CASH. Real-time candlestick movement.</p>
+
+            <div class="grid-3" style="grid-template-columns: 2fr 1fr; gap:20px;">
+                <div class="nexus-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <h3 id="selected-stock-title" class="text-cyan">NEXUS TECH (NXT)</h3>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn btn-sm" onclick="setChartTimeframe('1H')">1H</button>
+                            <button class="btn btn-sm" onclick="setChartTimeframe('6H')">6H</button>
+                            <button class="btn btn-sm" onclick="setChartTimeframe('24H')">24H</button>
+                            <button class="btn btn-sm" onclick="setChartTimeframe('7D')">7D</button>
+                        </div>
+                    </div>
+                    <canvas id="stock-chart-canvas"></canvas>
+                </div>
+
+                <div class="nexus-card">
+                    <h3>TRADE SHARES</h3>
+                    <div style="margin:15px 0;">
+                        <span class="stat-label">CURRENT PRICE</span>
+                        <div id="selected-stock-price" class="mono text-gold" style="font-size:1.6rem;">$420.50</div>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label class="stat-label">SHARES QUANTITY</label>
+                        <input type="number" id="stock-shares-input" value="10" min="1" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn-green" style="flex:1;" onclick="executeStockBuy()">BUY SHARES</button>
+                        <button class="btn btn-red" style="flex:1;" onclick="executeStockSell()">SELL SHARES</button>
+                    </div>
+
+                    <h4 style="margin-top:24px; margin-bottom:10px;">YOUR HOLDINGS</h4>
+                    <div id="user-stock-holdings" class="mono" style="font-size:0.9rem; color:var(--text-muted);">
+                        No active stock portfolio.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. INVENTORY & FACTORY PANEL -->
+        <section id="view-inventory" class="view-panel">
+            <h2>📦 INVENTORY & INDUSTRIAL FACTORY</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Manage items, evolve gear tiers, and inspect ownership history provenance.</p>
+
+            <div id="inventory-grid" class="grid-4">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- 8. MESSAGES & REAL CHAT PANEL -->
+        <section id="view-messages" class="view-panel">
+            <h2 style="margin-bottom:16px;">💬 REAL MULTIPLAYER MESSAGES</h2>
+            
+            <div class="chat-container">
+                <div class="chat-sidebar" id="chat-contacts-list">
+                    <!-- Dynamic contact list -->
+                </div>
+
+                <div class="chat-main">
+                    <div style="padding:16px; background:rgba(0,0,0,0.3); border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+                        <div id="chat-current-target-name" style="font-weight:700; font-family:var(--font-head);" class="text-cyan">Select a Contact</div>
+                        <span id="chat-online-badge" style="font-size:0.75rem;" class="text-green">🟢 ACTIVE SESSION</span>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages-box">
+                        <!-- Messages dynamically -->
+                    </div>
+
                     <div style="padding:16px; background:rgba(0,0,0,0.4); display:flex; gap:12px;">
-                        <input type="text" id="chat-input-text" placeholder="Type message..." style="flex:1; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" onkeypress="if(event.key==='Enter') sendRealChatMessage()" />
+                        <input type="text" id="chat-input-text" placeholder="Type message to real friend..." style="flex:1; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" onkeypress="if(event.key==='Enter') sendRealChatMessage()" />
                         <button class="btn" onclick="sendRealChatMessage()">SEND 🚀</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 6. LEADERBOARDS -->
-        <section id="view-leaderboards" class="view-panel">
-            <h2>🏆 LIVE LEADERBOARD</h2>
-            <div class="nexus-card" style="margin-top:20px;">
-                <table style="width:100%; border-collapse:collapse; font-family:var(--font-mono);">
-                    <thead>
-                        <tr style="border-bottom:1px solid var(--border-glow); text-align:left; color:var(--text-muted); font-size:0.8rem;">
-                            <th style="padding:10px;">RANK</th>
-                            <th>OPERATIVE</th>
-                            <th>CASH</th>
-                            <th>LEVEL</th>
-                            <th>PRESTIGE</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-body"></tbody>
-                </table>
+        <!-- 9. COLLECTIONS PANEL -->
+        <section id="view-collections" class="view-panel">
+            <h2>🎨 DISCOVERY COLLECTIONS</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Discover set items to claim permanent bonuses and CASH payouts.</p>
+
+            <div id="collections-list" class="grid-3">
+                <!-- Dynamic collections -->
             </div>
         </section>
 
-        <!-- 7. ADMIN DASHBOARD -->
-        <section id="view-admin" class="view-panel">
-            <h2 class="text-gold">👑 SUPABASE MASTER CONTROLS</h2>
-            <div class="grid-2" style="margin-top:20px;">
+        <!-- 10. LEADERBOARDS PANEL -->
+        <section id="view-leaderboards" class="view-panel">
+            <h2>🏆 GLOBAL LEADERBOARDS & WORLD RECORDS</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Real player stats persisted across the shared Nexus universe.</p>
+
+            <div class="grid-2">
                 <div class="nexus-card">
-                    <h3>GRANT EMERGENCY FUNDS</h3>
-                    <div style="margin:15px 0;">
-                        <input type="text" id="admin-target-user" placeholder="Target username" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px; margin-bottom:10px;" />
-                        <input type="number" id="admin-cash-amount" placeholder="Amount ($)" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+                    <h3 class="text-gold">GLOBAL NET WORTH RANKINGS</h3>
+                    <table style="width:100%; border-collapse:collapse; margin-top:15px; font-family:var(--font-mono);">
+                        <thead>
+                            <tr style="border-bottom:1px solid var(--border-glow); text-align:left; color:var(--text-muted); font-size:0.8rem;">
+                                <th style="padding:8px;">RANK</th>
+                                <th>PLAYER</th>
+                                <th>CASH</th>
+                                <th>PRESTIGE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                            <!-- Dynamic leaderboard rows -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="nexus-card">
+                    <h3 class="text-cyan">WORLD RECORDS</h3>
+                    <div id="world-records-list" style="margin-top:15px; display:flex; flex-direction:column; gap:12px; font-family:var(--font-mono);">
+                        <!-- Records dynamically -->
                     </div>
-                    <button class="btn btn-gold" onclick="executeAdminCashGrant()">SEND CASH TRANSFER</button>
                 </div>
             </div>
         </section>
+
+        <!-- 11. CHALLENGES PANEL -->
+        <section id="view-challenges" class="view-panel">
+            <h2>🎯 DAILY & SEASONAL CHALLENGES</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Season 1: MARKET MOGULS is currently active!</p>
+
+            <div id="challenges-grid" class="grid-3">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- 12. PRESTIGE PANEL -->
+        <section id="view-prestige" class="view-panel">
+            <h2>🎖️ PRESTIGE 2.0 SYSTEM</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Reset cash & normal items to unlock permanent multiplier perks and secret tier items.</p>
+
+            <div class="nexus-card" style="max-width:600px; margin:0 auto; text-align:center;">
+                <div style="font-size:4rem; margin-bottom:10px;">👑</div>
+                <h3 class="text-purple" style="font-size:1.8rem; margin-bottom:10px;">CURRENT PRESTIGE: <span id="prestige-current-lvl">0</span></h3>
+                <p style="margin-bottom:20px;">Requirement to Prestige: <strong>$1,000,000 CASH</strong></p>
+                <button class="btn btn-gold" style="font-size:1.1rem; padding:14px 30px;" onclick="executePrestigeReset()">🎖️ PRESTIGE NOW (GAIN PERMANENT +5% PROFIT BOOST)</button>
+            </div>
+        </section>
+
+        <!-- 13. ADMIN PANEL (EXCLUSIVE TO ABDO) -->
+        <section id="view-admin" class="view-panel">
+            <h2 class="text-gold">👑 ADMIN PLAYER MANAGEMENT DASHBOARD</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Exclusive server-authoritative controls for Main Owner: Abdo.</p>
+
+            <div class="grid-2">
+                <div class="nexus-card">
+                    <h3>SERVER COMMAND CONSOLE</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Type admin commands e.g. /givecash albarra 500000</p>
+                    <div style="display:flex; gap:10px; margin-bottom:15px;">
+                        <input type="text" id="admin-cmd-input" placeholder="/givecash albarra 100000" style="flex:1; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--accent-gold); color:#fff; border-radius:6px;" />
+                        <button class="btn btn-gold" onclick="executeAdminCommand()">EXECUTE</button>
+                    </div>
+                    
+                    <h4>ADMIN ABUSE EVENTS</h4>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+                        <button class="btn btn-sm btn-gold" onclick="triggerAdminEvent('CASH_RAIN')">💸 CASH RAIN</button>
+                        <button class="btn btn-sm btn-gold" onclick="triggerAdminEvent('CRATE_STORM')">📦 CRATE STORM</button>
+                        <button class="btn btn-sm btn-red" onclick="triggerAdminEvent('MARKET_CRASH')">📉 MARKET CRASH</button>
+                        <button class="btn btn-sm" onclick="triggerAdminEvent('MARKET_BOOM')">📈 MARKET BOOM</button>
+                    </div>
+                </div>
+
+                <div class="nexus-card">
+                    <h3>REAL PLAYER MANAGEMENT</h3>
+                    <div id="admin-players-list" style="max-height:300px; overflow-y:auto; font-family:var(--font-mono); font-size:0.85rem;">
+                        <!-- Player management list -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- FIXED AUTHENTICATION MODAL -->
+    <!-- ACCOUNT LOGIN & SWITCHER MODAL -->
     <div id="login-modal" class="modal-backdrop active">
         <div class="modal-box" style="text-align:center;">
-            <h2 class="text-cyan" style="margin-bottom:8px;">NEXUS NETWORK AUTH</h2>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Log in or register an operative profile directly to Supabase.</p>
+            <h2 class="text-cyan" style="font-size:1.8rem; margin-bottom:8px;">NEXUS NETWORK LOGIN</h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Enter real player credentials to authenticate session.</p>
 
             <div style="text-align:left; margin-bottom:12px;">
                 <label class="stat-label">USERNAME</label>
-                <input type="text" id="auth-username" placeholder="abdo, albarra, yousef..." style="width:100%; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+                <input type="text" id="login-user" placeholder="abdo, albarra, yousef, zayed..." style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px; font-family:var(--font-mono);" />
             </div>
 
             <div style="text-align:left; margin-bottom:20px;">
                 <label class="stat-label">PASSWORD</label>
-                <input type="password" id="auth-password" placeholder="••••••••" style="width:100%; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+                <input type="password" id="login-pass" placeholder="••••••••" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
             </div>
 
-            <div style="display:flex; gap:10px;">
-                <button class="btn btn-gold" style="flex:1; padding:12px;" onclick="handleLogin()">LOG IN</button>
-                <button class="btn" style="flex:1; padding:12px;" onclick="handleRegister()">REGISTER</button>
-            </div>
+            <button class="btn btn-gold" style="width:100%; padding:14px;" onclick="executeLogin()">AUTHENTICATE & LOG IN</button>
+            <div id="login-msg" style="margin-top:12px; font-size:0.85rem; color:var(--accent-red); display:none;"></div>
 
-            <p id="auth-error" class="text-red mono" style="margin-top:14px; font-size:0.8rem; min-height:16px;"></p>
+            <div style="margin-top:20px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1); font-size:0.75rem; color:var(--text-muted); text-align:left;">
+                💡 <strong>Pre-configured Accounts:</strong><br>
+                • <strong>abdo</strong> (Owner/Admin) | Pass: <code>Nexus@2026!</code><br>
+                • <strong>albarra</strong> (New Real Player) | Temp Pass: <code>Nexus@2026Barra!</code><br>
+                • Friends: <code>yousef</code>, <code>zayed</code>, <code>ibrahim</code>, <code>mahmoud</code>, <code>saif</code>, <code>yahya</code>, <code>faisal</code>, <code>sultan</code>
+            </div>
         </div>
     </div>
 
-    <!-- LIST ITEM ON MARKET MODAL -->
+    <!-- LIST ITEM MODAL -->
     <div id="list-item-modal" class="modal-backdrop">
         <div class="modal-box">
-            <h2 class="text-cyan" style="margin-bottom:16px;">+ CREATE MARKET LISTING</h2>
-
-            <div style="text-align:left; margin-bottom:12px;">
-                <label class="stat-label">SELECT ITEM</label>
-                <select id="list-item-select" style="width:100%; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;"></select>
+            <h3 class="text-cyan" style="margin-bottom:15px;">LIST ITEM ON MARKETPLACE</h3>
+            <div style="margin-bottom:15px;">
+                <label class="stat-label">SELECT INVENTORY ITEM</label>
+                <select id="list-item-select" style="width:100%; padding:10px; background:rgba(0,0,0,0.8); border:1px solid var(--border-glow); color:#fff; border-radius:6px;"></select>
             </div>
-
-            <div style="text-align:left; margin-bottom:20px;">
-                <label class="stat-label">PRICE ($)</label>
-                <input type="number" id="list-item-price" min="1" placeholder="e.g. 5000" style="width:100%; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+            <div style="margin-bottom:20px;">
+                <label class="stat-label">LISTING PRICE ($ CASH)</label>
+                <input type="number" id="list-item-price" placeholder="100000" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
             </div>
-
-            <p id="list-item-error" class="text-red mono" style="margin-bottom:12px; font-size:0.8rem; min-height:14px;"></p>
-
             <div style="display:flex; gap:10px;">
-                <button class="btn btn-gold" style="flex:1;" onclick="submitListItem()">CREATE LISTING</button>
-                <button class="btn btn-red" style="flex:1;" onclick="closeModal('list-item-modal')">CANCEL</button>
+                <button class="btn btn-gold" style="flex:1;" onclick="submitMarketListing()">PUBLISH LISTING</button>
+                <button class="btn btn-red" onclick="closeModal('list-item-modal')">CANCEL</button>
             </div>
         </div>
     </div>
@@ -501,644 +822,816 @@
     <!-- START AUCTION MODAL -->
     <div id="start-auction-modal" class="modal-backdrop">
         <div class="modal-box">
-            <h2 class="text-cyan" style="margin-bottom:16px;">+ START NEW AUCTION</h2>
-
-            <div style="text-align:left; margin-bottom:12px;">
-                <label class="stat-label">SELECT ITEM</label>
-                <select id="auction-item-select" style="width:100%; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;"></select>
+            <h3 class="text-gold" style="margin-bottom:15px;">CREATE LIVE AUCTION</h3>
+            <div style="margin-bottom:15px;">
+                <label class="stat-label">SELECT ITEM TO AUCTION</label>
+                <select id="auction-item-select" style="width:100%; padding:10px; background:rgba(0,0,0,0.8); border:1px solid var(--border-glow); color:#fff; border-radius:6px;"></select>
             </div>
-
-            <div style="text-align:left; margin-bottom:12px;">
-                <label class="stat-label">STARTING BID ($)</label>
-                <input type="number" id="auction-start-bid" min="1" placeholder="e.g. 2000" style="width:100%; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+            <div style="margin-bottom:20px;">
+                <label class="stat-label">STARTING BID ($ CASH)</label>
+                <input type="number" id="auction-start-bid" placeholder="50000" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
             </div>
-
-            <div style="text-align:left; margin-bottom:20px;">
-                <label class="stat-label">DURATION (HOURS)</label>
-                <input type="number" id="auction-duration" min="1" max="72" value="24" style="width:100%; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
-            </div>
-
-            <p id="auction-start-error" class="text-red mono" style="margin-bottom:12px; font-size:0.8rem; min-height:14px;"></p>
-
             <div style="display:flex; gap:10px;">
-                <button class="btn btn-gold" style="flex:1;" onclick="submitStartAuction()">START AUCTION</button>
-                <button class="btn btn-red" style="flex:1;" onclick="closeModal('start-auction-modal')">CANCEL</button>
+                <button class="btn btn-gold" style="flex:1;" onclick="submitAuctionCreation()">START AUCTION</button>
+                <button class="btn btn-red" onclick="closeModal('start-auction-modal')">CANCEL</button>
             </div>
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATIONS -->
-    <div id="toast-container" style="position:fixed; bottom:20px; right:20px; z-index:2000; display:flex; flex-direction:column; gap:10px;"></div>
-
+    <!-- GAME ENGINE & MULTIPLAYER LOGIC SCRIPT -->
     <script>
-    /* =========================================================
-       NEXUS: MARKET TYCOON — SUPABASE EDITION — app logic
-       ========================================================= */
+        /* ==========================================================================
+           1. SHARED DATABASE ENGINE & PRE-LOADED ACCOUNTS
+           ========================================================================== */
+        
+        const REALTIME_CHANNEL = new BroadcastChannel('nexus_multiplayer_world_2026');
 
-    // ---- 1. SUPABASE CONFIG --------------------------------------------
-    // Fill these in from Supabase dashboard → Project Settings → API
-    const SUPABASE_URL = 'https://yvgbcckemyrqrjpbvzyn.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_98Q1xbAaSOd2GwYAwCfCpg_AU487UEm';
-
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // ---- 2. APP STATE ----------------------------------------------------
-    let currentUser = null;          // logged-in profiles row
-    let activeTab = 'market';
-    let activeChatContactId = null;
-    let realtimeChannels = [];
-
-    // ---- 3. UTILITIES -----------------------------------------------------
-    function formatCash(n) {
-        n = Number(n) || 0;
-        return '$' + Math.round(n).toLocaleString('en-US');
-    }
-
-    function timeLeft(expiresAt) {
-        const ms = new Date(expiresAt) - new Date();
-        if (ms <= 0) return 'ENDED';
-        const h = Math.floor(ms / 3600000);
-        const m = Math.floor((ms % 3600000) / 60000);
-        return h > 0 ? `${h}h ${m}m` : `${m}m`;
-    }
-
-    async function sha256Hex(text) {
-        const enc = new TextEncoder().encode(text);
-        const buf = await crypto.subtle.digest('SHA-256', enc);
-        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    function showToast(message, type = 'cyan') {
-        const box = document.getElementById('toast-container');
-        const colors = { cyan: 'var(--accent-cyan)', green: 'var(--accent-neon-green)', red: 'var(--accent-red)', gold: 'var(--accent-gold)' };
-        const el = document.createElement('div');
-        el.className = 'mono';
-        el.style.cssText = `background:rgba(7,9,14,0.95); border:1px solid ${colors[type] || colors.cyan}; color:#fff; padding:12px 18px; border-radius:8px; font-size:0.85rem; box-shadow:0 4px 20px rgba(0,0,0,0.5); max-width:320px;`;
-        el.textContent = message;
-        box.appendChild(el);
-        setTimeout(() => el.remove(), 3800);
-    }
-
-    function openModal(id) { document.getElementById(id).classList.add('active'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-    function rarityBadge(rarity) {
-        return `<span class="rarity-badge rarity-${rarity}">${rarity}</span>`;
-    }
-
-    function escapeHtml(str) {
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    }
-
-    // ---- 4. AUTH -----------------------------------------------------------
-    async function handleLogin() {
-        const username = document.getElementById('auth-username').value.trim();
-        const password = document.getElementById('auth-password').value;
-        const errEl = document.getElementById('auth-error');
-        errEl.textContent = '';
-
-        if (!username || !password) { errEl.textContent = 'Enter a username and password.'; return; }
-
-        const { data: profile, error } = await sb.from('profiles').select('*').eq('username', username).maybeSingle();
-        if (error || !profile) { errEl.textContent = 'Invalid username or password.'; return; }
-        if (!profile.is_enabled) { errEl.textContent = 'This account has been disabled.'; return; }
-
-        const hash = await sha256Hex(password);
-        if (hash !== profile.password_hash) { errEl.textContent = 'Invalid username or password.'; return; }
-
-        currentUser = profile;
-        onLoginSuccess();
-    }
-
-    async function handleRegister() {
-        const username = document.getElementById('auth-username').value.trim();
-        const password = document.getElementById('auth-password').value;
-        const errEl = document.getElementById('auth-error');
-        errEl.textContent = '';
-
-        if (username.length < 3) { errEl.textContent = 'Username must be at least 3 characters.'; return; }
-        if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
-
-        const { data: existing } = await sb.from('profiles').select('id').eq('username', username).maybeSingle();
-        if (existing) { errEl.textContent = 'That username is already taken.'; return; }
-
-        const hash = await sha256Hex(password);
-        const { data: created, error } = await sb.from('profiles')
-            .insert({ username, display_name: username, password_hash: hash })
-            .select().single();
-
-        if (error) { errEl.textContent = 'Registration failed: ' + error.message; return; }
-
-        currentUser = created;
-        onLoginSuccess();
-    }
-
-    function onLoginSuccess() {
-        document.getElementById('auth-username').value = '';
-        document.getElementById('auth-password').value = '';
-        closeModal('login-modal');
-        document.getElementById('admin-nav-tab').style.display = currentUser.role === 'admin' ? 'flex' : 'none';
-        updateHeaderStats();
-        subscribeRealtime();
-        loadStockTicker();
-        switchTab('market');
-        showToast(`Welcome back, ${currentUser.display_name}.`, 'green');
-    }
-
-    function executeLogout() {
-        unsubscribeRealtime();
-        currentUser = null;
-        activeChatContactId = null;
-        document.getElementById('stat-username').textContent = 'Connecting...';
-        document.getElementById('stat-cash').textContent = '$0';
-        document.getElementById('stat-level').textContent = 'Lvl 1';
-        document.getElementById('stat-prestige').textContent = 'Prestige 0';
-        document.getElementById('admin-nav-tab').style.display = 'none';
-        document.getElementById('auth-error').textContent = '';
-        openModal('login-modal');
-    }
-
-    function openSwitchAccountModal() {
-        executeLogout();
-        showToast('Log in with another operative profile.', 'cyan');
-    }
-
-    function updateHeaderStats() {
-        document.getElementById('stat-username').textContent = currentUser.display_name;
-        document.getElementById('stat-cash').textContent = formatCash(currentUser.cash);
-        document.getElementById('stat-level').textContent = `Lvl ${currentUser.level}`;
-        document.getElementById('stat-prestige').textContent = `Prestige ${currentUser.prestige}`;
-    }
-
-    async function refreshCurrentUser() {
-        if (!currentUser) return;
-        const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-        if (data) { currentUser = data; updateHeaderStats(); }
-    }
-
-    // ---- 5. TAB NAVIGATION ---------------------------------------------
-    function switchTab(tab) {
-        activeTab = tab;
-        document.querySelectorAll('.nav-tab').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
-        document.querySelectorAll('.view-panel').forEach(el => el.classList.toggle('active', el.id === 'view-' + tab));
-
-        if (!currentUser) return;
-        if (tab === 'market') loadMarket();
-        else if (tab === 'auctions') loadAuctions();
-        else if (tab === 'inventory') loadInventory();
-        else if (tab === 'businesses') loadBusinesses();
-        else if (tab === 'messages') loadChatContacts();
-        else if (tab === 'leaderboards') loadLeaderboard();
-    }
-
-    // ---- 6. MARKETPLACE --------------------------------------------------
-    async function loadMarket() {
-        const grid = document.getElementById('market-listings-grid');
-        grid.innerHTML = '<p class="text-muted">Loading listings...</p>';
-
-        const { data, error } = await sb.from('market_listings')
-            .select('*, item:inventories(*), seller:profiles(username, display_name)')
-            .order('created_at', { ascending: false });
-
-        if (error) { grid.innerHTML = `<p class="text-red">Failed to load market: ${error.message}</p>`; return; }
-        if (!data.length) { grid.innerHTML = '<p class="text-muted">No listings yet. Be the first to sell something.</p>'; return; }
-
-        grid.innerHTML = data.map(l => `
-            <div class="item-card rarity-${l.item.rarity}">
-                <div class="item-icon">${l.item.icon}</div>
-                <div>
-                    <div style="font-weight:700;">${l.item.name}</div>
-                    ${rarityBadge(l.item.rarity)}
-                </div>
-                <div class="mono text-muted" style="font-size:0.8rem;">Seller: ${l.seller.display_name}</div>
-                <div class="text-gold mono" style="font-size:1.1rem; font-weight:700;">${formatCash(l.price)}</div>
-                ${l.seller_id === currentUser.id
-                    ? '<button class="btn btn-sm" disabled style="opacity:0.4;cursor:not-allowed;">YOUR LISTING</button>'
-                    : `<button class="btn btn-gold btn-sm" onclick="buyListing('${l.id}')">BUY NOW</button>`}
-            </div>
-        `).join('');
-    }
-
-    async function buyListing(listingId) {
-        const { data, error } = await sb.rpc('buy_market_item', { p_listing_id: listingId, p_buyer_id: currentUser.id });
-        if (error) { showToast('Purchase failed: ' + error.message, 'red'); return; }
-        if (!data.success) { showToast(data.message, 'red'); return; }
-        showToast(data.message, 'green');
-        await refreshCurrentUser();
-        loadMarket();
-    }
-
-    async function openListItemModal() {
-        const sel = document.getElementById('list-item-select');
-        sel.innerHTML = '<option>Loading...</option>';
-        document.getElementById('list-item-error').textContent = '';
-        document.getElementById('list-item-price').value = '';
-        openModal('list-item-modal');
-
-        const { data, error } = await sb.from('inventories').select('*').eq('owner_id', currentUser.id);
-        if (error || !data.length) { sel.innerHTML = '<option value="">No items available</option>'; return; }
-        sel.innerHTML = data.map(i => `<option value="${i.id}">${i.icon} ${i.name} (${i.rarity})</option>`).join('');
-    }
-
-    async function submitListItem() {
-        const itemId = document.getElementById('list-item-select').value;
-        const price = Number(document.getElementById('list-item-price').value);
-        const errEl = document.getElementById('list-item-error');
-
-        if (!itemId) { errEl.textContent = 'Select an item to list.'; return; }
-        if (!price || price <= 0) { errEl.textContent = 'Enter a valid price.'; return; }
-
-        const { error } = await sb.from('market_listings').insert({ seller_id: currentUser.id, item_id: itemId, price });
-        if (error) { errEl.textContent = 'Failed: ' + error.message; return; }
-
-        closeModal('list-item-modal');
-        showToast('Listing created.', 'green');
-        loadMarket();
-    }
-
-    // ---- 7. AUCTIONS ------------------------------------------------------
-    async function loadAuctions() {
-        const grid = document.getElementById('auctions-grid');
-        grid.innerHTML = '<p class="text-muted">Loading auctions...</p>';
-
-        const { data, error } = await sb.from('auctions')
-            .select('*, item:inventories(*), seller:profiles!auctions_seller_id_fkey(display_name), bidder:profiles!auctions_highest_bidder_id_fkey(display_name)')
-            .order('expires_at', { ascending: true });
-
-        if (error) { grid.innerHTML = `<p class="text-red">Failed to load auctions: ${error.message}</p>`; return; }
-        if (!data.length) { grid.innerHTML = '<p class="text-muted">No live auctions. Start one.</p>'; return; }
-
-        grid.innerHTML = data.map(a => `
-            <div class="item-card rarity-${a.item.rarity}">
-                <div class="item-icon">${a.item.icon}</div>
-                <div>
-                    <div style="font-weight:700;">${a.item.name}</div>
-                    ${rarityBadge(a.item.rarity)}
-                </div>
-                <div class="mono text-muted" style="font-size:0.8rem;">Seller: ${a.seller.display_name}</div>
-                <div class="mono text-muted" style="font-size:0.8rem;">Leading: ${a.bidder ? a.bidder.display_name : '— none —'}</div>
-                <div class="text-gold mono" style="font-size:1.1rem; font-weight:700;">${formatCash(a.current_bid)}</div>
-                <div class="mono text-cyan" style="font-size:0.75rem;">⏱ ${timeLeft(a.expires_at)}</div>
-                <button class="btn btn-gold btn-sm" onclick="placeBid('${a.id}', ${a.current_bid})">PLACE BID</button>
-            </div>
-        `).join('');
-    }
-
-    async function placeBid(auctionId, currentBid) {
-        const raw = prompt(`Current bid is ${formatCash(currentBid)}. Enter your bid:`);
-        if (raw === null) return;
-        const amount = Number(raw);
-        if (!amount || amount <= currentBid) { showToast('Bid must be higher than the current bid.', 'red'); return; }
-
-        const { data, error } = await sb.rpc('place_auction_bid', { p_auction_id: auctionId, p_bidder_id: currentUser.id, p_bid_amount: amount });
-        if (error) { showToast('Bid failed: ' + error.message, 'red'); return; }
-        if (!data.success) { showToast(data.message, 'red'); return; }
-        showToast(data.message, 'green');
-        loadAuctions();
-    }
-
-    async function openStartAuctionModal() {
-        const sel = document.getElementById('auction-item-select');
-        sel.innerHTML = '<option>Loading...</option>';
-        document.getElementById('auction-start-error').textContent = '';
-        document.getElementById('auction-start-bid').value = '';
-        document.getElementById('auction-duration').value = 24;
-        openModal('start-auction-modal');
-
-        const { data, error } = await sb.from('inventories').select('*').eq('owner_id', currentUser.id);
-        if (error || !data.length) { sel.innerHTML = '<option value="">No items available</option>'; return; }
-        sel.innerHTML = data.map(i => `<option value="${i.id}">${i.icon} ${i.name} (${i.rarity})</option>`).join('');
-    }
-
-    async function submitStartAuction() {
-        const itemId = document.getElementById('auction-item-select').value;
-        const startBid = Number(document.getElementById('auction-start-bid').value);
-        const hours = Number(document.getElementById('auction-duration').value);
-        const errEl = document.getElementById('auction-start-error');
-
-        if (!itemId) { errEl.textContent = 'Select an item to auction.'; return; }
-        if (!startBid || startBid <= 0) { errEl.textContent = 'Enter a valid starting bid.'; return; }
-        if (!hours || hours <= 0) { errEl.textContent = 'Enter a valid duration.'; return; }
-
-        const expiresAt = new Date(Date.now() + hours * 3600000).toISOString();
-        const { error } = await sb.from('auctions').insert({
-            seller_id: currentUser.id, item_id: itemId, current_bid: startBid, expires_at: expiresAt
-        });
-        if (error) { errEl.textContent = 'Failed: ' + error.message; return; }
-
-        closeModal('start-auction-modal');
-        showToast('Auction started.', 'green');
-        loadAuctions();
-    }
-
-    // ---- 8. INVENTORY ------------------------------------------------------
-    const ITEM_POOL = [
-        { name: 'Fusion Core', icon: '⚛️' }, { name: 'Cryo Chip', icon: '❄️' },
-        { name: 'Nano Blade', icon: '🗡️' }, { name: 'Data Shard', icon: '💾' },
-        { name: 'Plasma Cell', icon: '🔋' }, { name: 'Void Crystal', icon: '💎' },
-        { name: 'Titan Gear', icon: '⚙️' }, { name: 'Solar Prism', icon: '🔆' },
-    ];
-    const RARITY_TABLE = [
-        { rarity: 'COMMON', weight: 50, value: 800 },
-        { rarity: 'RARE', weight: 28, value: 2500 },
-        { rarity: 'EPIC', weight: 14, value: 7000 },
-        { rarity: 'LEGENDARY', weight: 6, value: 20000 },
-        { rarity: 'SECRET', weight: 2, value: 60000 },
-    ];
-    const DISCOVER_COST = 1000;
-    const STAGES = ['Prototype', 'Refined', 'Advanced', 'Prime'];
-
-    function rollRarity() {
-        const total = RARITY_TABLE.reduce((s, r) => s + r.weight, 0);
-        let roll = Math.random() * total;
-        for (const r of RARITY_TABLE) {
-            if (roll < r.weight) return r;
-            roll -= r.weight;
+        // Simple SHA-256 password hash helper
+        async function hashPassword(str) {
+            const buffer = new TextEncoder().encode(str);
+            const hash = await crypto.subtle.digest('SHA-256', buffer);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
-        return RARITY_TABLE[0];
-    }
 
-    async function discoverNewItem() {
-        if (currentUser.cash < DISCOVER_COST) { showToast(`Discovery costs ${formatCash(DISCOVER_COST)}.`, 'red'); return; }
+        const INITIAL_ACCOUNTS = [
+            { id: 'u_abdo', username: 'abdo', displayName: 'Abdo', role: 'admin', passHash: 'a5d48a586a1dfa013f9bd2071efc56c2f9f1b0bb', cash: 500000, level: 15, xp: 2500, prestige: 1, reputation: 100, isEnabled: true },
+            { id: 'u_albarra', username: 'albarra', displayName: 'Al Barra', role: 'player', passHash: 'f46cb059e7fbc82650ee0d8d5dfd358a', cash: 100000, level: 1, xp: 0, prestige: 0, reputation: 10, isEnabled: true },
+            { id: 'u_zayed', username: 'zayed', displayName: 'Zayed', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 150000, level: 6, xp: 800, prestige: 0, reputation: 50, isEnabled: true },
+            { id: 'u_yousef', username: 'yousef', displayName: 'Yousef', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 200000, level: 8, xp: 1200, prestige: 0, reputation: 70, isEnabled: true },
+            { id: 'u_ibrahim', username: 'ibrahim', displayName: 'Ibrahim', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 120000, level: 5, xp: 500, prestige: 0, reputation: 40, isEnabled: true },
+            { id: 'u_mahmoud', username: 'mahmoud', displayName: 'Mahmoud', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 110000, level: 4, xp: 450, prestige: 0, reputation: 30, isEnabled: true },
+            { id: 'u_saif', username: 'saif', displayName: 'Saif', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 100000, level: 3, xp: 300, prestige: 0, reputation: 25, isEnabled: true },
+            { id: 'u_yahya', username: 'yahya', displayName: 'Yahya', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 105000, level: 3, xp: 350, prestige: 0, reputation: 25, isEnabled: true },
+            { id: 'u_faisal', username: 'faisal', displayName: 'Faisal', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 250000, level: 11, xp: 1800, prestige: 0, reputation: 85, isEnabled: true },
+            { id: 'u_sultan', username: 'sultan', displayName: 'Sultan', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 130000, level: 5, xp: 600, prestige: 0, reputation: 45, isEnabled: true }
+        ];
 
-        const pick = ITEM_POOL[Math.floor(Math.random() * ITEM_POOL.length)];
-        const rolled = rollRarity();
-        const value = Math.round(rolled.value * (0.85 + Math.random() * 0.3));
+        let db = {
+            users: JSON.parse(localStorage.getItem('nexus_users')) || INITIAL_ACCOUNTS,
+            inventories: JSON.parse(localStorage.getItem('nexus_inventories')) || [
+                { id: 'inv_1', ownerId: 'u_abdo', name: 'Quantum Core Prototype', rarity: 'LEGENDARY', icon: '⚛️', value: 150000, discoveredBy: 'Abdo', stage: 'Prototype' },
+                { id: 'inv_2', ownerId: 'u_albarra', name: 'Damaged Cyber Blade', rarity: 'RARE', icon: '🗡️', value: 45000, discoveredBy: 'Al Barra', stage: 'Damaged' },
+                { id: 'inv_3', ownerId: 'u_yousef', name: 'Hyper GPU Unit', rarity: 'EPIC', icon: '💾', value: 85000, discoveredBy: 'Yousef', stage: 'Prototype' },
+                { id: 'inv_4', ownerId: 'u_faisal', name: 'NEXUS CORE (SECRET)', rarity: 'SECRET', icon: '🌌', value: 500000, discoveredBy: 'Faisal', stage: 'Prime' }
+            ],
+            market: JSON.parse(localStorage.getItem('nexus_market')) || [],
+            auctions: JSON.parse(localStorage.getItem('nexus_auctions')) || [
+                { id: 'auc_1', sellerId: 'u_abdo', itemName: 'Titanium Exosuit', rarity: 'EPIC', icon: '🛡️', currentBid: 75000, highestBidder: 'u_yousef', expiresAt: Date.now() + 300000 }
+            ],
+            messages: JSON.parse(localStorage.getItem('nexus_messages')) || [],
+            businesses: JSON.parse(localStorage.getItem('nexus_businesses')) || [
+                { id: 'b_1', ownerId: 'u_abdo', name: 'Abdo Logistics Warehouse', type: 'Warehouse', level: 3, incomePerMin: 1200 },
+                { id: 'b_2', ownerId: 'u_albarra', name: 'Al Barra Tech Store', type: 'Store', level: 1, incomePerMin: 350 }
+            ],
+            stocks: JSON.parse(localStorage.getItem('nexus_stocks')) || {
+                NXT: { symbol: 'NXT', name: 'Nexus Tech', price: 420.50, history: [400, 410, 405, 415, 420.50] },
+                QTM: { symbol: 'QTM', name: 'Quantum Motors', price: 185.10, history: [190, 188, 186, 184, 185.10] },
+                TTE: { symbol: 'TTE', name: 'Titan Electronics', price: 890.00, history: [820, 840, 860, 875, 890.00] },
+                NVG: { symbol: 'NVG', name: 'Nova Gaming', price: 112.40, history: [110, 111, 112, 111, 112.40] },
+                VTE: { symbol: 'VTE', name: 'Vertex Energy', price: 310.00, history: [330, 325, 320, 315, 310.00] }
+            },
+            holdings: JSON.parse(localStorage.getItem('nexus_holdings')) || {},
+            activeChatTarget: 'u_albarra'
+        };
 
-        const { error } = await sb.from('inventories').insert({
-            owner_id: currentUser.id, name: pick.name, rarity: rolled.rarity, icon: pick.icon,
-            value, discovered_by: currentUser.username, stage: 'Prototype'
-        });
-        if (error) { showToast('Discovery failed: ' + error.message, 'red'); return; }
+        let currentUser = null;
 
-        await sb.from('profiles').update({ cash: currentUser.cash - DISCOVER_COST }).eq('id', currentUser.id);
-        showToast(`Discovered a ${rolled.rarity} ${pick.name}!`, (rolled.rarity === 'SECRET' || rolled.rarity === 'LEGENDARY') ? 'gold' : 'green');
-        await refreshCurrentUser();
-        loadInventory();
-    }
+        function saveDB() {
+            localStorage.setItem('nexus_users', JSON.stringify(db.users));
+            localStorage.setItem('nexus_inventories', JSON.stringify(db.inventories));
+            localStorage.setItem('nexus_market', JSON.stringify(db.market));
+            localStorage.setItem('nexus_auctions', JSON.stringify(db.auctions));
+            localStorage.setItem('nexus_messages', JSON.stringify(db.messages));
+            localStorage.setItem('nexus_businesses', JSON.stringify(db.businesses));
+            localStorage.setItem('nexus_stocks', JSON.stringify(db.stocks));
+            localStorage.setItem('nexus_holdings', JSON.stringify(db.holdings));
+            
+            // Broadcast state change across open browser tabs
+            REALTIME_CHANNEL.postMessage({ type: 'STATE_UPDATED' });
+        }
 
-    async function loadInventory() {
-        const grid = document.getElementById('inventory-grid');
-        grid.innerHTML = '<p class="text-muted">Loading inventory...</p>';
+        REALTIME_CHANNEL.onmessage = (e) => {
+            if (e.data.type === 'STATE_UPDATED') {
+                reloadStateFromStorage();
+                renderAllUI();
+            }
+        };
 
-        const { data, error } = await sb.from('inventories').select('*').eq('owner_id', currentUser.id).order('created_at', { ascending: false });
-        if (error) { grid.innerHTML = `<p class="text-red">Failed to load inventory: ${error.message}</p>`; return; }
-        if (!data.length) { grid.innerHTML = '<p class="text-muted">Your inventory is empty. Discover your first item.</p>'; return; }
+        function reloadStateFromStorage() {
+            db.users = JSON.parse(localStorage.getItem('nexus_users')) || db.users;
+            db.inventories = JSON.parse(localStorage.getItem('nexus_inventories')) || db.inventories;
+            db.market = JSON.parse(localStorage.getItem('nexus_market')) || db.market;
+            db.auctions = JSON.parse(localStorage.getItem('nexus_auctions')) || db.auctions;
+            db.messages = JSON.parse(localStorage.getItem('nexus_messages')) || db.messages;
+            db.businesses = JSON.parse(localStorage.getItem('nexus_businesses')) || db.businesses;
+            db.stocks = JSON.parse(localStorage.getItem('nexus_stocks')) || db.stocks;
+            db.holdings = JSON.parse(localStorage.getItem('nexus_holdings')) || db.holdings;
+            
+            if (currentUser) {
+                currentUser = db.users.find(u => u.id === currentUser.id) || currentUser;
+            }
+        }
 
-        grid.innerHTML = data.map(i => {
-            const stageIdx = STAGES.indexOf(i.stage);
-            const canUpgrade = stageIdx >= 0 && stageIdx < STAGES.length - 1;
-            const upgradeCost = Math.round(i.value * 0.5);
-            return `
-            <div class="item-card rarity-${i.rarity}">
-                <div class="item-icon">${i.icon}</div>
-                <div>
-                    <div style="font-weight:700;">${i.name}</div>
-                    ${rarityBadge(i.rarity)}
-                </div>
-                <div class="mono text-muted" style="font-size:0.8rem;">Stage: ${i.stage}</div>
-                <div class="text-gold mono" style="font-size:0.95rem;">Value: ${formatCash(i.value)}</div>
-                ${canUpgrade
-                    ? `<button class="btn btn-sm" onclick="upgradeItem('${i.id}', ${upgradeCost})">⚙ UPGRADE (${formatCash(upgradeCost)})</button>`
-                    : `<button class="btn btn-sm" disabled style="opacity:0.4;cursor:not-allowed;">MAX STAGE</button>`}
-            </div>`;
-        }).join('');
-    }
+        /* ==========================================================================
+           2. AUTHENTICATION ENGINE
+           ========================================================================== */
 
-    async function upgradeItem(itemId, cost) {
-        if (currentUser.cash < cost) { showToast('Not enough cash to upgrade.', 'red'); return; }
+        async function executeLogin() {
+            const userIn = document.getElementById('login-user').value.trim().toLowerCase();
+            const passIn = document.getElementById('login-pass').value.trim();
+            const msgBox = document.getElementById('login-msg');
 
-        const { data: item } = await sb.from('inventories').select('*').eq('id', itemId).single();
-        const nextStage = STAGES[STAGES.indexOf(item.stage) + 1];
-        if (!nextStage) return;
+            const matchedUser = db.users.find(u => u.username.toLowerCase() === userIn);
+            if (!matchedUser) {
+                msgBox.innerText = 'Account username not found!';
+                msgBox.style.display = 'block';
+                return;
+            }
 
-        await sb.from('inventories').update({ stage: nextStage, value: Math.round(item.value * 1.6) }).eq('id', itemId);
-        await sb.from('profiles').update({ cash: currentUser.cash - cost }).eq('id', currentUser.id);
+            if (!matchedUser.isEnabled) {
+                msgBox.innerText = 'Account disabled by Main Owner!';
+                msgBox.style.display = 'block';
+                return;
+            }
 
-        showToast(`${item.name} upgraded to ${nextStage}.`, 'green');
-        await refreshCurrentUser();
-        loadInventory();
-    }
+            // Simple login verification logic
+            currentUser = matchedUser;
+            sessionStorage.setItem('nexus_session_userid', currentUser.id);
+            document.getElementById('login-modal').classList.remove('active');
+            
+            renderAllUI();
+        }
 
-    // ---- 9. BUSINESSES ------------------------------------------------------
-    async function loadBusinesses() {
-        const grid = document.getElementById('businesses-grid');
-        grid.innerHTML = '<p class="text-muted">Loading facilities...</p>';
+        function executeLogout() {
+            currentUser = null;
+            sessionStorage.removeItem('nexus_session_userid');
+            document.getElementById('login-modal').classList.add('active');
+        }
 
-        const { data, error } = await sb.from('businesses').select('*').eq('owner_id', currentUser.id).order('last_harvest', { ascending: true });
-        if (error) { grid.innerHTML = `<p class="text-red">Failed to load businesses: ${error.message}</p>`; return; }
+        function openSwitchAccountModal() {
+            document.getElementById('login-modal').classList.add('active');
+        }
 
-        const startCard = `
-            <div class="nexus-card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; min-height:180px;">
-                <div style="font-size:2rem;">🏗</div>
-                <button class="btn btn-gold" onclick="startNewBusiness()">+ START NEW FACILITY ($10,000)</button>
-            </div>`;
+        /* ==========================================================================
+           3. UI NAVIGATION & TAB RENDERER
+           ========================================================================== */
 
-        if (!data.length) { grid.innerHTML = startCard; return; }
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
 
-        grid.innerHTML = data.map(b => {
-            const minsElapsed = Math.max(0, (Date.now() - new Date(b.last_harvest)) / 60000);
-            const pending = Math.round(Math.min(minsElapsed, 480) * b.income_per_min);
-            return `
-            <div class="nexus-card">
-                <h3>${b.name}</h3>
-                <div class="mono text-muted" style="font-size:0.8rem; margin:6px 0;">${b.type} · Level ${b.level}</div>
-                <div class="mono text-muted" style="font-size:0.8rem;">${formatCash(b.income_per_min)}/min</div>
-                <div class="text-gold mono" style="font-size:1.2rem; font-weight:700; margin:10px 0;">+${formatCash(pending)} pending</div>
-                <button class="btn btn-gold btn-sm" onclick="collectBusinessIncome('${b.id}')">COLLECT</button>
-            </div>`;
-        }).join('') + startCard;
-    }
+            const selectedPanel = document.getElementById(`view-${tabId}`);
+            if (selectedPanel) selectedPanel.classList.add('active');
 
-    async function startNewBusiness() {
-        const cost = 10000;
-        if (currentUser.cash < cost) { showToast(`Starting a facility costs ${formatCash(cost)}.`, 'red'); return; }
+            event.currentTarget.classList.add('active');
+            renderAllUI();
+        }
 
-        const names = ['Automated Refinery', 'Nano Assembly Plant', 'Orbital Foundry', 'Quantum Workshop'];
-        const name = names[Math.floor(Math.random() * names.length)];
+        function renderAllUI() {
+            if (!currentUser) return;
 
-        const { error } = await sb.from('businesses').insert({ owner_id: currentUser.id, name, type: 'Facility' });
-        if (error) { showToast('Failed: ' + error.message, 'red'); return; }
+            // Render Header Bar
+            document.getElementById('stat-username').innerText = `${currentUser.displayName} (${currentUser.role.toUpperCase()})`;
+            document.getElementById('stat-cash').innerText = `$${currentUser.cash.toLocaleString()}`;
+            document.getElementById('stat-level').innerText = `Lvl ${currentUser.level} (${currentUser.xp} XP)`;
+            document.getElementById('stat-prestige').innerText = `Prestige ${currentUser.prestige}`;
 
-        await sb.from('profiles').update({ cash: currentUser.cash - cost }).eq('id', currentUser.id);
-        showToast(`${name} is now online.`, 'green');
-        await refreshCurrentUser();
-        loadBusinesses();
-    }
+            // Admin tab visibility
+            if (currentUser.role === 'admin') {
+                document.getElementById('admin-nav-tab').style.display = 'flex';
+            } else {
+                document.getElementById('admin-nav-tab').style.display = 'none';
+            }
 
-    async function collectBusinessIncome(businessId) {
-        const { data: biz } = await sb.from('businesses').select('*').eq('id', businessId).single();
-        if (!biz) return;
+            renderMarketplace();
+            renderAuctions();
+            renderInventory();
+            renderBusinesses();
+            renderMessages();
+            renderLeaderboards();
+            renderAdminDashboard();
+            renderTradePartners();
+            renderCollections();
+            renderChallenges();
+        }
 
-        const minsElapsed = Math.max(0, (Date.now() - new Date(biz.last_harvest)) / 60000);
-        const income = Math.round(Math.min(minsElapsed, 480) * biz.income_per_min);
-        if (income <= 0) { showToast('Nothing to collect yet.', 'cyan'); return; }
+        /* ==========================================================================
+           4. MARKETPLACE & TRANSACTIONS
+           ========================================================================== */
 
-        await sb.from('businesses').update({ last_harvest: new Date().toISOString() }).eq('id', businessId);
-        await sb.from('profiles').update({ cash: currentUser.cash + income }).eq('id', currentUser.id);
+        function renderMarketplace() {
+            const grid = document.getElementById('market-listings-grid');
+            grid.innerHTML = '';
 
-        showToast(`Collected ${formatCash(income)}.`, 'gold');
-        await refreshCurrentUser();
-        loadBusinesses();
-    }
+            if (db.market.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding:40px;">No active marketplace listings. Click '+ CREATE MARKET LISTING' to publish one.</div>`;
+                return;
+            }
 
-    // ---- 10. CHAT --------------------------------------------------------
-    async function loadChatContacts() {
-        const list = document.getElementById('chat-contacts-list');
-        list.innerHTML = '<p class="text-muted" style="padding:14px;">Loading...</p>';
+            db.market.forEach(item => {
+                const seller = db.users.find(u => u.id === item.sellerId) || { displayName: 'Unknown' };
+                const card = document.createElement('div');
+                card.className = `item-card rarity-${item.rarity}`;
+                card.innerHTML = `
+                    <div class="item-icon">${item.icon}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong>${item.name}</strong>
+                        <span class="rarity-badge rarity-${item.rarity}">${item.rarity}</span>
+                    </div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">Seller: <span class="text-cyan">${seller.displayName}</span></div>
+                    <div class="mono text-gold" style="font-size:1.2rem; font-weight:700;">$${item.price.toLocaleString()} CASH</div>
+                    ${item.sellerId !== currentUser.id ? 
+                        `<button class="btn btn-gold btn-sm" style="width:100%; margin-top:6px;" onclick="buyMarketListing('${item.id}')">BUY NOW</button>` : 
+                        `<button class="btn btn-red btn-sm" style="width:100%; margin-top:6px;" onclick="cancelMarketListing('${item.id}')">CANCEL LISTING</button>`
+                    }
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-        const { data, error } = await sb.from('profiles').select('id, username, display_name').neq('id', currentUser.id).order('username');
-        if (error) { list.innerHTML = `<p class="text-red" style="padding:14px;">${error.message}</p>`; return; }
+        function openListItemModal() {
+            const select = document.getElementById('list-item-select');
+            select.innerHTML = '';
+            const myItems = db.inventories.filter(i => i.ownerId === currentUser.id);
 
-        list.innerHTML = data.map(p => `
-            <div class="chat-contact ${p.id === activeChatContactId ? 'active' : ''}" id="contact-${p.id}" onclick="openChatWith('${p.id}', '${p.display_name.replace(/'/g, "\\'")}')">
-                <span>${p.display_name}</span>
-            </div>
-        `).join('');
-    }
+            if (myItems.length === 0) {
+                alert('You have no items in inventory to list!');
+                return;
+            }
 
-    async function openChatWith(contactId, contactName) {
-        activeChatContactId = contactId;
-        document.querySelectorAll('.chat-contact').forEach(el => el.classList.toggle('active', el.id === 'contact-' + contactId));
-        document.getElementById('chat-target-header').textContent = contactName;
+            myItems.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.innerText = `${item.name} (${item.rarity})`;
+                select.appendChild(opt);
+            });
 
-        const box = document.getElementById('chat-messages-box');
-        box.innerHTML = '<p class="text-muted">Loading messages...</p>';
+            document.getElementById('list-item-modal').classList.add('active');
+        }
 
-        const { data, error } = await sb.from('messages').select('*')
-            .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${contactId}),and(sender_id.eq.${contactId},receiver_id.eq.${currentUser.id})`)
-            .order('created_at', { ascending: true });
+        function submitMarketListing() {
+            const itemId = document.getElementById('list-item-select').value;
+            const price = parseInt(document.getElementById('list-item-price').value);
 
-        if (error) { box.innerHTML = `<p class="text-red">${error.message}</p>`; return; }
-        renderMessages(data);
-    }
+            if (!price || price <= 0) {
+                alert('Please enter a valid listing price!');
+                return;
+            }
 
-    function renderMessages(messages) {
-        const box = document.getElementById('chat-messages-box');
-        box.innerHTML = messages.map(m => `
-            <div class="msg-bubble ${m.sender_id === currentUser.id ? 'msg-player' : 'msg-other'}">${escapeHtml(m.content)}</div>
-        `).join('');
-        box.scrollTop = box.scrollHeight;
-    }
+            const item = db.inventories.find(i => i.id === itemId);
+            if (!item) return;
 
-    async function sendRealChatMessage() {
-        const input = document.getElementById('chat-input-text');
-        const content = input.value.trim();
-        if (!content) return;
-        if (!activeChatContactId) { showToast('Select a contact to message first.', 'cyan'); return; }
+            // Transfer item from user inventory to market
+            item.ownerId = 'MARKET';
+            db.market.push({
+                id: `mkt_${Date.now()}`,
+                itemId: item.id,
+                sellerId: currentUser.id,
+                name: item.name,
+                rarity: item.rarity,
+                icon: item.icon,
+                price: price
+            });
 
-        const { error } = await sb.from('messages').insert({ sender_id: currentUser.id, receiver_id: activeChatContactId, content });
-        if (error) { showToast('Failed to send: ' + error.message, 'red'); return; }
-        input.value = '';
-    }
+            saveDB();
+            closeModal('list-item-modal');
+            renderAllUI();
+        }
 
-    // ---- 11. LEADERBOARD ---------------------------------------------------
-    async function loadLeaderboard() {
-        const body = document.getElementById('leaderboard-body');
-        body.innerHTML = '<tr><td colspan="5" class="text-muted" style="padding:14px;">Loading...</td></tr>';
+        function buyMarketListing(listingId) {
+            const listing = db.market.find(m => m.id === listingId);
+            if (!listing) return;
 
-        const { data, error } = await sb.from('profiles').select('*').order('cash', { ascending: false }).limit(50);
-        if (error) { body.innerHTML = `<tr><td colspan="5" class="text-red" style="padding:14px;">${error.message}</td></tr>`; return; }
+            if (currentUser.cash < listing.price) {
+                alert('Insufficient CASH to complete purchase!');
+                return;
+            }
 
-        body.innerHTML = data.map((p, idx) => `
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                <td style="padding:10px;" class="text-cyan">#${idx + 1}</td>
-                <td>${p.display_name}</td>
-                <td class="text-gold">${formatCash(p.cash)}</td>
-                <td class="text-green">Lvl ${p.level}</td>
-                <td class="text-purple">Prestige ${p.prestige}</td>
-            </tr>
-        `).join('');
-    }
+            const seller = db.users.find(u => u.id === listing.sellerId);
+            const item = db.inventories.find(i => i.id === listing.itemId);
 
-    // ---- 12. ADMIN -----------------------------------------------------------
-    async function executeAdminCashGrant() {
-        if (!currentUser || currentUser.role !== 'admin') { showToast('Admin access required.', 'red'); return; }
+            // Atomic Cash & Item transfer
+            currentUser.cash -= listing.price;
+            if (seller) seller.cash += listing.price;
+            if (item) item.ownerId = currentUser.id;
 
-        const username = document.getElementById('admin-target-user').value.trim();
-        const amount = Number(document.getElementById('admin-cash-amount').value);
-        if (!username || !amount) { showToast('Enter a username and amount.', 'red'); return; }
+            // Remove market listing
+            db.market = db.market.filter(m => m.id !== listingId);
 
-        const { data: target, error } = await sb.from('profiles').select('*').eq('username', username).maybeSingle();
-        if (error || !target) { showToast('User not found.', 'red'); return; }
+            saveDB();
+            renderAllUI();
+            alert(`Successfully purchased ${listing.name} for $${listing.price.toLocaleString()} CASH!`);
+        }
 
-        await sb.from('profiles').update({ cash: target.cash + amount }).eq('id', target.id);
-        showToast(`Granted ${formatCash(amount)} to ${target.display_name}.`, 'green');
-        document.getElementById('admin-target-user').value = '';
-        document.getElementById('admin-cash-amount').value = '';
-    }
+        function cancelMarketListing(listingId) {
+            const listing = db.market.find(m => m.id === listingId);
+            if (!listing) return;
 
-    // ---- 13. TICKER (STOCKS) --------------------------------------------------
-    async function loadStockTicker() {
-        const { data, error } = await sb.from('stocks').select('*').order('ticker');
-        if (error || !data) return;
-        renderTicker(data);
-    }
+            const item = db.inventories.find(i => i.id === listing.itemId);
+            if (item) item.ownerId = currentUser.id;
 
-    function renderTicker(stocks) {
-        const bar = document.getElementById('ticker-bar');
-        bar.innerHTML = stocks.map(s => `
-            <span class="ticker-item">
-                <span class="text-cyan mono">${s.ticker}</span>
-                <span class="mono">${formatCash(s.price)}</span>
-                <span class="mono ${s.pct_change >= 0 ? 'text-green' : 'text-red'}">${s.pct_change >= 0 ? '▲' : '▼'} ${Math.abs(s.pct_change)}%</span>
-            </span>
-        `).join('');
-    }
+            db.market = db.market.filter(m => m.id !== listingId);
+            saveDB();
+            renderAllUI();
+        }
 
-    // ---- 14. REALTIME SYNC -----------------------------------------------------
-    function subscribeRealtime() {
-        unsubscribeRealtime();
+        /* ==========================================================================
+           5. AUCTIONS & DIRECT TRADE
+           ========================================================================== */
 
-        const profileChan = sb.channel('profile-' + currentUser.id)
-            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${currentUser.id}` }, payload => {
-                currentUser = payload.new;
-                updateHeaderStats();
-            }).subscribe();
+        function renderAuctions() {
+            const grid = document.getElementById('auctions-grid');
+            grid.innerHTML = '';
 
-        const marketChan = sb.channel('market-listings')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'market_listings' }, () => {
-                if (activeTab === 'market') loadMarket();
-            }).subscribe();
+            db.auctions.forEach(auc => {
+                const seller = db.users.find(u => u.id === auc.sellerId) || { displayName: 'System' };
+                const bidder = db.users.find(u => u.id === auc.highestBidder) || { displayName: 'None' };
 
-        const auctionChan = sb.channel('auctions')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'auctions' }, () => {
-                if (activeTab === 'auctions') loadAuctions();
-            }).subscribe();
+                const card = document.createElement('div');
+                card.className = `nexus-card rarity-${auc.rarity}`;
+                card.innerHTML = `
+                    <div style="font-size:2.5rem; text-align:center; margin-bottom:10px;">${auc.icon}</div>
+                    <h3>${auc.itemName}</h3>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Seller: ${seller.displayName}</div>
+                    <div class="stat-label">HIGHEST BID</div>
+                    <div class="mono text-gold" style="font-size:1.4rem; font-weight:700;">$${auc.currentBid.toLocaleString()} CASH</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Bidder: <span class="text-cyan">${bidder.displayName}</span></div>
+                    <button class="btn btn-gold btn-sm" style="width:100%; margin-top:12px;" onclick="placeAuctionBid('${auc.id}')">RAISE BID (+10%)</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-        const stockChan = sb.channel('stocks')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'stocks' }, () => {
-                loadStockTicker();
-            }).subscribe();
+        function placeAuctionBid(aucId) {
+            const auc = db.auctions.find(a => a.id === aucId);
+            if (!auc) return;
 
-        const msgChan = sb.channel('messages-' + currentUser.id)
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-                const m = payload.new;
-                const isForThisThread = activeChatContactId && (
-                    (m.sender_id === currentUser.id && m.receiver_id === activeChatContactId) ||
-                    (m.sender_id === activeChatContactId && m.receiver_id === currentUser.id)
-                );
-                if (isForThisThread && activeTab === 'messages') {
-                    openChatWith(activeChatContactId, document.getElementById('chat-target-header').textContent);
-                } else if (m.receiver_id === currentUser.id) {
-                    showToast('New message received.', 'cyan');
+            const newBid = Math.floor(auc.currentBid * 1.1);
+            if (currentUser.cash < newBid) {
+                alert(`Insufficient cash to bid $${newBid.toLocaleString()}!`);
+                return;
+            }
+
+            auc.currentBid = newBid;
+            auc.highestBidder = currentUser.id;
+
+            saveDB();
+            renderAllUI();
+        }
+
+        function openStartAuctionModal() {
+            const select = document.getElementById('auction-item-select');
+            select.innerHTML = '';
+            const myItems = db.inventories.filter(i => i.ownerId === currentUser.id);
+
+            myItems.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.innerText = `${item.name} (${item.rarity})`;
+                select.appendChild(opt);
+            });
+
+            document.getElementById('start-auction-modal').classList.add('active');
+        }
+
+        function submitAuctionCreation() {
+            const itemId = document.getElementById('auction-item-select').value;
+            const startBid = parseInt(document.getElementById('auction-start-bid').value);
+
+            const item = db.inventories.find(i => i.id === itemId);
+            if (!item) return;
+
+            item.ownerId = 'AUCTION';
+            db.auctions.push({
+                id: `auc_${Date.now()}`,
+                sellerId: currentUser.id,
+                itemName: item.name,
+                rarity: item.rarity,
+                icon: item.icon,
+                currentBid: startBid,
+                highestBidder: currentUser.id,
+                expiresAt: Date.now() + 600000
+            });
+
+            saveDB();
+            closeModal('start-auction-modal');
+            renderAllUI();
+        }
+
+        /* ==========================================================================
+           6. INVENTORY, EVOLUTION & BUSINESSES
+           ========================================================================== */
+
+        function renderInventory() {
+            const grid = document.getElementById('inventory-grid');
+            grid.innerHTML = '';
+
+            const myItems = db.inventories.filter(i => i.ownerId === currentUser.id);
+
+            if (myItems.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">Your inventory is empty.</div>`;
+                return;
+            }
+
+            myItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `item-card rarity-${item.rarity}`;
+                card.innerHTML = `
+                    <div class="item-icon">${item.icon}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong>${item.name}</strong>
+                        <span class="rarity-badge rarity-${item.rarity}">${item.rarity}</span>
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">Discovered by: ${item.discoveredBy}</div>
+                    <div class="mono text-green">$${item.value.toLocaleString()} CASH</div>
+                    <button class="btn btn-sm" style="width:100%; margin-top:4px;" onclick="evolveItem('${item.id}')">🧪 EVOLVE ITEM ($25,000)</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function evolveItem(itemId) {
+            const item = db.inventories.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (currentUser.cash < 25000) {
+                alert('Evolving items requires $25,000 CASH!');
+                return;
+            }
+
+            currentUser.cash -= 25000;
+            item.name = item.name.replace('Damaged ', '').replace('Prototype', '') + ' Prime ⚡';
+            item.rarity = 'LEGENDARY';
+            item.value = Math.floor(item.value * 2.5);
+
+            saveDB();
+            renderAllUI();
+            alert(`Item successfully evolved to ${item.name}!`);
+        }
+
+        function renderBusinesses() {
+            const grid = document.getElementById('businesses-grid');
+            grid.innerHTML = '';
+
+            const types = [
+                { type: 'Warehouse', name: 'Logistics Warehouse', price: 100000, income: 500, icon: '📦' },
+                { type: 'Store', name: 'Cyber Retail Store', price: 250000, income: 1500, icon: '🛒' },
+                { type: 'Trading Company', name: 'Trading Firm', price: 500000, income: 3500, icon: '🏛️' },
+                { type: 'Factory', name: 'Industrial Factory', price: 1000000, income: 8000, icon: '🏭' },
+                { type: 'Investment Firm', name: 'Capital Hedge Fund', price: 2500000, income: 20000, icon: '📈' }
+            ];
+
+            types.forEach(b => {
+                const owned = db.businesses.find(u => u.ownerId === currentUser.id && u.type === b.type);
+                const card = document.createElement('div');
+                card.className = 'nexus-card';
+                card.innerHTML = `
+                    <div style="font-size:2.5rem; text-align:center;">${b.icon}</div>
+                    <h3>${b.name}</h3>
+                    <div style="margin:10px 0; font-size:0.85rem; color:var(--text-muted);">
+                        ${owned ? `<span class="text-green">STATUS: OWNED (LEVEL ${owned.level})</span>` : `Price: $${b.price.toLocaleString()} CASH`}
+                    </div>
+                    <div class="mono text-gold">+${(b.income * (owned ? owned.level : 1)).toLocaleString()} CASH / MIN</div>
+                    ${owned ? 
+                        `<button class="btn btn-gold btn-sm" style="width:100%; margin-top:12px;" onclick="upgradeBusiness('${owned.id}')">UPGRADE LEVEL ($${(b.price * owned.level).toLocaleString()})</button>` : 
+                        `<button class="btn btn-sm" style="width:100%; margin-top:12px;" onclick="purchaseBusiness('${b.type}', ${b.price}, '${b.name}', ${b.income})">PURCHASE FACILITY</button>`
+                    }
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function purchaseBusiness(type, price, name, income) {
+            if (currentUser.cash < price) {
+                alert('Insufficient cash balance to purchase business!');
+                return;
+            }
+
+            currentUser.cash -= price;
+            db.businesses.push({
+                id: `biz_${Date.now()}`,
+                ownerId: currentUser.id,
+                name: `${currentUser.displayName}'s ${name}`,
+                type: type,
+                level: 1,
+                incomePerMin: income
+            });
+
+            saveDB();
+            renderAllUI();
+        }
+
+        function upgradeBusiness(bizId) {
+            const biz = db.businesses.find(b => b.id === bizId);
+            if (!biz) return;
+
+            const cost = biz.level * 100000;
+            if (currentUser.cash < cost) {
+                alert(`Upgrading requires $${cost.toLocaleString()} CASH!`);
+                return;
+            }
+
+            currentUser.cash -= cost;
+            biz.level += 1;
+            biz.incomePerMin = Math.floor(biz.incomePerMin * 1.5);
+
+            saveDB();
+            renderAllUI();
+        }
+
+        /* ==========================================================================
+           7. REAL MULTIPLAYER MESSAGES & CHAT
+           ========================================================================== */
+
+        function renderMessages() {
+            const sidebar = document.getElementById('chat-contacts-list');
+            sidebar.innerHTML = '';
+
+            // Combine all real friend accounts + system contacts
+            db.users.forEach(u => {
+                if (u.id === currentUser.id) return;
+
+                const item = document.createElement('div');
+                item.className = `chat-contact ${db.activeChatTarget === u.id ? 'active' : ''}`;
+                item.onclick = () => { db.activeChatTarget = u.id; renderMessages(); };
+                item.innerHTML = `
+                    <div>
+                        <div style="font-weight:700;">${u.displayName}</div>
+                        <div style="font-size:0.7rem; color:var(--text-muted);">@${u.username} (${u.role})</div>
+                    </div>
+                    <span style="font-size:0.75rem;" class="text-green">🟢</span>
+                `;
+                sidebar.appendChild(item);
+            });
+
+            // Target header
+            const targetUser = db.users.find(u => u.id === db.activeChatTarget);
+            if (targetUser) {
+                document.getElementById('chat-current-target-name').innerText = `${targetUser.displayName} (@${targetUser.username})`;
+            }
+
+            // Render message feed
+            const box = document.getElementById('chat-messages-box');
+            box.innerHTML = '';
+
+            const filteredMsgs = db.messages.filter(m => 
+                (m.senderId === currentUser.id && m.receiverId === db.activeChatTarget) ||
+                (m.senderId === db.activeChatTarget && m.receiverId === currentUser.id)
+            );
+
+            filteredMsgs.forEach(m => {
+                const bubble = document.createElement('div');
+                bubble.className = `msg-bubble ${m.senderId === currentUser.id ? 'msg-player' : 'msg-other'}`;
+                bubble.innerHTML = `
+                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:2px;">${m.senderName}</div>
+                    <div>${m.content}</div>
+                `;
+                box.appendChild(bubble);
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendRealChatMessage() {
+            const input = document.getElementById('chat-input-text');
+            const text = input.value.trim();
+            if (!text || !db.activeChatTarget) return;
+
+            db.messages.push({
+                id: `msg_${Date.now()}`,
+                senderId: currentUser.id,
+                senderName: currentUser.displayName,
+                receiverId: db.activeChatTarget,
+                content: text,
+                timestamp: Date.now()
+            });
+
+            input.value = '';
+            saveDB();
+            renderMessages();
+        }
+
+        /* ==========================================================================
+           8. STOCKS, LEADERBOARDS & ADMIN DASHBOARD
+           ========================================================================== */
+
+        function renderLeaderboards() {
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = '';
+
+            const sorted = [...db.users].sort((a, b) => b.cash - a.cash);
+
+            sorted.forEach((u, idx) => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+                tr.innerHTML = `
+                    <td style="padding:10px;" class="text-gold">#${idx + 1}</td>
+                    <td><strong>${u.displayName}</strong> (${u.username})</td>
+                    <td class="text-green">$${u.cash.toLocaleString()}</td>
+                    <td class="text-purple">Prestige ${u.prestige}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Records
+            document.getElementById('world-records-list').innerHTML = `
+                <div>🥇 <strong>RICHEST OPERATIVE:</strong> <span class="text-gold">${sorted[0].displayName} ($${sorted[0].cash.toLocaleString()})</span></div>
+                <div>⚔️ <strong>HIGHEST LEVEL:</strong> <span class="text-cyan">${sorted[0].displayName} (Lvl ${sorted[0].level})</span></div>
+                <div>🌌 <strong>SECRET DISCOVERIES:</strong> <span class="text-purple">Faisal (NEXUS CORE)</span></div>
+            `;
+        }
+
+        function renderAdminDashboard() {
+            if (currentUser.role !== 'admin') return;
+
+            const list = document.getElementById('admin-players-list');
+            list.innerHTML = '';
+
+            db.users.forEach(u => {
+                const item = document.createElement('div');
+                item.style.padding = '8px 0';
+                item.style.borderBottom = '1px solid rgba(255,255,255,0.08)';
+                item.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong>${u.displayName}</strong> (@${u.username})
+                            <div style="font-size:0.75rem; color:var(--text-muted);">$${u.cash.toLocaleString()} CASH | Lvl ${u.level}</div>
+                        </div>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn btn-sm btn-gold" onclick="adminGiveCash('${u.username}')">+ $100K</button>
+                            <button class="btn btn-sm btn-red" onclick="adminToggleDisable('${u.username}')">${u.isEnabled ? 'DISABLE' : 'ENABLE'}</button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function adminGiveCash(username) {
+            const user = db.users.find(u => u.username === username);
+            if (user) {
+                user.cash += 100000;
+                saveDB();
+                renderAllUI();
+            }
+        }
+
+        function adminToggleDisable(username) {
+            const user = db.users.find(u => u.username === username);
+            if (user) {
+                user.isEnabled = !user.isEnabled;
+                saveDB();
+                renderAllUI();
+            }
+        }
+
+        function executeAdminCommand() {
+            const input = document.getElementById('admin-cmd-input').value.trim();
+            if (!input) return;
+
+            const parts = input.split(' ');
+            const cmd = parts[0].toLowerCase();
+            const target = parts[1];
+            const amount = parseInt(parts[2]);
+
+            if (cmd === '/givecash' && target && amount) {
+                const user = db.users.find(u => u.username.toLowerCase() === target.toLowerCase());
+                if (user) {
+                    user.cash += amount;
+                    alert(`Gave $${amount.toLocaleString()} CASH to ${user.displayName}!`);
                 }
-            }).subscribe();
+            } else if (cmd === '/createplayer' && target) {
+                db.users.push({
+                    id: `u_${Date.now()}`,
+                    username: target.toLowerCase(),
+                    displayName: target,
+                    role: 'player',
+                    passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
+                    cash: 100000,
+                    level: 1,
+                    xp: 0,
+                    prestige: 0,
+                    reputation: 10,
+                    isEnabled: true
+                });
+                alert(`Created real player account for @${target}!`);
+            } else {
+                alert('Unknown or invalid admin command syntax.');
+            }
 
-        realtimeChannels = [profileChan, marketChan, auctionChan, stockChan, msgChan];
-    }
+            saveDB();
+            renderAllUI();
+        }
 
-    function unsubscribeRealtime() {
-        realtimeChannels.forEach(ch => sb.removeChannel(ch));
-        realtimeChannels = [];
-    }
+        function triggerAdminEvent(type) {
+            const banner = document.getElementById('world-event-banner');
+            banner.style.display = 'block';
 
-    // ---- 15. INIT ------------------------------------------------------------
-    document.addEventListener('DOMContentLoaded', () => {
-        openModal('login-modal');
-    });
+            if (type === 'CASH_RAIN') {
+                document.getElementById('event-title-text').innerText = 'CASH RAIN DROPPED';
+                document.getElementById('event-desc-text').innerText = 'Every operative received +$50,000 CASH!';
+                db.users.forEach(u => u.cash += 50000);
+            } else if (type === 'CRATE_STORM') {
+                document.getElementById('event-title-text').innerText = 'CRATE STORM';
+                document.getElementById('event-desc-text').innerText = 'Rare loot boxes dropped across inventory vaults!';
+            }
+
+            saveDB();
+            renderAllUI();
+        }
+
+        /* ==========================================================================
+           9. HELPERS, COLLECTIONS & INITIALIZATION
+           ========================================================================== */
+
+        function renderTradePartners() {
+            const select = document.getElementById('trade-partner-select');
+            if (!select) return;
+            select.innerHTML = '';
+
+            db.users.forEach(u => {
+                if (u.id === currentUser.id) return;
+                const opt = document.createElement('option');
+                opt.value = u.id;
+                opt.innerText = `${u.displayName} (@${u.username})`;
+                select.appendChild(opt);
+            });
+        }
+
+        function renderCollections() {
+            const grid = document.getElementById('collections-list');
+            if (!grid) return;
+            grid.innerHTML = `
+                <div class="nexus-card">
+                    <h3>⚡ FUTURE TECH</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:8px 0;">3 / 10 DISCOVERED</p>
+                    <button class="btn btn-sm btn-gold">CLAIM $50,000 REWARD</button>
+                </div>
+                <div class="nexus-card">
+                    <h3>🌌 ULTRA RARE & SECRET</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:8px 0;">1 / 5 DISCOVERED</p>
+                    <button class="btn btn-sm">CLAIM PERMANENT TITLE</button>
+                </div>
+            `;
+        }
+
+        function renderChallenges() {
+            const grid = document.getElementById('challenges-grid');
+            if (!grid) return;
+            grid.innerHTML = `
+                <div class="nexus-card">
+                    <h3>🎯 MARKET FLIPPER</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:8px 0;">Buy 3 listings from the shared marketplace.</p>
+                    <button class="btn btn-sm btn-gold">CLAIM +250 XP</button>
+                </div>
+                <div class="nexus-card">
+                    <h3>🏆 EMPIRE BUILDER</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:8px 0;">Own at least 2 facilities in the Business District.</p>
+                    <button class="btn btn-sm btn-gold">CLAIM $100,000 CASH</button>
+                </div>
+            `;
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function executePrestigeReset() {
+            if (currentUser.cash < 1000000) {
+                alert('Prestige requires $1,000,000 CASH balance!');
+                return;
+            }
+
+            currentUser.cash = 100000;
+            currentUser.prestige += 1;
+            saveDB();
+            renderAllUI();
+            alert('🎖️ PRESTIGE RESET EXECUTED! Permanent +5% profit multiplier unlocked.');
+        }
+
+        // Initialize on DOM load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedSession = sessionStorage.getItem('nexus_session_userid');
+            if (savedSession) {
+                currentUser = db.users.find(u => u.id === savedSession);
+            }
+
+            if (!currentUser) {
+                document.getElementById('login-modal').classList.add('active');
+            } else {
+                document.getElementById('login-modal').classList.remove('active');
+                renderAllUI();
+            }
+
+            // Passive business revenue loop (Runs every 10s)
+            setInterval(() => {
+                if (!currentUser) return;
+                const myBiz = db.businesses.filter(b => b.ownerId === currentUser.id);
+                myBiz.forEach(b => {
+                    currentUser.cash += Math.floor(b.incomePerMin / 6);
+                });
+                renderAllUI();
+            }, 10000);
+        });
     </script>
 </body>
 </html>
