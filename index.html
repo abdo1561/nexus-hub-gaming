@@ -342,13 +342,13 @@
 
     <!-- NAVIGATION TABS -->
     <nav id="nav-tabs-bar">
-        <div class="nav-tab active" onclick="switchTab('market')">🛒 SHARED MARKET</div>
-        <div class="nav-tab" onclick="switchTab('auctions')">🏛️ LIVE AUCTIONS</div>
-        <div class="nav-tab" onclick="switchTab('inventory')">📦 INVENTORY & LAB</div>
-        <div class="nav-tab" onclick="switchTab('businesses')">🏢 BUSINESS EMPIRE</div>
-        <div class="nav-tab" onclick="switchTab('messages')">💬 CLOUD CHAT</div>
-        <div class="nav-tab" onclick="switchTab('leaderboards')">🏆 GLOBAL RANKS</div>
-        <div id="admin-nav-tab" class="nav-tab text-gold" style="display:none;" onclick="switchTab('admin')">👑 ADMIN DASHBOARD</div>
+        <div class="nav-tab active" data-tab="market" onclick="switchTab('market')">🛒 SHARED MARKET</div>
+        <div class="nav-tab" data-tab="auctions" onclick="switchTab('auctions')">🏛️ LIVE AUCTIONS</div>
+        <div class="nav-tab" data-tab="inventory" onclick="switchTab('inventory')">📦 INVENTORY & LAB</div>
+        <div class="nav-tab" data-tab="businesses" onclick="switchTab('businesses')">🏢 BUSINESS EMPIRE</div>
+        <div class="nav-tab" data-tab="messages" onclick="switchTab('messages')">💬 CLOUD CHAT</div>
+        <div class="nav-tab" data-tab="leaderboards" onclick="switchTab('leaderboards')">🏆 GLOBAL RANKS</div>
+        <div id="admin-nav-tab" class="nav-tab text-gold" data-tab="admin" style="display:none;" onclick="switchTab('admin')">👑 ADMIN DASHBOARD</div>
     </nav>
 
     <!-- VIEWPORTS -->
@@ -379,8 +379,13 @@
 
         <!-- 3. INVENTORY -->
         <section id="view-inventory" class="view-panel">
-            <h2>📦 INVENTORY & UPGRADE FORGE</h2>
-            <p style="color:var(--text-muted); margin-bottom:20px;">Evolve prototypes to Prime artifacts.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <div>
+                    <h2>📦 INVENTORY & UPGRADE FORGE</h2>
+                    <p style="color:var(--text-muted);">Evolve prototypes to Prime artifacts.</p>
+                </div>
+                <button class="btn btn-gold" onclick="discoverNewItem()">🎲 DISCOVER NEW ITEM</button>
+            </div>
             <div id="inventory-grid" class="grid-4"></div>
         </section>
 
@@ -451,15 +456,4 @@
             <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Log in or register an operative profile directly to Supabase.</p>
 
             <div style="text-align:left; margin-bottom:12px;">
-                <label class="stat-label">USERNAME</label>
-                <input type="text" id="auth-username" placeholder="abdo, albarra, yousef..." style="width:100%; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
-            </div>
-
-            <div style="text-align:left; margin-bottom:20px;">
-                <label class="stat-label">PASSWORD</label>
-                <input type="password" id="auth-password" placeholder="••••••••" style="width:100%; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
-            </div>
-
-            <div style="display:flex; gap:10px;">
-                <button class="btn btn-gold" style="flex:1; padding:12px;" onclick="handleLogin()">LOG IN</button>
-                <button class="btn" style="flex:1; padding:12px;" onclick="handleRegister()">
+                <label class="stat-label">USE
