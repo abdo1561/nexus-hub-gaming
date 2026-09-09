@@ -1,2577 +1,734 @@
-<!DOCTYPE html> 
-<html lang="en" data-theme="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS HUB | Premium Gaming & Entertainment Platform</title>
-    <!-- External CSS & Font Dependencies -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@500;700;800;900&display=swap" rel="stylesheet">
-    <!-- External JS Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
+    <title>NEXUS: WEBRUNNER - OS</title>
     <style>
-        /* ==========================================================================
-           1. DESIGN SYSTEM & CORE VARIABLES
-           ========================================================================== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
         :root {
-            --bg-base: #0a0c14;
-            --bg-surface: #121624;
-            --bg-card: rgba(22, 28, 45, 0.7);
-            --bg-card-hover: rgba(30, 39, 64, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-border-glow: rgba(0, 240, 255, 0.3);
-            
-            --primary: #00f0ff;
-            --primary-glow: rgba(0, 240, 255, 0.4);
-            --secondary: #7000ff;
-            --secondary-glow: rgba(112, 0, 255, 0.4);
-            --accent: #ff0055;
-            --accent-glow: rgba(255, 0, 85, 0.4);
-            --success: #00ff66;
-            --warning: #ffaa00;
-            --owner-gold: #ffd700;
-            --owner-glow: rgba(255, 215, 0, 0.5);
-
-            --text-main: #f0f4f8;
-            --text-muted: #8a99ad;
-            --text-dim: #505c6e;
-
-            --font-main: 'Inter', sans-serif;
-            --font-display: 'Orbitron', sans-serif;
-
-            --header-height: 70px;
-            --announcement-height: 42px;
-            --sidebar-width: 260px;
-            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-full: 9999px;
+            --bg-dark: #050507;
+            --bg-panel: rgba(15, 15, 20, 0.85);
+            --thread-cyan: #00e5ff;
+            --thread-purple: #9d00ff;
+            --text-main: #f0f0f0;
+            --text-muted: #888;
+            --font-ui: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
-        [data-theme="light"] {
-            --bg-base: #eef2f7;
-            --bg-surface: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.85);
-            --bg-card-hover: rgba(255, 255, 255, 0.98);
-            --glass-border: rgba(0, 0, 0, 0.1);
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --text-dim: #94a3b8;
-        }
-
-        /* ==========================================================================
-           2. BASE & RESET STYLES
-           ========================================================================== */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             user-select: none;
-            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            background-color: var(--bg-base);
+            background-color: var(--bg-dark);
             color: var(--text-main);
-            font-family: var(--font-main);
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(10, 12, 20, 0.5);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(112, 0, 255, 0.4);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
-
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
+            font-family: var(--font-ui);
+            overflow: hidden;
             width: 100vw;
             height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.5;
         }
 
-        #app-root {
-            position: relative;
-            z-index: 1;
+        /* FULLSCREEN OVERLAY */
+        #init-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* ==========================================================================
-           3. LIVE ADMIN ANNOUNCEMENT BAR
-           ========================================================================== */
-        .announcement-bar {
-            background: linear-gradient(90deg, #7000ff, #ff0055, #00f0ff, #7000ff);
-            background-size: 300% 100%;
-            animation: gradientMove 6s ease infinite;
-            height: var(--announcement-height);
-            display: flex;
+            justify-content: center;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            font-family: var(--font-display);
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #ffffff;
-            box-shadow: 0 4px 20px rgba(255, 0, 85, 0.3);
-            position: relative;
-            z-index: 100;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
         }
-
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .announcement-content {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 auto;
-            cursor: pointer;
-            transition: transform var(--transition-fast);
-        }
-        .announcement-content:hover {
-            transform: scale(1.02);
-        }
-
-        .announcement-badge {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 3px 10px;
-            border-radius: var(--radius-full);
-            font-size: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .uae-clock-pill {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 4px 12px;
-            border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-family: var(--font-display);
-        }
-
-        /* ==========================================================================
-           4. TOP HEADER / NAVBAR
-           ========================================================================== */
-        .navbar {
-            height: var(--header-height);
-            background: rgba(18, 22, 36, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            position: sticky;
-            top: 0;
-            z-index: 90;
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: var(--font-display);
-            font-size: 1.4rem;
+        
+        .title-glitch {
+            font-size: 4rem;
             font-weight: 900;
-            color: #fff;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .brand-logo i {
-            color: var(--primary);
-            filter: drop-shadow(0 0 8px var(--primary-glow));
-        }
-        .brand-logo span {
-            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, var(--thread-cyan), var(--thread-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-
-        .nav-search-bar {
-            position: relative;
-            width: 320px;
-        }
-        .nav-search-bar input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-full);
-            padding: 10px 16px 10px 42px;
-            color: var(--text-main);
-            font-family: var(--font-main);
-            font-size: 0.9rem;
-            outline: none;
-            transition: all var(--transition-fast);
-        }
-        .nav-search-bar input:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
-        }
-        .nav-search-bar i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .icon-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            position: relative;
-        }
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .invite-btn {
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: var(--radius-full);
-            font-family: var(--font-display);
-            font-size: 0.78rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 15px var(--accent-glow);
-            transition: all var(--transition-fast);
-        }
-        .invite-btn:hover {
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 0 22px var(--accent-glow);
-            filter: brightness(1.1);
-        }
-
-        .user-profile-badge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            padding: 5px 14px 5px 6px;
-            border-radius: var(--radius-full);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-        .user-profile-badge:hover {
-            border-color: var(--secondary);
-            background: rgba(112, 0, 255, 0.15);
-        }
-
-        .avatar-box {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-            position: relative;
-            color: #fff;
-        }
-        .owner-badge-icon {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            color: var(--owner-gold);
-            font-size: 0.75rem;
-            filter: drop-shadow(0 0 4px var(--owner-glow));
-        }
-
-        .user-info-text {
-            display: flex;
-            flex-direction: column;
-        }
-        .user-name {
-            font-weight: 700;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .user-level {
-            font-size: 0.7rem;
-            color: var(--primary);
-            font-family: var(--font-display);
-        }
-
-        /* ==========================================================================
-           5. MAIN LAYOUT (SIDEBAR + CONTENT)
-           ========================================================================== */
-        .main-container {
-            display: flex;
-            flex: 1;
-            min-height: calc(100vh - var(--header-height) - var(--announcement-height));
-        }
-
-        .sidebar {
-            width: var(--sidebar-width);
-            background: rgba(14, 18, 30, 0.95);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid var(--glass-border);
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            transition: all var(--transition-smooth);
-            z-index: 80;
-        }
-
-        .nav-group-title {
-            font-size: 0.7rem;
-            font-family: var(--font-display);
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            padding-left: 12px;
-            margin-bottom: 8px;
-        }
-
-        .nav-menu {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            position: relative;
-        }
-        .nav-item i {
-            font-size: 1.1rem;
-            width: 22px;
-            text-align: center;
-        }
-        .nav-item:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.06);
-            transform: translateX(4px);
-        }
-        .nav-item.active {
-            color: #ffffff;
-            background: linear-gradient(90deg, rgba(112, 0, 255, 0.3) 0%, rgba(0, 240, 255, 0.1) 100%);
-            border-left: 3px solid var(--primary);
-            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.1);
-        }
-
-        .nav-item .badge {
-            margin-left: auto;
-            background: var(--accent);
-            color: #fff;
-            font-size: 0.65rem;
-            padding: 2px 8px;
-            border-radius: var(--radius-full);
-            font-family: var(--font-display);
-        }
-
-        .nav-item.dev-only {
-            display: none;
-            border: 1px dashed var(--owner-gold);
-            color: var(--owner-gold);
-        }
-        .nav-item.dev-only.visible {
-            display: flex;
-        }
-
-        .content-area {
-            flex: 1;
-            padding: 28px;
-            overflow-y: auto;
-            max-width: 1600px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ==========================================================================
-           6. HERO BANNER & GAMES GRID
-           ========================================================================== */
-        .hero-banner {
-            position: relative;
-            height: 340px;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            background: linear-gradient(135deg, #0f051d, #1c0038, #021a38);
-            margin-bottom: 32px;
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            padding: 42px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-bg-art {
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 60%;
-            height: 100%;
-            background: radial-gradient(circle at 70% 50%, rgba(0, 240, 255, 0.25), transparent 70%);
-            mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
-            -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
-            opacity: 0.8;
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 550px;
-        }
-
-        .hero-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255, 0, 85, 0.2);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 4px 12px;
-            border-radius: var(--radius-full);
-            font-size: 0.75rem;
-            font-family: var(--font-display);
-            font-weight: 700;
-            margin-bottom: 14px;
-        }
-
-        .hero-title {
-            font-family: var(--font-display);
-            font-size: 2.3rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, #fff 30%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-desc {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 24px;
-        }
-
-        .btn-group {
-            display: flex;
-            align-items: center;
-            gap: 14px;
+            margin-bottom: 10px;
         }
 
         .btn {
-            padding: 12px 24px;
-            border-radius: var(--radius-md);
-            font-family: var(--font-display);
+            background: transparent;
+            border: 2px solid var(--thread-cyan);
+            color: var(--thread-cyan);
+            padding: 12px 30px;
+            font-size: 1.2rem;
             font-weight: 700;
-            font-size: 0.85rem;
             cursor: pointer;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: all var(--transition-fast);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            box-shadow: 0 4px 20px var(--primary-glow);
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px var(--primary-glow);
-            filter: brightness(1.1);
-        }
-
-        .btn-glass {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            backdrop-filter: blur(10px);
-        }
-        .btn-glass:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--text-main);
-        }
-
-        .filter-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-
-        .filter-tags {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-tag {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-        .filter-tag:hover, .filter-tag.active {
-            background: rgba(0, 240, 255, 0.15);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            margin-top: 24px;
-        }
-
-        .section-title {
-            font-family: var(--font-display);
-            font-size: 1.25rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-transform: uppercase;
-        }
-        .section-title i {
-            color: var(--primary);
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 22px;
-        }
-
-        .game-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--glass-border);
-            overflow: hidden;
-            transition: all var(--transition-smooth);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .game-card:hover {
-            transform: translateY(-6px) scale(1.02);
-            border-color: var(--glass-border-glow);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--primary-glow);
-            background: var(--bg-card-hover);
-        }
-
-        .card-thumb {
-            height: 160px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            background: #111625;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-thumb-icon {
-            font-size: 3.5rem;
-            color: var(--primary);
-            filter: drop-shadow(0 0 12px var(--primary-glow));
-            transition: transform var(--transition-fast);
-        }
-        .game-card:hover .card-thumb-icon {
-            transform: scale(1.15) rotate(-5deg);
-        }
-
-        .card-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 3px 8px;
-            border-radius: var(--radius-sm);
-            font-size: 0.65rem;
-            font-family: var(--font-display);
-            font-weight: 800;
-            text-transform: uppercase;
-            z-index: 2;
-        }
-        .badge-new { background: var(--accent); color: #fff; }
-        .badge-popular { background: var(--warning); color: #000; }
-        .badge-dev { background: var(--owner-gold); color: #000; }
-
-        .card-fav-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            z-index: 2;
-        }
-        .card-fav-btn:hover, .card-fav-btn.active {
-            color: var(--accent);
-            background: rgba(255, 0, 85, 0.2);
-            border-color: var(--accent);
-        }
-
-        .card-body {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .card-title {
-            font-family: var(--font-display);
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--text-main);
-        }
-
-        .card-desc {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-            margin-bottom: 14px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            flex: 1;
-        }
-
-        .card-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.72rem;
-            color: var(--text-dim);
-            padding-top: 10px;
-            border-top: 1px solid var(--glass-border);
-            margin-bottom: 12px;
-        }
-
-        .card-play-btn {
-            width: 100%;
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 0.78rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .card-play-btn:hover {
-            background: var(--primary);
-            color: #000;
-            box-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        /* ==========================================================================
-           7. 3D OPEN WORLD
-           ========================================================================== */
-        .world-wrapper {
-            position: relative;
-            width: 100%;
-            height: calc(100vh - 180px);
-            min-height: 520px;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            border: 1px solid var(--glass-border);
-            background: #05070d;
-        }
-
-        #world-canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .world-hud {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .world-hud-pill {
-            background: rgba(14, 18, 30, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            padding: 10px 18px;
-            border-radius: var(--radius-full);
-            color: #fff;
-            font-family: var(--font-display);
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            pointer-events: auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-
-        .world-controls-overlay {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(14, 18, 30, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            padding: 14px 20px;
-            border-radius: var(--radius-md);
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            pointer-events: auto;
-        }
-        .world-controls-overlay p {
-            margin-bottom: 4px;
-        }
-        .world-controls-overlay kbd {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 2px 6px;
+            transition: all 0.2s ease;
             border-radius: 4px;
-            color: var(--primary);
-            font-family: var(--font-display);
+            font-family: var(--font-mono);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
         }
 
-        .minimap-box {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
-            background: rgba(5, 7, 13, 0.85);
-            overflow: hidden;
-            box-shadow: 0 0 15px var(--primary-glow);
-            pointer-events: auto;
-        }
-        #minimap-canvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        .secret-alert-toast {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            background: linear-gradient(135deg, rgba(112, 0, 255, 0.95), rgba(255, 0, 85, 0.95));
-            border: 2px solid var(--owner-gold);
-            padding: 28px 40px;
-            border-radius: var(--radius-lg);
-            text-align: center;
-            box-shadow: 0 0 40px var(--owner-glow);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 50;
-        }
-        .secret-alert-toast.active {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            pointer-events: auto;
-        }
-
-        /* ==========================================================================
-           8. INTERACTIVE BOOK ("QUANTUM CODEX")
-           ========================================================================== */
-        .book-section-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 600px;
-        }
-
-        .book-container {
-            width: 820px;
-            height: 520px;
-            position: relative;
-            perspective: 1500px;
-            margin-bottom: 24px;
-        }
-
-        .book-spread {
-            width: 100%;
-            height: 100%;
-            background: #141928;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--glass-border);
-            display: flex;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(112, 0, 255, 0.2);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .book-page {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            background: linear-gradient(135deg, #121726, #0e121e);
-        }
-
-        .book-page-left {
-            border-right: 2px solid rgba(0, 0, 0, 0.4);
-            box-shadow: inset -15px 0 20px rgba(0, 0, 0, 0.4);
-        }
-        .book-page-right {
-            box-shadow: inset 15px 0 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .book-title {
-            font-family: var(--font-display);
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
-
-        .book-body {
-            font-size: 0.92rem;
-            line-height: 1.7;
-            color: var(--text-main);
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 16px;
-        }
-
-        .book-page-num {
-            font-family: var(--font-display);
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            text-align: center;
-        }
-
-        .book-controls {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* ==========================================================================
-           9. GLOBAL CHAT SYSTEM
-           ========================================================================== */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 620px;
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--glass-border);
-            overflow: hidden;
-        }
-
-        .chat-header {
-            padding: 16px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .message-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            animation: fadeIn 0.2s ease;
-            position: relative;
-        }
-
-        .message-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-            color: #fff;
-        }
-
-        .message-content-box {
-            display: flex;
-            flex-direction: column;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 10px 16px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--glass-border);
-            max-width: 80%;
-            position: relative;
-        }
-
-        .message-meta {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
-        }
-
-        .message-author {
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-
-        .badge-owner-tag {
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
+        .btn:hover {
+            background: var(--thread-cyan);
             color: #000;
-            font-weight: 900;
-            font-size: 0.62rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: var(--font-display);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
         }
 
-        .badge-dev-tag {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            font-weight: 800;
-            font-size: 0.62rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: var(--font-display);
-        }
-
-        .message-time {
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            margin-left: auto;
-        }
-
-        .message-text {
-            font-size: 0.9rem;
-            color: var(--text-main);
-            line-height: 1.4;
-            word-break: break-word;
-        }
-
-        .msg-del-btn {
-            background: none;
-            border: none;
-            color: var(--accent);
-            font-size: 0.75rem;
-            cursor: pointer;
-            margin-left: 8px;
-            opacity: 0.6;
-            transition: opacity var(--transition-fast);
-        }
-        .msg-del-btn:hover {
-            opacity: 1;
-        }
-
-        .chat-input-bar {
-            padding: 14px 20px;
-            background: rgba(0, 0, 0, 0.4);
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .chat-input-bar input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            padding: 12px 18px;
-            border-radius: var(--radius-full);
-            color: var(--text-main);
-            font-family: var(--font-main);
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .chat-input-bar input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
-        }
-
-        /* ==========================================================================
-           10. DEVELOPER / ADMIN PANEL
-           ========================================================================== */
-        .admin-panel-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--owner-gold);
-            padding: 28px;
-            box-shadow: 0 0 25px var(--owner-glow);
-            margin-bottom: 24px;
-        }
-
-        .admin-nav {
-            display: flex;
-            gap: 12px;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 14px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .admin-tab-btn {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-sm);
-            color: var(--text-muted);
-            font-family: var(--font-display);
-            font-size: 0.78rem;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-        .admin-tab-btn.active, .admin-tab-btn:hover {
-            background: var(--owner-gold);
-            color: #000;
-            font-weight: 700;
-        }
-
-        .admin-sub-tab {
+        /* MAIN APP LAYOUT */
+        #app {
             display: none;
-        }
-        .admin-sub-tab.active {
-            display: block;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .form-group label {
-            font-size: 0.75rem;
-            font-family: var(--font-display);
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-        .form-group input, .form-group select, .form-group textarea {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--glass-border);
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            color: var(--text-main);
-            font-family: var(--font-main);
-            font-size: 0.88rem;
-            outline: none;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            border-color: var(--primary);
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 14px;
-            font-size: 0.85rem;
-        }
-        .data-table th, .data-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--glass-border);
-        }
-        .data-table th {
-            font-family: var(--font-display);
-            color: var(--text-dim);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-        }
-
-        /* ==========================================================================
-           11. MODAL WINDOWS
-           ========================================================================== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(5, 7, 13, 0.85);
-            backdrop-filter: blur(12px);
-            z-index: 200;
+            flex-direction: row;
+        }
+
+        /* SIDEBAR */
+        #sidebar {
+            width: 250px;
+            background: rgba(10, 10, 12, 0.95);
+            border-right: 1px solid rgba(0, 229, 255, 0.2);
             display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition-fast);
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            z-index: 100;
         }
 
-        .modal-box {
-            background: #121624;
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            width: 90%;
-            max-width: 680px;
-            padding: 32px;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            transform: translateY(20px);
-            transition: transform var(--transition-smooth);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-overlay.active .modal-box {
-            transform: translateY(0);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.3rem;
-            cursor: pointer;
-            transition: color var(--transition-fast);
-        }
-        .modal-close:hover {
-            color: var(--accent);
-        }
-
-        /* Game Launcher Frame */
-        #game-launcher-modal .modal-box {
-            max-width: 900px;
+        .brand {
             padding: 20px;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: #fff;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-shadow: 0 0 10px var(--thread-cyan);
         }
 
-        .game-canvas-container {
-            width: 100%;
-            height: 480px;
-            background: #000;
-            border-radius: var(--radius-md);
-            overflow: hidden;
+        .nav-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #fff;
+            background: rgba(0, 229, 255, 0.1);
+            border-left: 3px solid var(--thread-cyan);
+        }
+
+        /* CONTENT AREA */
+        #content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             position: relative;
         }
 
-        #game-play-canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
+        #topbar {
+            height: 60px;
+            background: rgba(10, 10, 12, 0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
         }
 
-        /* Media Section Card */
-        .media-grid {
+        .stats-group {
+            display: flex;
+            gap: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }
+        
+        .stat span { color: var(--thread-cyan); font-weight: bold; }
+
+        /* VIEWS */
+        .view {
+            display: none;
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: radial-gradient(circle at center, #111 0%, #050507 100%);
+        }
+
+        .view.active { display: block; }
+
+        h2 { margin-bottom: 20px; font-weight: 900; font-size: 2rem; color: #fff; }
+
+        .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
         }
-        .media-card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
+
+        .card {
+            background: var(--bg-panel);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            transition: all var(--transition-fast);
+            transition: transform 0.2s;
         }
-        .media-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary);
+        
+        .card:hover { border-color: var(--thread-cyan); transform: translateY(-2px); }
+
+        /* GAME CANVAS */
+        #game-view {
+            padding: 0;
+            display: none;
+            position: relative;
+            background: #000;
+        }
+        
+        #game-view.active { display: flex; }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
 
-        /* Responsive Mobile Layout */
-        @media (max-width: 900px) {
-            .main-container {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid var(--glass-border);
-                padding: 12px;
-            }
-            .nav-menu {
-                flex-direction: row;
-                overflow-x: auto;
-            }
-            .nav-item span {
-                display: none;
-            }
-            .hero-banner {
-                padding: 24px;
-                height: auto;
-            }
-            .book-container {
-                width: 100%;
-                height: 480px;
-            }
-            .book-spread {
-                flex-direction: column;
-            }
+        #game-hud {
+            position: absolute;
+            top: 20px; left: 20px;
+            pointer-events: none;
+        }
+
+        .hud-element {
+            background: rgba(0,0,0,0.5);
+            padding: 10px 15px;
+            border-left: 4px solid var(--thread-cyan);
+            font-family: var(--font-mono);
+            margin-bottom: 10px;
+        }
+
+        #combo-counter {
+            position: absolute;
+            top: 20px; right: 20px;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--thread-cyan);
+            text-shadow: 0 0 20px var(--thread-cyan);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        /* CUTSCENE OVERLAY */
+        #cutscene {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            color: #fff;
+            flex-direction: column;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <canvas id="bg-canvas"></canvas>
 
-    <div id="app-root">
-        <!-- 1. LIVE ADMIN ANNOUNCEMENT BAR -->
-        <div class="announcement-bar">
-            <div class="announcement-content" onclick="app.showAnnouncementModal()">
-                <div class="announcement-badge">
-                    <i class="fa-solid fa-bullhorn"></i> SYSTEM UPDATE
-                </div>
-                <span id="announcement-text-display">Welcome to Nexus Hub v3.0! Developer Panel, 3D Open World & Games Active!</span>
-            </div>
-            <div class="uae-clock-pill">
-                <i class="fa-solid fa-clock"></i> <span id="uae-time-clock">--:--:-- GST</span>
-            </div>
+    <!-- INIT SCREEN FOR FULLSCREEN TRIGGER -->
+    <div id="init-screen">
+        <div class="title-glitch">NEXUS: WEBRUNNER</div>
+        <p style="margin-bottom: 30px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 2px;">THE CITY IS YOURS TO CROSS.</p>
+        <button class="btn" onclick="initApp()">INITIALIZE SYSTEM (FULLSCREEN)</button>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app">
+        <!-- SIDEBAR -->
+        <div id="sidebar">
+            <div class="brand">NEXUS HUB</div>
+            <div class="nav-item active" onclick="nav('home')">HOME</div>
+            <div class="nav-item" onclick="startCutscene()">PLAY (ENTER CITY)</div>
+            <div class="nav-item" onclick="nav('suits')">SUITS</div>
+            <div class="nav-item" onclick="nav('abilities')">SKILL TREE</div>
+            <div class="nav-item" onclick="nav('leaderboard')">LEADERBOARDS</div>
+            <div class="nav-item" onclick="nav('ai')">NEXUS AI</div>
+            <div class="nav-item" onclick="nav('admin')" style="margin-top: auto; color: #ff3366;">ADMIN OVERRIDE</div>
         </div>
 
-        <!-- 2. NAVBAR -->
-        <nav class="navbar">
-            <div class="brand-logo" onclick="app.switchTab('home')">
-                <i class="fa-solid fa-cube"></i>
-                <span>NEXUS HUB</span>
+        <!-- CONTENT -->
+        <div id="content">
+            <div id="topbar">
+                <div style="font-weight: 700; color: #fff;">HERO: <span style="color: var(--thread-cyan);">KAI REYES (NOVA)</span></div>
+                <div class="stats-group">
+                    <div class="stat">LVL: <span id="ui-lvl">1</span></div>
+                    <div class="stat">XP: <span id="ui-xp">0</span></div>
+                    <div class="stat">REP: <span id="ui-rep">0</span></div>
+                </div>
             </div>
 
-            <div class="nav-search-bar">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="global-search-input" placeholder="Search games, media, lore..." oninput="app.handleSearch(this.value)">
-            </div>
-
-            <div class="nav-actions">
-                <button class="icon-btn" title="Toggle Sound" onclick="app.toggleAudio()">
-                    <i class="fa-solid fa-volume-high" id="sound-icon"></i>
-                </button>
-                <button class="icon-btn" title="Toggle Theme" onclick="app.toggleTheme()">
-                    <i class="fa-solid fa-moon" id="theme-icon"></i>
-                </button>
-                <button class="invite-btn" onclick="app.inviteFriends()">
-                    <i class="fa-solid fa-user-plus"></i> INVITE FRIENDS
-                </button>
-                <div class="user-profile-badge" onclick="app.openAuthOrProfile()">
-                    <div class="avatar-box" id="nav-avatar">
-                        U
-                        <i class="fa-solid fa-crown owner-badge-icon" id="dev-crown-badge" style="display:none;"></i>
+            <!-- HOME VIEW -->
+            <div id="view-home" class="view active">
+                <h2>NOVA CITY STATUS</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3 style="color: var(--thread-cyan); margin-bottom: 10px;">CURRENT MISSION</h3>
+                        <p><strong>THE BLACKOUT</strong><br>Investigate the power anomalies in the Iron District. The Architect's drones have been spotted.</p>
                     </div>
-                    <div class="user-info-text">
-                        <span class="user-name" id="nav-username">Guest User</span>
-                        <span class="user-level" id="nav-user-role">PLAYER</span>
+                    <div class="card">
+                        <h3 style="color: var(--thread-purple); margin-bottom: 10px;">CITY EVENTS</h3>
+                        <p>3 Active Crimes Detected.<br>1 Rooftop Race available in Neon Heights.</p>
+                    </div>
+                    <div class="card">
+                        <h3 style="color: #fff; margin-bottom: 10px;">SUIT STATUS</h3>
+                        <p>Threadcore Base Armor Equipped.<br>Durability: 100%</p>
                     </div>
                 </div>
             </div>
-        </nav>
 
-        <!-- 3. MAIN CONTAINER (SIDEBAR + CONTENT AREA) -->
-        <div class="main-container">
-            <!-- SIDEBAR -->
-            <aside class="sidebar">
-                <div class="nav-group-title">Navigation</div>
-                <ul class="nav-menu">
-                    <li class="nav-item active" onclick="app.switchTab('home')" data-tab="home">
-                        <i class="fa-solid fa-house"></i> <span>Home Dashboard</span>
-                    </li>
-                    <li class="nav-item" onclick="app.switchTab('games')" data-tab="games">
-                        <i class="fa-solid fa-gamepad"></i> <span>Games Hub</span>
-                    </li>
-                    <li class="nav-item" onclick="app.switchTab('world')" data-tab="world">
-                        <i class="fa-solid fa-globe"></i> <span>3D Open World</span> <span class="badge">3D</span>
-                    </li>
-                    <li class="nav-item" onclick="app.switchTab('book')" data-tab="book">
-                        <i class="fa-solid fa-book-open"></i> <span>Quantum Codex</span>
-                    </li>
-                    <li class="nav-item" onclick="app.switchTab('media')" data-tab="media">
-                        <i class="fa-solid fa-tv"></i> <span>Media & Streams</span>
-                    </li>
-                    <li class="nav-item" onclick="app.switchTab('chat')" data-tab="chat">
-                        <i class="fa-solid fa-comments"></i> <span>Global Chat</span> <span class="badge" id="chat-count-badge">LIVE</span>
-                    </li>
-                    <li class="nav-item" onclick="app.switchTab('leaderboard')" data-tab="leaderboard">
-                        <i class="fa-solid fa-trophy"></i> <span>Leaderboards</span>
-                    </li>
-                    <li class="nav-item dev-only" id="sidebar-dev-item" onclick="app.switchTab('admin')" data-tab="admin">
-                        <i class="fa-solid fa-code-branch"></i> <span>Developer Panel</span>
-                    </li>
-                    <li class="nav-item" onclick="app.switchTab('settings')" data-tab="settings">
-                        <i class="fa-solid fa-gear"></i> <span>Settings</span>
-                    </li>
-                </ul>
-            </aside>
-
-            <!-- CONTENT AREA -->
-            <main class="content-area">
-                <!-- TAB 1: HOME -->
-                <div class="tab-content active" id="tab-home">
-                    <div class="hero-banner">
-                        <div class="hero-bg-art"></div>
-                        <div class="hero-content">
-                            <div class="hero-tag"><i class="fa-solid fa-bolt"></i> FEATURED EXPERIENCE</div>
-                            <h1 class="hero-title">EXPLORE THE CYBER NEXUS WORLD</h1>
-                            <p class="hero-desc">Enter a next-generation 3D open world environment, play mini-games, decode secret codices, and chat live with gamers worldwide.</p>
-                            <div class="btn-group">
-                                <button class="btn btn-primary" onclick="app.switchTab('world')"><i class="fa-solid fa-play"></i> LAUNCH 3D WORLD</button>
-                                <button class="btn btn-glass" onclick="app.switchTab('games')"><i class="fa-solid fa-gamepad"></i> BROWSE GAMES</button>
-                            </div>
-                        </div>
+            <!-- SUITS VIEW -->
+            <div id="view-suits" class="view">
+                <h2>SUIT COLLECTION</h2>
+                <div class="card-grid">
+                    <div class="card" style="border-color: var(--thread-cyan);">
+                        <h3>Threadcore Starter</h3>
+                        <p style="color: var(--text-muted); margin-top: 10px;">The original bio-tech armor.</p>
+                        <button class="btn" style="margin-top: 15px; padding: 5px 15px; font-size: 0.9rem;">EQUIPPED</button>
                     </div>
-
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-fire"></i> POPULAR GAMES</div>
+                    <div class="card" style="opacity: 0.5;">
+                        <h3>Neon Velocity</h3>
+                        <p style="color: var(--text-muted); margin-top: 10px;">Unlocks at Level 10.</p>
                     </div>
-                    <div class="games-grid" id="home-featured-games-grid"></div>
-                </div>
-
-                <!-- TAB 2: GAMES HUB -->
-                <div class="tab-content" id="tab-games">
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-gamepad"></i> GAMES HUB LIBRARY</div>
-                    </div>
-
-                    <div class="filter-bar">
-                        <div class="filter-tags">
-                            <button class="filter-tag active" onclick="app.filterGames('all', this)">All Games</button>
-                            <button class="filter-tag" onclick="app.filterGames('action', this)">Action</button>
-                            <button class="filter-tag" onclick="app.filterGames('arcade', this)">Arcade</button>
-                            <button class="filter-tag" onclick="app.filterGames('puzzle', this)">Puzzle</button>
-                            <button class="filter-tag" onclick="app.filterGames('favorites', this)">Favorites</button>
-                        </div>
-                    </div>
-
-                    <div class="games-grid" id="all-games-grid"></div>
-                </div>
-
-                <!-- TAB 3: 3D OPEN WORLD -->
-                <div class="tab-content" id="tab-world">
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-globe"></i> 3D OPEN WORLD EXPLORER</div>
-                        <button class="btn btn-glass" onclick="app.resetWorldPosition()"><i class="fa-solid fa-location-crosshairs"></i> Reset Spawn</button>
-                    </div>
-
-                    <div class="world-wrapper">
-                        <canvas id="world-canvas"></canvas>
-
-                        <div class="world-hud">
-                            <div class="world-hud-pill">
-                                <i class="fa-solid fa-gem" style="color:var(--primary);"></i>
-                                <span>Crystals: <strong id="hud-crystals">0 / 10</strong></span>
-                            </div>
-                            <div class="world-hud-pill">
-                                <i class="fa-solid fa-sun" style="color:var(--warning);"></i>
-                                <span id="hud-tod">Day Mode</span>
-                            </div>
-                        </div>
-
-                        <div class="world-controls-overlay">
-                            <p><strong>Controls:</strong> <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or Arrow Keys to move</p>
-                            <p><kbd>SPACE</kbd> Jump | <kbd>E</kbd> Interact with Secrets / NPCs</p>
-                        </div>
-
-                        <div class="minimap-box">
-                            <canvas id="minimap-canvas"></canvas>
-                        </div>
-
-                        <div class="secret-alert-toast" id="secret-toast">
-                            <h2 style="color:var(--owner-gold); font-family:var(--font-display);"><i class="fa-solid fa-key"></i> SECRET LOCATION DISCOVERED!</h2>
-                            <p style="margin-top:8px;">You found the Ancient Quantum Vault! Unlocked 500 XP!</p>
-                        </div>
+                    <div class="card" style="opacity: 0.5;">
+                        <h3>Blackout Stealth</h3>
+                        <p style="color: var(--text-muted); margin-top: 10px;">Unlocks at Level 25.</p>
                     </div>
                 </div>
-
-                <!-- TAB 4: INTERACTIVE BOOK -->
-                <div class="tab-content" id="tab-book">
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-book-open"></i> QUANTUM CODEX - LORE & SECRETS</div>
+            </div>
+            
+            <!-- AI VIEW -->
+            <div id="view-ai" class="view">
+                <h2>NEXUS HERO INTELLIGENCE</h2>
+                <div class="card" style="height: 400px; display: flex; flex-direction: column;">
+                    <div id="ai-chat" style="flex: 1; overflow-y: auto; font-family: var(--font-mono); color: var(--thread-cyan); margin-bottom: 10px;">
+                        > NEXUS AI ONLINE. AWAITING QUERY, KAI.
                     </div>
-
-                    <div class="book-section-wrapper">
-                        <div class="book-container">
-                            <div class="book-spread">
-                                <div class="book-page book-page-left">
-                                    <div>
-                                        <h3 class="book-title" id="book-page-left-title">Chapter I: The Inception</h3>
-                                        <div class="book-body" id="book-page-left-body">
-                                            Loading book pages...
-                                        </div>
-                                    </div>
-                                    <div class="book-page-num" id="book-page-left-num">Page 1</div>
-                                </div>
-                                <div class="book-page book-page-right">
-                                    <div>
-                                        <h3 class="book-title" id="book-page-right-title">Chapter II: The Quantum Grid</h3>
-                                        <div class="book-body" id="book-page-right-body">
-                                            Loading book pages...
-                                        </div>
-                                    </div>
-                                    <div class="book-page-num" id="book-page-right-num">Page 2</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="book-controls">
-                            <button class="btn btn-glass" onclick="app.prevBookPage()"><i class="fa-solid fa-chevron-left"></i> Previous</button>
-                            <span id="book-progress-text" style="font-family:var(--font-display);">Page 1-2 of 6</span>
-                            <button class="btn btn-primary" onclick="app.nextBookPage()">Next <i class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                    </div>
+                    <input type="text" id="ai-input" placeholder="Ask about routes, crimes, or upgrades..." style="padding: 15px; background: rgba(0,0,0,0.5); border: 1px solid var(--thread-cyan); color: #fff; font-family: var(--font-mono);">
                 </div>
+            </div>
 
-                <!-- TAB 5: MEDIA & STREAMS -->
-                <div class="tab-content" id="tab-media">
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-tv"></i> MEDIA & STREAMING HUB</div>
-                    </div>
-
-                    <div class="media-grid">
-                        <div class="media-card">
-                            <i class="fa-brands fa-youtube media-icon media-youtube"></i>
-                            <h3>Nexus Hub Official Trailer</h3>
-                            <p style="font-size:0.85rem; color:var(--text-muted);">Watch the official launch cinematic for the Cyber Nexus ecosystem.</p>
-                            <button class="btn btn-glass" onclick="alert('Playing Stream Preview...')"><i class="fa-solid fa-play"></i> Watch Stream</button>
-                        </div>
-                        <div class="media-card">
-                            <i class="fa-brands fa-spotify media-icon media-spotify"></i>
-                            <h3>Cyberpunk Synthwave Playlist</h3>
-                            <p style="font-size:0.85rem; color:var(--text-muted);">High-octane synthwave beats curated for gaming sessions.</p>
-                            <button class="btn btn-glass" onclick="app.playSynthMusic()"><i class="fa-solid fa-music"></i> Listen Live</button>
-                        </div>
-                        <div class="media-card">
-                            <i class="fa-brands fa-tiktok media-icon media-tiktok"></i>
-                            <h3>Community Highlights</h3>
-                            <p style="font-size:0.85rem; color:var(--text-muted);">Short gaming clips and high score record breaks.</p>
-                            <button class="btn btn-glass" onclick="alert('Loading TikTok feed...')"><i class="fa-solid fa-fire"></i> View Clips</button>
-                        </div>
-                    </div>
+            <!-- GAME VIEW -->
+            <div id="view-game" class="view" style="padding: 0;">
+                <div id="cutscene">
+                    <h1 style="font-size: 3rem; letter-spacing: 5px; margin-bottom: 20px;">IRON DISTRICT</h1>
+                    <p style="font-family: var(--font-mono); color: var(--thread-cyan);">Threadcore engaged. The city is yours to cross.</p>
                 </div>
-
-                <!-- TAB 6: GLOBAL CHAT -->
-                <div class="tab-content" id="tab-chat">
-                    <div class="chat-container">
-                        <div class="chat-header">
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <i class="fa-solid fa-comments" style="color:var(--primary);"></i>
-                                <span style="font-family:var(--font-display); font-weight:700;">NEXUS GLOBAL CHAT</span>
-                            </div>
-                            <span style="font-size:0.8rem; color:var(--success);"><i class="fa-solid fa-circle" style="font-size:0.6rem;"></i> Live Persistent DB Channel</span>
-                        </div>
-
-                        <div class="chat-messages" id="chat-messages-container"></div>
-
-                        <div class="chat-input-bar">
-                            <input type="text" id="chat-message-input" placeholder="Type your message..." onkeypress="if(event.key==='Enter') app.sendChatMessage()">
-                            <button class="btn btn-primary" onclick="app.sendChatMessage()"><i class="fa-solid fa-paper-plane"></i> SEND</button>
-                        </div>
-                    </div>
+                <canvas id="gameCanvas"></canvas>
+                <div id="game-hud">
+                    <div class="hud-element" id="hud-speed">SPD: 0 M/S</div>
+                    <div class="hud-element" id="hud-alt">ALT: 0 M</div>
                 </div>
-
-                <!-- TAB 7: LEADERBOARDS -->
-                <div class="tab-content" id="tab-leaderboard">
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-trophy"></i> GLOBAL LEADERBOARDS</div>
-                    </div>
-
-                    <table class="data-table" style="background:var(--bg-card); border-radius:var(--radius-md); overflow:hidden;">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Player</th>
-                                <th>Game</th>
-                                <th>Score</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-table-body"></tbody>
-                    </table>
+                <div id="combo-counter">COMBO x1</div>
+                <div style="position: absolute; bottom: 20px; left: 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); pointer-events: none;">
+                    [CLICK + HOLD] Fire Web / Swing<br>
+                    [RELEASE] Launch<br>
+                    [SPACE] Air Dash / Trick<br>
+                    [ESC] Return to Hub
                 </div>
-
-                <!-- TAB 8: DEVELOPER / ADMIN PANEL -->
-                <div class="tab-content" id="tab-admin">
-                    <div class="admin-panel-card">
-                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
-                            <h2 style="font-family:var(--font-display); color:var(--owner-gold); display:flex; align-items:center; gap:10px;">
-                                <i class="fa-solid fa-shield-halved"></i> SECURE DEVELOPER CONTROL PANEL
-                            </h2>
-                            <button class="btn btn-glass" onclick="app.logoutDev()"><i class="fa-solid fa-lock"></i> Lock Admin Panel</button>
-                        </div>
-
-                        <div class="admin-nav">
-                            <button class="admin-tab-btn active" onclick="app.switchAdminSubTab('stats', this)">Platform Stats</button>
-                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('games', this)">Manage Games</button>
-                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('users', this)">Manage Users</button>
-                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('book', this)">Manage Codex</button>
-                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('chat', this)">Chat Moderation</button>
-                            <button class="admin-tab-btn" onclick="app.switchAdminSubTab('announcement', this)">Announcements</button>
-                        </div>
-
-                        <!-- SUB-TAB: STATS -->
-                        <div class="admin-sub-tab active" id="admin-sub-stats">
-                            <div class="form-grid">
-                                <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:var(--radius-md); text-align:center;">
-                                    <h1 id="stat-total-users" style="color:var(--primary); font-family:var(--font-display);">0</h1>
-                                    <p style="font-size:0.8rem; color:var(--text-muted);">Registered Users</p>
-                                </div>
-                                <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:var(--radius-md); text-align:center;">
-                                    <h1 id="stat-total-games" style="color:var(--secondary); font-family:var(--font-display);">0</h1>
-                                    <p style="font-size:0.8rem; color:var(--text-muted);">Active Games</p>
-                                </div>
-                                <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:var(--radius-md); text-align:center;">
-                                    <h1 id="stat-total-chat" style="color:var(--accent); font-family:var(--font-display);">0</h1>
-                                    <p style="font-size:0.8rem; color:var(--text-muted);">Stored Messages</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- SUB-TAB: GAMES -->
-                        <div class="admin-sub-tab" id="admin-sub-games">
-                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">Add / Edit Game</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Game Title</label>
-                                    <input type="text" id="dev-game-title" placeholder="e.g. Cyber Runner">
-                                </div>
-                                <div class="form-group">
-                                    <label>Category</label>
-                                    <select id="dev-game-category">
-                                        <option value="action">Action</option>
-                                        <option value="arcade">Arcade</option>
-                                        <option value="puzzle">Puzzle</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Icon Class (FontAwesome)</label>
-                                    <input type="text" id="dev-game-icon" placeholder="fa-solid fa-gamepad">
-                                </div>
-                            </div>
-                            <div class="form-group" style="margin-bottom:16px;">
-                                <label>Description</label>
-                                <textarea id="dev-game-desc" rows="2" placeholder="Brief game summary..."></textarea>
-                            </div>
-                            <button class="btn btn-primary" onclick="app.devAddGame()"><i class="fa-solid fa-plus"></i> Save Game to DB</button>
-                        </div>
-
-                        <!-- SUB-TAB: USERS -->
-                        <div class="admin-sub-tab" id="admin-sub-users">
-                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">User Accounts</h3>
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Username</th>
-                                        <th>Role</th>
-                                        <th>Score</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dev-users-table-body"></tbody>
-                            </table>
-                        </div>
-
-                        <!-- SUB-TAB: CODEX -->
-                        <div class="admin-sub-tab" id="admin-sub-book">
-                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">Add Codex Page</h3>
-                            <div class="form-group" style="margin-bottom:12px;">
-                                <label>Page Title</label>
-                                <input type="text" id="dev-book-title" placeholder="Chapter Title...">
-                            </div>
-                            <div class="form-group" style="margin-bottom:16px;">
-                                <label>Page Content</label>
-                                <textarea id="dev-book-content" rows="4" placeholder="Page body text..."></textarea>
-                            </div>
-                            <button class="btn btn-primary" onclick="app.devAddBookPage()"><i class="fa-solid fa-plus"></i> Add Page</button>
-                        </div>
-
-                        <!-- SUB-TAB: CHAT MODERATION -->
-                        <div class="admin-sub-tab" id="admin-sub-chat">
-                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">Chat Moderation</h3>
-                            <button class="btn btn-primary" style="background:var(--accent);" onclick="app.devPurgeChat()"><i class="fa-solid fa-trash"></i> Purge All Messages</button>
-                        </div>
-
-                        <!-- SUB-TAB: ANNOUNCEMENT -->
-                        <div class="admin-sub-tab" id="admin-sub-announcement">
-                            <h3 style="margin-bottom:12px; font-family:var(--font-display);">Broadcast System Announcement</h3>
-                            <div class="form-group" style="margin-bottom:16px;">
-                                <label>Announcement Text</label>
-                                <input type="text" id="dev-announcement-input" placeholder="Type global announcement header text...">
-                            </div>
-                            <button class="btn btn-primary" onclick="app.devUpdateAnnouncement()"><i class="fa-solid fa-bullhorn"></i> Update Announcement</button>
-                        </div>
-                    </div>
+            </div>
+            
+            <!-- OTHER VIEWS (Placeholder) -->
+            <div id="view-abilities" class="view"><h2>TRAVERSAL & COMBAT SKILL TREE</h2><p>Unlock new Threadcore capabilities.</p></div>
+            <div id="view-leaderboard" class="view"><h2>GLOBAL RECORDS</h2><p>Fastest Nova City crossings.</p></div>
+            <div id="view-admin" class="view">
+                <h2 style="color: #ff3366;">SECURE ADMIN DASHBOARD</h2>
+                <div class="card" style="border-color: #ff3366;">
+                    <p>WARNING: Server-side validation required for database mutation.</p>
+                    <button class="btn" style="border-color: #ff3366; color: #ff3366; margin-top: 10px;" onclick="awardXP(1000)">FORCE ADD 1000 XP</button>
                 </div>
+            </div>
 
-                <!-- TAB 9: SETTINGS -->
-                <div class="tab-content" id="tab-settings">
-                    <div class="section-header">
-                        <div class="section-title"><i class="fa-solid fa-gear"></i> PLATFORM SETTINGS</div>
-                    </div>
-
-                    <div style="background:var(--bg-card); border:1px solid var(--glass-border); border-radius:var(--radius-lg); padding:28px; max-width:600px;">
-                        <h3 style="font-family:var(--font-display); margin-bottom:20px;">Profile Customization</h3>
-                        <div class="form-group" style="margin-bottom:16px;">
-                            <label>Display Username</label>
-                            <input type="text" id="settings-username-input" placeholder="Enter your username...">
-                        </div>
-                        <button class="btn btn-primary" onclick="app.saveProfileSettings()"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button>
-
-                        <hr style="border:none; border-top:1px solid var(--glass-border); margin:24px 0;">
-
-                        <h3 style="font-family:var(--font-display); margin-bottom:16px; color:var(--accent);">Danger Zone</h3>
-                        <button class="btn btn-glass" style="border-color:var(--accent); color:var(--accent);" onclick="app.clearAppData()"><i class="fa-solid fa-trash-can"></i> Reset Local Storage & Data</button>
-                    </div>
-                </div>
-            </main>
         </div>
     </div>
 
-    <!-- MODAL 1: AUTH / DEVELOPER LOGIN MODAL -->
-    <div class="modal-overlay" id="auth-modal">
-        <div class="modal-box">
-            <button class="modal-close" onclick="app.closeModal('auth-modal')">&times;</button>
-            <h2 style="font-family:var(--font-display); margin-bottom:10px; color:var(--primary);"><i class="fa-solid fa-user-shield"></i> AUTHENTICATION</h2>
-            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">Log in with your Developer credentials or enter guest mode.</p>
-
-            <div class="form-group" style="margin-bottom:14px;">
-                <label>Username</label>
-                <input type="text" id="login-username" placeholder="Username (e.g. Developer)">
-            </div>
-            <div class="form-group" style="margin-bottom:20px;">
-                <label>Developer Passkey</label>
-                <input type="password" id="login-password" placeholder="Enter password (e.g. dev123)">
-            </div>
-
-            <div style="display:flex; gap:12px;">
-                <button class="btn btn-primary" onclick="app.loginUser()"><i class="fa-solid fa-right-to-bracket"></i> Login / Register</button>
-                <button class="btn btn-glass" onclick="app.loginAsGuest()">Continue as Guest</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 2: GAME LAUNCHER MODAL -->
-    <div class="modal-overlay" id="game-launcher-modal">
-        <div class="modal-box">
-            <button class="modal-close" onclick="app.closeGameModal()">&times;</button>
-            <h2 id="game-launcher-title" style="font-family:var(--font-display); color:var(--primary); margin-bottom:12px;">Playing Game</h2>
-            <div class="game-canvas-container">
-                <canvas id="game-play-canvas"></canvas>
-            </div>
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px;">
-                <span id="game-launcher-score" style="font-family:var(--font-display); font-size:1.1rem; color:var(--success);">Score: 0</span>
-                <span style="font-size:0.8rem; color:var(--text-muted);">Controls: Arrow Keys / WASD / Mouse</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- JS SCRIPT CORE ENGINE -->
     <script>
-        /* ==========================================================================
-           1. DATABASE ENGINE (PERSISTENT INDEXEDDB / LOCALSTORAGE)
-           ========================================================================== */
-        class NexusDB {
-            constructor() {
-                this.dbName = 'NexusHubDB_v3';
-                this.prefix = 'nexushub_';
+        // --- SYSTEM CORE ---
+        let state = {
+            level: 1,
+            xp: 0,
+            rep: 0,
+            combo: 0
+        };
+
+        function initApp() {
+            // Request Fullscreen
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(e => console.log(e));
             }
+            
+            document.getElementById('init-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('init-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'flex';
+                initGameEngine();
+            }, 500);
+        }
 
-            async init() {
-                // Ensure initial seed data exists
-                if (!this.get('users')) {
-                    this.set('users', [
-                        { id: 1, username: 'Developer', role: 'developer', score: 1250, passHash: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' }, // SHA-256 of 'admin'
-                        { id: 2, username: 'CyberGamer', role: 'player', score: 840 }
-                    ]);
-                }
-
-                if (!this.get('games')) {
-                    this.set('games', [
-                        { id: 'cyber-runner', title: 'Cyber Runner 2D', category: 'action', difficulty: 'Medium', desc: 'Jump over obstacles and dodge laser barriers in futuristic Neo-City.', icon: 'fa-solid fa-person-running', played: 1420 },
-                        { id: 'space-defender', title: 'Space Defender', category: 'arcade', difficulty: 'Hard', desc: 'Blast incoming alien invaders and protect the Nexus station.', icon: 'fa-solid fa-shuttle-space', played: 980 },
-                        { id: 'quantum-dodge', title: 'Quantum Dodge', category: 'action', difficulty: 'Easy', desc: 'Avoid energetic orb spikes with precision micro-maneuvers.', icon: 'fa-solid fa-atom', played: 610 },
-                        { id: 'neon-memory', title: 'Neon Memory Match', category: 'puzzle', difficulty: 'Easy', desc: 'Test your cognitive memory grid skills with cyberpunk cards.', icon: 'fa-solid fa-brain', played: 430 }
-                    ]);
-                }
-
-                if (!this.get('chat')) {
-                    this.set('chat', [
-                        { id: 101, author: 'Developer', role: 'developer', text: 'Welcome to Nexus Hub v3.0! Explore the 3D Open World and check out our Games Hub!', timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) },
-                        { id: 102, author: 'CyberGamer', role: 'player', text: 'The 3D open world is awesome! Found the secret vault!', timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) }
-                    ]);
-                }
-
-                if (!this.get('book')) {
-                    this.set('book', [
-                        { title: 'Chapter I: The Inception', content: 'In the year 2099, the digital landscape morphed into a living matrix known as Nexus. Here, artificial intelligences and human wanderers coexist in harmonic grid lines.' },
-                        { title: 'Chapter II: The Quantum Grid', content: 'The open world is anchored by the Central Node. Legend speaks of an Ancient Quantum Vault hidden beyond the eastern cyber mountains.' },
-                        { title: 'Chapter III: Master Controls', content: 'Use your skills in the Games Hub to earn high scores and climb the global leaderboards. Upgrade your developer status to unlock system administration.' }
-                    ]);
-                }
-
-                if (!this.get('announcement')) {
-                    this.set('announcement', 'Welcome to Nexus Hub v3.0! Developer Panel, 3D Open World & Games Active!');
-                }
+        function nav(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(v => v.classList.remove('active'));
+            
+            if(viewId === 'game') {
+                document.getElementById('view-game').classList.add('active');
+            } else {
+                document.getElementById('view-' + viewId).classList.add('active');
+                event.target.classList.add('active');
             }
-
-            get(key) {
-                const data = localStorage.getItem(this.prefix + key);
-                return data ? JSON.parse(data) : null;
-            }
-
-            set(key, val) {
-                localStorage.setItem(this.prefix + key, JSON.stringify(val));
+            
+            // Stop game loop if leaving game view
+            if(viewId !== 'game') {
+                gameRunning = false;
             }
         }
 
-        /* ==========================================================================
-           2. SOUND ENGINE (WEB AUDIO API SYNTHESIZER)
-           ========================================================================== */
-        class SoundEngine {
-            constructor() {
-                this.ctx = null;
-                this.enabled = true;
-            }
-
-            init() {
-                if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-            }
-
-            playTone(freq, duration, type='sine') {
-                if (!this.enabled) return;
-                this.init();
-                try {
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = type;
-                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-                    gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start();
-                    osc.stop(this.ctx.currentTime + duration);
-                } catch(e) {}
-            }
-
-            click() { this.playTone(800, 0.05, 'sine'); }
-            jump() { this.playTone(400, 0.15, 'square'); }
-            pickup() { this.playTone(1200, 0.2, 'triangle'); }
-            win() { this.playTone(900, 0.4, 'sine'); }
+        function updateHubUI() {
+            document.getElementById('ui-lvl').innerText = state.level;
+            document.getElementById('ui-xp').innerText = state.xp;
+            document.getElementById('ui-rep').innerText = state.rep;
         }
 
-        /* ==========================================================================
-           3. MAIN APP CONTROLLER
-           ========================================================================== */
-        class NexusApp {
-            constructor() {
-                this.db = new NexusDB();
-                this.sound = new SoundEngine();
-                this.currentUser = { username: 'Guest', role: 'player' };
-                this.bookIndex = 0;
-                this.chatBroadcast = new BroadcastChannel('nexus_chat_channel');
-                this.activeGameLoop = null;
-                this.gameCanvas = null;
-                this.gameCtx = null;
+        function awardXP(amount) {
+            state.xp += amount;
+            if(state.xp >= state.level * 1000) {
+                state.level++;
+                state.xp = 0;
             }
+            updateHubUI();
+        }
 
-            async init() {
-                await this.db.init();
-
-                // Setup UAE Clock
-                setInterval(() => this.updateClock(), 1000);
-                this.updateClock();
-
-                // Load User State
-                const savedUser = this.db.get('currentUser');
-                if (savedUser) {
-                    this.currentUser = savedUser;
-                }
-                this.updateUserUI();
-
-                // Load Announcements
-                const ann = this.db.get('announcement');
-                if (ann) {
-                    document.getElementById('announcement-text-display').innerText = ann;
-                }
-
-                // Render Sections
-                this.renderGames();
-                this.renderChat();
-                this.renderBook();
-                this.renderLeaderboard();
-                this.init3DWorld();
-
-                // Listen for Broadcast Chat
-                this.chatBroadcast.onmessage = () => this.renderChat();
-
-                // Background Animation Canvas
-                this.initBgCanvas();
+        // --- MOCK AI ---
+        document.getElementById('ai-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const val = this.value;
+                const chat = document.getElementById('ai-chat');
+                chat.innerHTML += `<br><br><span style="color:#fff;">> ${val}</span>`;
+                this.value = '';
+                
+                setTimeout(() => {
+                    chat.innerHTML += `<br><span style="color:var(--thread-purple);">> PROCESSING... RECOMMENDATION: MAINTAIN HIGH ALTITUDE IN NEON HEIGHTS FOR OPTIMAL SWING MOMENTUM.</span>`;
+                    chat.scrollTop = chat.scrollHeight;
+                }, 800);
             }
+        });
 
-            updateClock() {
-                const now = new Date();
-                const uaeTime = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Dubai', hour12: false });
-                document.getElementById('uae-time-clock').innerText = uaeTime + ' GST';
-            }
+        // --- GAME ENGINE (CANVAS 2D PHYSICS SIMULATION) ---
+        // Simulating the feeling of high-speed swinging, gravity, and momentum.
+        
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let gameRunning = false;
+        let lastTime = 0;
+        
+        // Camera / World
+        let camera = { x: 0, y: 0, zoom: 1 };
+        
+        // Player (Nova)
+        let player = {
+            x: 0, y: -500,
+            vx: 15, vy: 0, // Initial forward speed
+            radius: 10,
+            state: 'falling', // falling, swinging, running, diving
+            web: null // { x, y, length }
+        };
 
-            updateUserUI() {
-                document.getElementById('nav-username').innerText = this.currentUser.username;
-                document.getElementById('nav-user-role').innerText = this.currentUser.role.toUpperCase();
-                document.getElementById('nav-avatar').childNodes[0].nodeValue = this.currentUser.username.charAt(0).toUpperCase();
+        const GRAVITY = 0.4;
+        const AIR_RESISTANCE = 0.995;
+        const SWING_ACCEL = 0.6;
+        const MAX_SPEED = 40;
 
-                const devCrown = document.getElementById('dev-crown-badge');
-                const sidebarDev = document.getElementById('sidebar-dev-item');
-
-                if (this.currentUser.role === 'developer') {
-                    devCrown.style.display = 'block';
-                    sidebarDev.classList.add('visible');
-                } else {
-                    devCrown.style.display = 'none';
-                    sidebarDev.classList.remove('visible');
-                }
-            }
-
-            switchTab(tabId) {
-                this.sound.click();
-                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-                const targetTab = document.getElementById('tab-' + tabId);
-                const targetNavItem = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
-
-                if (targetTab) targetTab.classList.add('active');
-                if (targetNavItem) targetNavItem.classList.add('active');
-
-                if (tabId === 'admin') {
-                    this.renderAdminPanel();
-                }
-            }
-
-            /* --- GAMES SECTION --- */
-            renderGames(filterCategory = 'all', searchQuery = '') {
-                const games = this.db.get('games') || [];
-                const homeGrid = document.getElementById('home-featured-games-grid');
-                const allGrid = document.getElementById('all-games-grid');
-
-                let filtered = games.filter(g => {
-                    const matchCat = filterCategory === 'all' || g.category === filterCategory;
-                    const matchSearch = g.title.toLowerCase().includes(searchQuery.toLowerCase()) || g.desc.toLowerCase().includes(searchQuery.toLowerCase());
-                    return matchCat && matchSearch;
+        // City Generation
+        let buildings = [];
+        
+        function generateBuildings(startX, count) {
+            let currentX = startX;
+            for(let i=0; i<count; i++) {
+                let width = 200 + Math.random() * 300;
+                let height = 300 + Math.random() * 600; // varying heights
+                buildings.push({
+                    x: currentX,
+                    y: 0,
+                    w: width,
+                    h: height,
+                    color: `rgba(${20 + Math.random()*20}, ${20 + Math.random()*30}, ${30 + Math.random()*40}, 1)`
                 });
-
-                const createCardHtml = (game) => `
-                    <div class="game-card" onclick="app.launchGame('${game.id}')">
-                        <div class="card-thumb">
-                            <i class="${game.icon} card-thumb-icon"></i>
-                            <span class="card-badge badge-popular">${game.difficulty}</span>
-                            <div class="card-fav-btn" onclick="event.stopPropagation(); app.toggleFavorite('${game.id}')">
-                                <i class="fa-solid fa-heart"></i>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-title">${game.title}</h4>
-                            <p class="card-desc">${game.desc}</p>
-                            <div class="card-meta">
-                                <span><i class="fa-solid fa-gamepad"></i> ${game.category.toUpperCase()}</span>
-                                <span><i class="fa-solid fa-fire"></i> ${game.played} PLAYS</span>
-                            </div>
-                            <button class="card-play-btn"><i class="fa-solid fa-play"></i> PLAY NOW</button>
-                        </div>
-                    </div>
-                `;
-
-                if (homeGrid) homeGrid.innerHTML = games.slice(0, 3).map(createCardHtml).join('');
-                if (allGrid) allGrid.innerHTML = filtered.map(createCardHtml).join('');
-            }
-
-            filterGames(cat, btnEl) {
-                this.sound.click();
-                document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
-                btnEl.classList.add('active');
-                this.renderGames(cat);
-            }
-
-            handleSearch(query) {
-                this.renderGames('all', query);
-            }
-
-            /* --- GAME LAUNCHER ENGINE --- */
-            launchGame(gameId) {
-                this.sound.click();
-                const modal = document.getElementById('game-launcher-modal');
-                modal.classList.add('active');
-
-                this.gameCanvas = document.getElementById('game-play-canvas');
-                this.gameCtx = this.gameCanvas.getContext('2d');
-                this.gameCanvas.width = 860;
-                this.gameCanvas.height = 460;
-
-                const game = (this.db.get('games') || []).find(g => g.id === gameId);
-                document.getElementById('game-launcher-title').innerText = game ? game.title : 'Playing Game';
-
-                // Increment play count
-                const games = this.db.get('games') || [];
-                const gObj = games.find(g => g.id === gameId);
-                if (gObj) { gObj.played = (gObj.played || 0) + 1; this.db.set('games', games); }
-
-                this.startCyberRunnerGame();
-            }
-
-            startCyberRunnerGame() {
-                let score = 0;
-                let playerY = 320;
-                let isJumping = false;
-                let jumpVel = 0;
-                let obstacles = [{ x: 800, w: 20, h: 40 }];
-
-                const keys = {};
-                const keyDownHandler = (e) => { keys[e.code] = true; };
-                const keyUpHandler = (e) => { keys[e.code] = false; };
-
-                window.addEventListener('keydown', keyDownHandler);
-                window.addEventListener('keyup', keyUpHandler);
-
-                const loop = () => {
-                    this.gameCtx.fillStyle = '#0a0d18';
-                    this.gameCtx.fillRect(0, 0, 860, 460);
-
-                    // Ground
-                    this.gameCtx.fillStyle = '#00f0ff';
-                    this.gameCtx.fillRect(0, 380, 860, 4);
-
-                    // Jump Physics
-                    if ((keys['Space'] || keys['ArrowUp'] || keys['KeyW']) && !isJumping) {
-                        isJumping = true;
-                        jumpVel = -14;
-                        this.sound.jump();
-                    }
-
-                    if (isJumping) {
-                        playerY += jumpVel;
-                        jumpVel += 0.7;
-                        if (playerY >= 320) {
-                            playerY = 320;
-                            isJumping = false;
-                        }
-                    }
-
-                    // Player
-                    this.gameCtx.fillStyle = '#ff0055';
-                    this.gameCtx.fillRect(100, playerY, 30, 60);
-
-                    // Obstacles
-                    for (let i = 0; i < obstacles.length; i++) {
-                        obstacles[i].x -= 6;
-                        this.gameCtx.fillStyle = '#00f0ff';
-                        this.gameCtx.fillRect(obstacles[i].x, 340, obstacles[i].w, obstacles[i].h);
-
-                        // Collision Check
-                        if (100 < obstacles[i].x + obstacles[i].w &&
-                            100 + 30 > obstacles[i].x &&
-                            playerY + 60 > 340) {
-                            // Game Over
-                            this.saveScore(score);
-                            alert('Game Over! Final Score: ' + score);
-                            this.closeGameModal();
-                            window.removeEventListener('keydown', keyDownHandler);
-                            window.removeEventListener('keyup', keyUpHandler);
-                            return;
-                        }
-
-                        if (obstacles[i].x < -30) {
-                            obstacles[i].x = 860 + Math.random() * 200;
-                            score += 100;
-                            document.getElementById('game-launcher-score').innerText = 'Score: ' + score;
-                        }
-                    }
-
-                    this.activeGameLoop = requestAnimationFrame(loop);
-                };
-
-                loop();
-            }
-
-            closeGameModal() {
-                if (this.activeGameLoop) cancelAnimationFrame(this.activeGameLoop);
-                document.getElementById('game-launcher-modal').classList.remove('active');
-            }
-
-            saveScore(score) {
-                if (score <= 0) return;
-                const users = this.db.get('users') || [];
-                const user = users.find(u => u.username === this.currentUser.username);
-                if (user) {
-                    if (score > (user.score || 0)) {
-                        user.score = score;
-                        this.db.set('users', users);
-                        this.renderLeaderboard();
-                    }
-                }
-            }
-
-            /* --- GLOBAL CHAT SYSTEM --- */
-            renderChat() {
-                const chatList = this.db.get('chat') || [];
-                const container = document.getElementById('chat-messages-container');
-                if (!container) return;
-
-                container.innerHTML = chatList.map(msg => `
-                    <div class="message-item">
-                        <div class="message-avatar">${msg.author.charAt(0).toUpperCase()}</div>
-                        <div class="message-content-box">
-                            <div class="message-meta">
-                                <span class="message-author">${msg.author}</span>
-                                ${msg.role === 'developer' ? '<span class="badge-dev-tag">DEV</span>' : ''}
-                                <span class="message-time">${msg.timestamp}</span>
-                                ${(this.currentUser.role === 'developer' || this.currentUser.username === msg.author) ?
-                                    `<button class="msg-del-btn" onclick="app.deleteChatMessage(${msg.id})"><i class="fa-solid fa-trash"></i></button>` : ''}
-                            </div>
-                            <div class="message-text">${this.escapeHtml(msg.text)}</div>
-                        </div>
-                    </div>
-                `).join('');
-
-                container.scrollTop = container.scrollHeight;
-            }
-
-            sendChatMessage() {
-                const input = document.getElementById('chat-message-input');
-                const text = input.value.trim();
-                if (!text) return;
-
-                const chatList = this.db.get('chat') || [];
-                const newMsg = {
-                    id: Date.now(),
-                    author: this.currentUser.username,
-                    role: this.currentUser.role,
-                    text: text,
-                    timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
-                };
-
-                chatList.push(newMsg);
-                this.db.set('chat', chatList);
-                input.value = '';
-
-                this.renderChat();
-                this.chatBroadcast.postMessage('new_chat');
-                this.sound.click();
-            }
-
-            deleteChatMessage(msgId) {
-                let chatList = this.db.get('chat') || [];
-                chatList = chatList.filter(m => m.id !== msgId);
-                this.db.set('chat', chatList);
-                this.renderChat();
-                this.chatBroadcast.postMessage('del_chat');
-            }
-
-            escapeHtml(str) {
-                return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-            }
-
-            /* --- INTERACTIVE BOOK ("QUANTUM CODEX") --- */
-            renderBook() {
-                const book = this.db.get('book') || [];
-                if (book.length === 0) return;
-
-                const leftPage = book[this.bookIndex] || { title: 'End of Book', content: 'No further entries.' };
-                const rightPage = book[this.bookIndex + 1] || { title: '---', content: '---' };
-
-                document.getElementById('book-page-left-title').innerText = leftPage.title;
-                document.getElementById('book-page-left-body').innerText = leftPage.content;
-                document.getElementById('book-page-left-num').innerText = `Page ${this.bookIndex + 1}`;
-
-                document.getElementById('book-page-right-title').innerText = rightPage.title;
-                document.getElementById('book-page-right-body').innerText = rightPage.content;
-                document.getElementById('book-page-right-num').innerText = `Page ${this.bookIndex + 2}`;
-
-                document.getElementById('book-progress-text').innerText = `Pages ${this.bookIndex + 1}-${this.bookIndex + 2} of ${book.length}`;
-            }
-
-            nextBookPage() {
-                const book = this.db.get('book') || [];
-                if (this.bookIndex + 2 < book.length) {
-                    this.bookIndex += 2;
-                    this.renderBook();
-                    this.sound.click();
-                }
-            }
-
-            prevBookPage() {
-                if (this.bookIndex >= 2) {
-                    this.bookIndex -= 2;
-                    this.renderBook();
-                    this.sound.click();
-                }
-            }
-
-            /* --- LEADERBOARD SECTION --- */
-            renderLeaderboard() {
-                const users = (this.db.get('users') || []).sort((a,b) => (b.score||0) - (a.score||0));
-                const tbody = document.getElementById('leaderboard-table-body');
-                if (!tbody) return;
-
-                tbody.innerHTML = users.map((u, idx) => `
-                    <tr>
-                        <td><strong>#${idx + 1}</strong></td>
-                        <td>${u.username} ${u.role === 'developer' ? '<span class="badge-dev-tag">DEV</span>' : ''}</td>
-                        <td>Cyber Runner</td>
-                        <td style="color:var(--primary); font-family:var(--font-display); font-weight:700;">${u.score || 0} PTS</td>
-                        <td>2026-09-08</td>
-                    </tr>
-                `).join('');
-            }
-
-            /* --- DEVELOPER PANEL & AUTHENTICATION --- */
-            openAuthOrProfile() {
-                if (this.currentUser.role === 'developer') {
-                    this.switchTab('admin');
-                } else {
-                    document.getElementById('auth-modal').classList.add('active');
-                }
-            }
-
-            closeModal(modalId) {
-                document.getElementById(modalId).classList.remove('active');
-            }
-
-            async loginUser() {
-                const userVal = document.getElementById('login-username').value.trim();
-                const passVal = document.getElementById('login-password').value.trim();
-
-                if (!userVal) { alert('Please enter a username.'); return; }
-
-                // Check hashed developer passkey using Web Crypto API SHA-256
-                if (passVal) {
-                    const msgBuffer = new TextEncoder().encode(passVal);
-                    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-                    const hashArray = Array.from(new Uint8Array(hashBuffer));
-                    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
-                    // SHA-256 for 'admin' is '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' or 'dev123'
-                    if (hashHex === '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' || passVal === 'dev123') {
-                        this.currentUser = { username: userVal || 'Developer', role: 'developer' };
-                        this.db.set('currentUser', this.currentUser);
-                        this.updateUserUI();
-                        this.closeModal('auth-modal');
-                        this.switchTab('admin');
-                        confetti();
-                        return;
-                    }
-                }
-
-                // Regular Player Login
-                this.currentUser = { username: userVal, role: 'player' };
-                this.db.set('currentUser', this.currentUser);
-                this.updateUserUI();
-                this.closeModal('auth-modal');
-            }
-
-            loginAsGuest() {
-                this.currentUser = { username: 'Guest_' + Math.floor(Math.random()*1000), role: 'player' };
-                this.db.set('currentUser', this.currentUser);
-                this.updateUserUI();
-                this.closeModal('auth-modal');
-            }
-
-            logoutDev() {
-                this.currentUser = { username: 'Guest', role: 'player' };
-                this.db.set('currentUser', this.currentUser);
-                this.updateUserUI();
-                this.switchTab('home');
-            }
-
-            renderAdminPanel() {
-                if (this.currentUser.role !== 'developer') return;
-
-                const users = this.db.get('users') || [];
-                const games = this.db.get('games') || [];
-                const chat = this.db.get('chat') || [];
-
-                document.getElementById('stat-total-users').innerText = users.length;
-                document.getElementById('stat-total-games').innerText = games.length;
-                document.getElementById('stat-total-chat').innerText = chat.length;
-
-                // Render User Table
-                document.getElementById('dev-users-table-body').innerHTML = users.map(u => `
-                    <tr>
-                        <td>${u.id}</td>
-                        <td>${u.username}</td>
-                        <td>${u.role}</td>
-                        <td>${u.score || 0}</td>
-                        <td><button class="btn btn-glass" style="padding:4px 8px; font-size:0.7rem;" onclick="app.devToggleRole(${u.id})">Toggle Role</button></td>
-                    </tr>
-                `).join('');
-            }
-
-            switchAdminSubTab(subId, btnEl) {
-                document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.admin-sub-tab').forEach(t => t.classList.remove('active'));
-                btnEl.classList.add('active');
-                document.getElementById('admin-sub-' + subId).classList.add('active');
-            }
-
-            devAddGame() {
-                const title = document.getElementById('dev-game-title').value.trim();
-                const cat = document.getElementById('dev-game-category').value;
-                const icon = document.getElementById('dev-game-icon').value.trim() || 'fa-solid fa-gamepad';
-                const desc = document.getElementById('dev-game-desc').value.trim();
-
-                if (!title) { alert('Game Title is required'); return; }
-
-                const games = this.db.get('games') || [];
-                games.push({
-                    id: 'custom-' + Date.now(),
-                    title: title,
-                    category: cat,
-                    difficulty: 'Medium',
-                    desc: desc,
-                    icon: icon,
-                    played: 0
-                });
-
-                this.db.set('games', games);
-                this.renderGames();
-                alert('Game successfully added to Database!');
-            }
-
-            devAddBookPage() {
-                const title = document.getElementById('dev-book-title').value.trim();
-                const content = document.getElementById('dev-book-content').value.trim();
-                if (!title || !content) return;
-
-                const book = this.db.get('book') || [];
-                book.push({ title: title, content: content });
-                this.db.set('book', book);
-                this.renderBook();
-                alert('Codex Page Added!');
-            }
-
-            devPurgeChat() {
-                if (confirm('Are you sure you want to purge all chat history?')) {
-                    this.db.set('chat', []);
-                    this.renderChat();
-                }
-            }
-
-            devUpdateAnnouncement() {
-                const text = document.getElementById('dev-announcement-input').value.trim();
-                if (!text) return;
-                this.db.set('announcement', text);
-                document.getElementById('announcement-text-display').innerText = text;
-                alert('System Announcement Updated!');
-            }
-
-            /* --- 3D OPEN WORLD ENGINE (THREE.JS) --- */
-            init3DWorld() {
-                const canvas = document.getElementById('world-canvas');
-                if (!canvas) return;
-
-                const scene = new THREE.Scene();
-                scene.background = new THREE.Color(0x05070d);
-                scene.fog = new THREE.FogExp2(0x05070d, 0.015);
-
-                const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-
-                // Lights
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-                scene.add(ambientLight);
-
-                const dirLight = new THREE.DirectionalLight(0x00f0ff, 0.8);
-                dirLight.position.set(50, 100, 50);
-                scene.add(dirLight);
-
-                // Grid Floor
-                const gridHelper = new THREE.GridHelper(200, 50, 0x00f0ff, 0x7000ff);
-                scene.add(gridHelper);
-
-                // Player Cube
-                const playerGeo = new THREE.BoxGeometry(2, 2, 2);
-                const playerMat = new THREE.MeshLambertMaterial({ color: 0xff0055 });
-                const player = new THREE.Mesh(playerGeo, playerMat);
-                player.position.set(0, 1, 0);
-                scene.add(player);
-
-                // Secret Location: Ancient Quantum Vault Portal
-                const portalGeo = new THREE.TorusGeometry(4, 0.8, 16, 100);
-                const portalMat = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
-                const portal = new THREE.Mesh(portalGeo, portalMat);
-                portal.position.set(60, 4, -60);
-                scene.add(portal);
-
-                // Collectible Crystals
-                const crystals = [];
-                for (let i = 0; i < 10; i++) {
-                    const crysGeo = new THREE.OctahedronGeometry(1.2);
-                    const crysMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true });
-                    const crys = new THREE.Mesh(crysGeo, crysMat);
-                    crys.position.set((Math.random() - 0.5) * 120, 1.5, (Math.random() - 0.5) * 120);
-                    scene.add(crys);
-                    crystals.push(crys);
-                }
-
-                camera.position.set(0, 12, 20);
-
-                // Controls
-                const keys = {};
-                window.addEventListener('keydown', e => keys[e.code] = true);
-                window.addEventListener('keyup', e => keys[e.code] = false);
-
-                let collectedCount = 0;
-                let secretFound = false;
-
-                const animate = () => {
-                    requestAnimationFrame(animate);
-
-                    // Player Movement
-                    if (keys['KeyW'] || keys['ArrowUp']) player.position.z -= 0.4;
-                    if (keys['KeyS'] || keys['ArrowDown']) player.position.z += 0.4;
-                    if (keys['KeyA'] || keys['ArrowLeft']) player.position.x -= 0.4;
-                    if (keys['KeyD'] || keys['ArrowRight']) player.position.x += 0.4;
-
-                    camera.position.x = player.position.x;
-                    camera.position.z = player.position.z + 18;
-                    camera.lookAt(player.position);
-
-                    portal.rotation.y += 0.02;
-
-                    // Collect Crystals
-                    crystals.forEach((c, idx) => {
-                        c.rotation.y += 0.03;
-                        if (c.visible && player.position.distanceTo(c.position) < 3) {
-                            c.visible = false;
-                            collectedCount++;
-                            this.sound.pickup();
-                            document.getElementById('hud-crystals').innerText = `${collectedCount} / 10`;
-                        }
-                    });
-
-                    // Secret Discovery Check
-                    if (!secretFound && player.position.distanceTo(portal.position) < 6) {
-                        secretFound = true;
-                        this.sound.win();
-                        const toast = document.getElementById('secret-toast');
-                        toast.classList.add('active');
-                        setTimeout(() => toast.classList.remove('active'), 5000);
-                    }
-
-                    renderer.render(scene, camera);
-                };
-
-                animate();
-            }
-
-            resetWorldPosition() {
-                this.init3DWorld();
-            }
-
-            /* --- UTILS & AUDIO --- */
-            toggleAudio() {
-                this.sound.enabled = !this.sound.enabled;
-                document.getElementById('sound-icon').className = this.sound.enabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
-            }
-
-            toggleTheme() {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', nextTheme);
-                document.getElementById('theme-icon').className = nextTheme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-            }
-
-            inviteFriends() {
-                navigator.clipboard.writeText(window.location.href);
-                confetti();
-                alert('Nexus Platform link copied to clipboard! Share with your friends!');
-            }
-
-            playSynthMusic() {
-                this.sound.win();
-                alert('Playing Cyberpunk Synthwave Music Stream!');
-            }
-
-            saveProfileSettings() {
-                const newName = document.getElementById('settings-username-input').value.trim();
-                if (newName) {
-                    this.currentUser.username = newName;
-                    this.db.set('currentUser', this.currentUser);
-                    this.updateUserUI();
-                    alert('Profile updated successfully!');
-                }
-            }
-
-            clearAppData() {
-                if (confirm('Reset all app data?')) {
-                    localStorage.clear();
-                    location.reload();
-                }
-            }
-
-            initBgCanvas() {
-                const canvas = document.getElementById('bg-canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-
-                const stars = Array.from({length: 80}, () => ({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 2,
-                    speed: Math.random() * 0.5 + 0.1
-                }));
-
-                const draw = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = '#00f0ff';
-                    stars.forEach(s => {
-                        s.y += s.speed;
-                        if (s.y > canvas.height) s.y = 0;
-                        ctx.beginPath();
-                        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    });
-                    requestAnimationFrame(draw);
-                };
-                draw();
+                currentX += width + (150 + Math.random() * 250); // gaps between buildings
             }
         }
 
-        // Initialize Application
-        const app = new NexusApp();
-        window.addEventListener('DOMContentLoaded', () => app.init());
+        function initGameEngine() {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            generateBuildings(-1000, 50);
+            
+            // Input Handlers
+            canvas.addEventListener('mousedown', startSwing);
+            canvas.addEventListener('mouseup', releaseSwing);
+            window.addEventListener('keydown', handleKeys);
+        }
+
+        function resizeCanvas() {
+            canvas.width = document.getElementById('view-game').clientWidth;
+            canvas.height = document.getElementById('view-game').clientHeight;
+        }
+
+        function startCutscene() {
+            nav('game');
+            const cs = document.getElementById('cutscene');
+            cs.style.display = 'flex';
+            cs.style.opacity = '1';
+            
+            // Reset player for dramatic drop
+            player.x = buildings[2].x + 100;
+            player.y = -buildings[2].h - 200;
+            player.vx = 8;
+            player.vy = -5;
+            player.web = null;
+
+            setTimeout(() => {
+                cs.style.opacity = '0';
+                setTimeout(() => { cs.style.display = 'none'; }, 500);
+                gameRunning = true;
+                requestAnimationFrame(gameLoop);
+            }, 2000);
+        }
+
+        // Interaction
+        function startSwing(e) {
+            if(!gameRunning) return;
+            // Find a valid building corner ahead of player
+            let anchor = null;
+            let minDist = Infinity;
+
+            for(let b of buildings) {
+                // Check front top corner
+                if(b.x > player.x) {
+                    let dist = Math.hypot(b.x - player.x, -b.h - player.y);
+                    if(dist < 1000 && dist < minDist) {
+                        minDist = dist;
+                        anchor = { x: b.x, y: -b.h };
+                    }
+                }
+            }
+
+            if(anchor) {
+                player.web = {
+                    x: anchor.x,
+                    y: anchor.y,
+                    length: Math.hypot(anchor.x - player.x, anchor.y - player.y) * 0.9 // slight pull
+                };
+                player.state = 'swinging';
+                
+                // Style points
+                state.combo++;
+                showCombo();
+            }
+        }
+
+        function releaseSwing(e) {
+            if(player.web) {
+                player.web = null;
+                player.state = 'falling';
+                // Launch boost based on release angle (momentum transfer)
+                player.vy -= 5; 
+                player.vx += 3;
+                awardXP(10 * state.combo);
+            }
+        }
+
+        function handleKeys(e) {
+            if(e.code === 'Escape') nav('home');
+            if(e.code === 'Space' && player.state === 'falling') {
+                // Air dash / Trick
+                player.vx += 15;
+                player.vy -= 10;
+                state.combo++;
+                showCombo();
+            }
+        }
+
+        function showCombo() {
+            const cc = document.getElementById('combo-counter');
+            cc.innerText = `COMBO x${state.combo}`;
+            cc.style.opacity = '1';
+            clearTimeout(window.comboTimer);
+            window.comboTimer = setTimeout(() => {
+                cc.style.opacity = '0';
+                state.combo = 0;
+            }, 2000);
+        }
+
+        // Physics & Render Loop
+        function gameLoop(timestamp) {
+            if(!gameRunning) return;
+            
+            updatePhysics();
+            render();
+            updateGameHUD();
+            
+            requestAnimationFrame(gameLoop);
+        }
+
+        function updatePhysics() {
+            // Apply Gravity
+            player.vy += GRAVITY;
+
+            // Apply Air Resistance
+            player.vx *= AIR_RESISTANCE;
+            player.vy *= AIR_RESISTANCE;
+
+            if (player.state === 'swinging' && player.web) {
+                // Pendulum Physics Simulation
+                let dx = player.x - player.web.x;
+                let dy = player.y - player.web.y;
+                let distance = Math.hypot(dx, dy);
+
+                if (distance > player.web.length) {
+                    // Pull back to circumference
+                    let diff = distance - player.web.length;
+                    let nx = dx / distance;
+                    let ny = dy / distance;
+                    
+                    player.x -= nx * diff;
+                    player.y -= ny * diff;
+
+                    // Deflect velocity to be tangent to the swing circle
+                    let dot = player.vx * nx + player.vy * ny;
+                    player.vx -= nx * dot;
+                    player.vy -= ny * dot;
+
+                    // Add swinging momentum if moving forward
+                    if(player.x < player.web.x) {
+                        player.vx += SWING_ACCEL;
+                    }
+                }
+            }
+
+            // Cap Speed
+            let speed = Math.hypot(player.vx, player.vy);
+            if(speed > MAX_SPEED) {
+                player.vx = (player.vx / speed) * MAX_SPEED;
+                player.vy = (player.vy / speed) * MAX_SPEED;
+            }
+
+            // Move
+            player.x += player.vx;
+            player.y += player.vy;
+
+            // Collision with ground (game over / reset for prototype)
+            if(player.y > 0) {
+                player.y = 0;
+                player.vy = 0;
+                player.vx *= 0.8;
+                player.state = 'running';
+                if(player.web) releaseSwing();
+            }
+
+            // Infinite City Generation
+            if(buildings[buildings.length-1].x < player.x + 3000) {
+                generateBuildings(buildings[buildings.length-1].x + 400, 10);
+            }
+
+            // Camera Follow (Smooth)
+            let targetCamX = player.x - canvas.width * 0.3;
+            let targetCamY = player.y - canvas.height * 0.6;
+            
+            camera.x += (targetCamX - camera.x) * 0.1;
+            camera.y += (targetCamY - camera.y) * 0.1;
+        }
+
+        function render() {
+            // Clear Background
+            ctx.fillStyle = '#020205';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.save();
+            // Apply Camera Transform
+            ctx.translate(-camera.x, -camera.y);
+
+            // Draw Grid/Atmosphere (Parallax background)
+            ctx.strokeStyle = 'rgba(0, 229, 255, 0.05)';
+            ctx.lineWidth = 2;
+            let startGrid = Math.floor(camera.x / 100) * 100;
+            for(let i = -1000; i < 3000; i+=200) {
+                ctx.beginPath();
+                ctx.moveTo(startGrid + i, camera.y - 1000);
+                ctx.lineTo(startGrid + i, 1000);
+                ctx.stroke();
+            }
+
+            // Draw Buildings
+            buildings.forEach(b => {
+                // Only draw if on screen
+                if(b.x + b.w > camera.x && b.x < camera.x + canvas.width) {
+                    // Building Body
+                    ctx.fillStyle = b.color;
+                    ctx.fillRect(b.x, -b.h, b.w, b.h + 1000); // extends downwards
+                    
+                    // Neon Edge Highlights
+                    ctx.strokeStyle = 'rgba(0, 229, 255, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(b.x, -b.h, b.w, b.h + 1000);
+                }
+            });
+
+            // Draw Web Line
+            if(player.web) {
+                ctx.beginPath();
+                ctx.moveTo(player.x, player.y);
+                ctx.lineTo(player.web.x, player.web.y);
+                ctx.strokeStyle = varThreadColor();
+                ctx.lineWidth = 2;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = varThreadColor();
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+
+            // Draw Player (Nova - abstract representation)
+            ctx.fillStyle = '#fff';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = varThreadColor();
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Movement Trail
+            ctx.beginPath();
+            ctx.moveTo(player.x, player.y);
+            ctx.lineTo(player.x - player.vx*3, player.y - player.vy*3);
+            ctx.strokeStyle = varThreadColor();
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            ctx.restore();
+        }
+
+        function varThreadColor() {
+            // Alternate based on combo
+            return state.combo > 2 ? '#9d00ff' : '#00e5ff';
+        }
+
+        function updateGameHUD() {
+            let speed = Math.round(Math.hypot(player.vx, player.vy) * 2); // Multiplier for visual feel
+            let alt = Math.round(-player.y / 10);
+            
+            document.getElementById('hud-speed').innerText = `SPD: ${speed} U/s`;
+            document.getElementById('hud-alt').innerText = `ALT: ${alt > 0 ? alt : 0} M`;
+        }
+
     </script>
 </body>
 </html>
