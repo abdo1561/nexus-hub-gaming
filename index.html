@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS: MARKET TYCOON — FULL MULTIPLAYER</title>
+    <title>NEXUS: MARKET TYCOON — SUPABASE EDITION</title>
+    <!-- Fonts & Supabase SDK -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-dark: #07090e;
             --bg-card: rgba(15, 22, 36, 0.85);
+            --bg-card-hover: rgba(24, 35, 56, 0.95);
             --accent-cyan: #00f0ff;
             --accent-neon-green: #00ff88;
             --accent-gold: #ffd700;
             --accent-purple: #9d4edd;
             --accent-red: #ff3366;
             --border-glow: rgba(0, 240, 255, 0.25);
+            --border-gold: rgba(255, 215, 0, 0.3);
             --text-main: #e2e8f0;
             --text-muted: #94a3b8;
             --font-head: 'Orbitron', sans-serif;
@@ -63,10 +66,11 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 0 10px rgba(0,240,255,0.1);
         }
         .btn:hover {
             background: linear-gradient(135deg, rgba(0,240,255,0.3), rgba(157,78,221,0.4));
-            box-shadow: 0 0 15px rgba(0,240,255,0.4);
+            box-shadow: 0 0 20px rgba(0,240,255,0.4);
             transform: translateY(-2px);
         }
         .btn-gold {
@@ -75,7 +79,7 @@
         }
         .btn-gold:hover {
             background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,140,0,0.4));
-            box-shadow: 0 0 15px rgba(255,215,0,0.4);
+            box-shadow: 0 0 20px rgba(255,215,0,0.4);
         }
         .btn-red {
             background: linear-gradient(135deg, rgba(255,51,102,0.2), rgba(200,0,50,0.2));
@@ -83,7 +87,7 @@
         }
         .btn-red:hover {
             background: linear-gradient(135deg, rgba(255,51,102,0.4), rgba(200,0,50,0.4));
-            box-shadow: 0 0 15px rgba(255,51,102,0.4);
+            box-shadow: 0 0 20px rgba(255,51,102,0.4);
         }
         .btn-sm { padding: 5px 10px; font-size: 0.75rem; }
 
@@ -121,7 +125,7 @@
             border-radius: 30px;
         }
 
-        .stat-item { display: flex; flex-direction: column; }
+        .stat-item { display: flex; flex-direction: column; align-items: flex-start; }
         .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
         .stat-val { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; }
 
@@ -143,12 +147,16 @@
             white-space: nowrap;
             border-bottom: 3px solid transparent;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.03); }
         .nav-tab.active {
             color: var(--accent-cyan);
             border-bottom-color: var(--accent-cyan);
             background: rgba(0, 240, 255, 0.05);
+            text-shadow: 0 0 8px rgba(0,240,255,0.4);
         }
 
         #app-viewport {
@@ -165,9 +173,14 @@
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
 
-        @media (max-width: 1000px) {
-            .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+        @media (max-width: 1200px) {
+            .grid-5 { grid-template-columns: repeat(3, 1fr); }
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .grid-5, .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
         }
 
         .nexus-card {
@@ -203,6 +216,12 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .item-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 6px 20px rgba(0,240,255,0.15);
         }
         .item-icon {
             width: 100%;
@@ -226,12 +245,14 @@
             justify-content: center;
         }
         .modal-backdrop.active { display: flex; }
+
         .modal-box {
             background: var(--bg-dark);
             border: 1px solid var(--accent-cyan);
+            box-shadow: 0 0 40px rgba(0,240,255,0.2);
             border-radius: 14px;
             width: 90%;
-            max-width: 480px;
+            max-width: 500px;
             padding: 28px;
         }
 
@@ -246,6 +267,7 @@
             overflow-x: auto;
             white-space: nowrap;
         }
+        .ticker-item { display: inline-flex; gap: 8px; align-items: center; }
 
         .chat-container {
             display: grid;
@@ -276,34 +298,21 @@
             flex-direction: column;
             gap: 10px;
         }
-        .msg-bubble {
-            max-width: 75%;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-        .msg-player {
-            align-self: flex-end;
-            background: rgba(0, 240, 255, 0.15);
-            border: 1px solid var(--accent-cyan);
-        }
-        .msg-other {
-            align-self: flex-start;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
+        .msg-bubble { max-width: 75%; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; }
+        .msg-player { align-self: flex-end; background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); }
+        .msg-other { align-self: flex-start; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); }
     </style>
 </head>
 <body>
 
-    <div class="live-ticker" id="ticker-bar">
-        <!-- Live tickers injected here -->
-    </div>
+    <!-- TICKER -->
+    <div class="live-ticker" id="ticker-bar"></div>
 
+    <!-- MAIN HEADER -->
     <header id="top-header">
         <div class="brand-logo">
             <span>⚡</span>
-            <div>NEXUS <span style="font-size:0.7rem; color:var(--text-muted); display:block; letter-spacing:2px;">SUPABASE CLOUD</span></div>
+            <div>NEXUS <span style="font-size:0.7rem; color:var(--text-muted); display:block; letter-spacing:2px;">SUPABASE LIVE</span></div>
         </div>
 
         <div class="user-stats-bar">
@@ -317,7 +326,7 @@
             </div>
             <div class="stat-item">
                 <span class="stat-label">LEVEL / XP</span>
-                <span id="stat-level" class="stat-val text-green">Lvl 1 (0 XP)</span>
+                <span id="stat-level" class="stat-val text-green">Lvl 1</span>
             </div>
             <div class="stat-item">
                 <span class="stat-label">PRESTIGE</span>
@@ -331,6 +340,7 @@
         </div>
     </header>
 
+    <!-- NAVIGATION TABS -->
     <nav id="nav-tabs-bar">
         <div class="nav-tab active" onclick="switchTab('market')">🛒 SHARED MARKET</div>
         <div class="nav-tab" onclick="switchTab('auctions')">🏛️ LIVE AUCTIONS</div>
@@ -338,49 +348,50 @@
         <div class="nav-tab" onclick="switchTab('businesses')">🏢 BUSINESS EMPIRE</div>
         <div class="nav-tab" onclick="switchTab('messages')">💬 CLOUD CHAT</div>
         <div class="nav-tab" onclick="switchTab('leaderboards')">🏆 GLOBAL RANKS</div>
-        <div id="admin-nav-tab" class="nav-tab text-gold" style="display:none;" onclick="switchTab('admin')">👑 ADMIN CONTROL</div>
+        <div id="admin-nav-tab" class="nav-tab text-gold" style="display:none;" onclick="switchTab('admin')">👑 ADMIN DASHBOARD</div>
     </nav>
 
+    <!-- VIEWPORTS -->
     <main id="app-viewport">
-        <!-- MARKETPLACE -->
+        <!-- 1. MARKETPLACE -->
         <section id="view-market" class="view-panel active">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <div>
                     <h2>🛒 SUPABASE LIVE MARKETPLACE</h2>
-                    <p style="color:var(--text-muted);">Atomic purchases synced across all active players in real time.</p>
+                    <p style="color:var(--text-muted);">Atomic transactions synced directly across all players.</p>
                 </div>
                 <button class="btn btn-gold" onclick="openListItemModal()">+ CREATE MARKET LISTING</button>
             </div>
             <div id="market-listings-grid" class="grid-4"></div>
         </section>
 
-        <!-- AUCTIONS -->
+        <!-- 2. AUCTIONS -->
         <section id="view-auctions" class="view-panel">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <div>
                     <h2>🏛️ LIVE AUCTIONS</h2>
-                    <p style="color:var(--text-muted);">Synchronized bids managed through database RPC functions.</p>
+                    <p style="color:var(--text-muted);">Synchronized high-stakes bidding.</p>
                 </div>
                 <button class="btn btn-gold" onclick="openStartAuctionModal()">+ START NEW AUCTION</button>
             </div>
             <div id="auctions-grid" class="grid-3"></div>
         </section>
 
-        <!-- INVENTORY -->
+        <!-- 3. INVENTORY -->
         <section id="view-inventory" class="view-panel">
             <h2>📦 INVENTORY & UPGRADE FORGE</h2>
-            <p style="color:var(--text-muted); margin-bottom:20px;">Evolve prototypes into prime artifacts directly on Postgres.</p>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Evolve prototypes to Prime artifacts.</p>
             <div id="inventory-grid" class="grid-4"></div>
         </section>
 
-        <!-- BUSINESSES -->
+        <!-- 4. BUSINESSES -->
         <section id="view-businesses" class="view-panel">
             <h2>🏢 PRODUCTION FACILITIES</h2>
-            <p style="color:var(--text-muted); margin-bottom:20px;">Owned commercial districts automatically stream passive profit.</p>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Automated profit generated directly to your database balance.</p>
             <div id="businesses-grid" class="grid-3"></div>
         </section>
 
-        <!-- MESSAGES -->
+        <!-- 5. CHAT -->
         <section id="view-messages" class="view-panel">
             <h2 style="margin-bottom:16px;">💬 GLOBAL & DIRECT MESSAGES</h2>
             <div class="chat-container">
@@ -398,7 +409,7 @@
             </div>
         </section>
 
-        <!-- LEADERBOARDS -->
+        <!-- 6. LEADERBOARDS -->
         <section id="view-leaderboards" class="view-panel">
             <h2>🏆 LIVE LEADERBOARD</h2>
             <div class="nexus-card" style="margin-top:20px;">
@@ -417,7 +428,7 @@
             </div>
         </section>
 
-        <!-- ADMIN PANEL -->
+        <!-- 7. ADMIN DASHBOARD -->
         <section id="view-admin" class="view-panel">
             <h2 class="text-gold">👑 SUPABASE MASTER CONTROLS</h2>
             <div class="grid-2" style="margin-top:20px;">
@@ -433,11 +444,11 @@
         </section>
     </main>
 
-    <!-- AUTH MODAL -->
+    <!-- FIXED AUTHENTICATION MODAL -->
     <div id="login-modal" class="modal-backdrop active">
         <div class="modal-box" style="text-align:center;">
             <h2 class="text-cyan" style="margin-bottom:8px;">NEXUS NETWORK AUTH</h2>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Log in or create a profile directly on Supabase.</p>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Log in or register an operative profile directly to Supabase.</p>
 
             <div style="text-align:left; margin-bottom:12px;">
                 <label class="stat-label">USERNAME</label>
@@ -450,21 +461,5 @@
             </div>
 
             <div style="display:flex; gap:10px;">
-                <button class="btn btn-gold" style="flex:1;" onclick="handleLogin()">LOG IN</button>
-                <button class="btn" style="flex:1;" onclick="handleRegister()">REGISTER NEW</button>
-            </div>
-            <div id="auth-msg" style="margin-top:12px; font-size:0.85rem; color:var(--accent-red); display:none;"></div>
-        </div>
-    </div>
-
-    <!-- LIST ITEM MODAL -->
-    <div id="list-item-modal" class="modal-backdrop">
-        <div class="modal-box">
-            <h3 class="text-cyan" style="margin-bottom:15px;">LIST ITEM ON MARKETPLACE</h3>
-            <div style="margin-bottom:15px;">
-                <label class="stat-label">SELECT ITEM FROM INVENTORY</label>
-                <select id="list-item-select" style="width:100%; padding:10px; background:rgba(0,0,0,0.8); border:1px solid var(--border-glow); color:#fff; border-radius:6px;"></select>
-            </div>
-            <div style="margin-bottom:20px;">
-                <label class="stat-label">PRICE ($ CASH)</label>
-                <input type="number" id="list-item-price" placeholder="50000" style="w
+                <button class="btn btn-gold" style="flex:1; padding:12px;" onclick="handleLogin()">LOG IN</button>
+                <button class="btn" style="flex:1; padding:12px;" onclick="handleRegister()">
