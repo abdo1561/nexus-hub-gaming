@@ -3,732 +3,1635 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS: WEBRUNNER - OS</title>
+    <title>NEXUS: MARKET TYCOON — FULL MULTIPLAYER + WORLD EXPANSION</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
-
         :root {
-            --bg-dark: #050507;
-            --bg-panel: rgba(15, 15, 20, 0.85);
-            --thread-cyan: #00e5ff;
-            --thread-purple: #9d00ff;
-            --text-main: #f0f0f0;
-            --text-muted: #888;
-            --font-ui: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
+            --bg-dark: #07090e;
+            --bg-card: rgba(15, 22, 36, 0.85);
+            --bg-card-hover: rgba(24, 35, 56, 0.95);
+            --accent-cyan: #00f0ff;
+            --accent-neon-green: #00ff88;
+            --accent-gold: #ffd700;
+            --accent-purple: #9d4edd;
+            --accent-red: #ff3366;
+            --border-glow: rgba(0, 240, 255, 0.25);
+            --border-gold: rgba(255, 215, 0, 0.3);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --font-head: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        
         body {
             background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(157, 78, 221, 0.05) 0%, transparent 40%),
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
             color: var(--text-main);
-            font-family: var(--font-ui);
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
+            font-family: var(--font-body);
+            font-size: 16px;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* FULLSCREEN OVERLAY */
-        #init-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            transition: opacity 0.5s ease;
-        }
-        
-        .title-glitch {
-            font-size: 4rem;
-            font-weight: 900;
-            letter-spacing: 4px;
-            background: linear-gradient(90deg, var(--thread-cyan), var(--thread-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
+        /* --- TYPOGRAPHY & BUTTONS --- */
+        h1, h2, h3, h4 { font-family: var(--font-head); text-transform: uppercase; letter-spacing: 1px; }
+        .mono { font-family: var(--font-mono); }
+        .text-cyan { color: var(--accent-cyan); }
+        .text-gold { color: var(--accent-gold); }
+        .text-green { color: var(--accent-neon-green); }
+        .text-purple { color: var(--accent-purple); }
+        .text-red { color: var(--accent-red); }
 
         .btn {
-            background: transparent;
-            border: 2px solid var(--thread-cyan);
-            color: var(--thread-cyan);
-            padding: 12px 30px;
-            font-size: 1.2rem;
+            background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(157,78,221,0.2));
+            border: 1px solid var(--accent-cyan);
+            color: #fff;
+            font-family: var(--font-head);
+            font-size: 0.85rem;
             font-weight: 700;
+            padding: 10px 18px;
+            border-radius: 6px;
             cursor: pointer;
-            text-transform: uppercase;
             transition: all 0.2s ease;
-            border-radius: 4px;
-            font-family: var(--font-mono);
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 0 10px rgba(0,240,255,0.1);
         }
-
         .btn:hover {
-            background: var(--thread-cyan);
-            color: #000;
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+            background: linear-gradient(135deg, rgba(0,240,255,0.3), rgba(157,78,221,0.4));
+            box-shadow: 0 0 20px rgba(0,240,255,0.4);
+            transform: translateY(-2px);
         }
-
-        /* MAIN APP LAYOUT */
-        #app {
-            display: none;
-            width: 100vw;
-            height: 100vh;
-            flex-direction: row;
+        .btn-gold {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,140,0,0.2));
+            border-color: var(--accent-gold);
         }
+        .btn-gold:hover {
+            background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,140,0,0.4));
+            box-shadow: 0 0 20px rgba(255,215,0,0.4);
+        }
+        .btn-red {
+            background: linear-gradient(135deg, rgba(255,51,102,0.2), rgba(200,0,50,0.2));
+            border-color: var(--accent-red);
+        }
+        .btn-red:hover {
+            background: linear-gradient(135deg, rgba(255,51,102,0.4), rgba(200,0,50,0.4));
+            box-shadow: 0 0 20px rgba(255,51,102,0.4);
+        }
+        .btn-sm { padding: 5px 10px; font-size: 0.75rem; }
 
-        /* SIDEBAR */
-        #sidebar {
-            width: 250px;
-            background: rgba(10, 10, 12, 0.95);
-            border-right: 1px solid rgba(0, 229, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: blur(10px);
+        /* --- HEADER & STATS BAR --- */
+        #top-header {
+            position: sticky;
+            top: 0;
             z-index: 100;
+            background: rgba(7, 9, 14, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-glow);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
         }
 
-        .brand {
-            padding: 20px;
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
             font-weight: 900;
-            font-size: 1.5rem;
-            color: #fff;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            text-shadow: 0 0 10px var(--thread-cyan);
+            color: var(--accent-cyan);
+            text-shadow: 0 0 12px rgba(0,240,255,0.5);
         }
 
-        .nav-item {
-            padding: 15px 20px;
-            cursor: pointer;
-            font-weight: 700;
-            color: var(--text-muted);
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
+        .user-stats-bar {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 8px 18px;
+            border-radius: 30px;
         }
 
-        .nav-item:hover, .nav-item.active {
-            color: #fff;
-            background: rgba(0, 229, 255, 0.1);
-            border-left: 3px solid var(--thread-cyan);
-        }
-
-        /* CONTENT AREA */
-        #content {
-            flex: 1;
+        .stat-item {
             display: flex;
             flex-direction: column;
+            align-items: flex-start;
+        }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        .stat-val { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; }
+
+        /* --- NAVIGATION TABS --- */
+        #nav-tabs-bar {
+            background: rgba(12, 17, 28, 0.9);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            overflow-x: auto;
+            padding: 0 20px;
+            gap: 4px;
+            scrollbar-width: thin;
+        }
+        .nav-tab {
+            padding: 14px 18px;
+            font-family: var(--font-head);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.03); }
+        .nav-tab.active {
+            color: var(--accent-cyan);
+            border-bottom-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+            text-shadow: 0 0 8px rgba(0,240,255,0.4);
+        }
+
+        /* --- MAIN VIEW CONTAINER --- */
+        #app-viewport {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px;
+            min-height: calc(100vh - 140px);
+        }
+
+        .view-panel { display: none; }
+        .view-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CARDS & GRID LAYOUTS --- */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+
+        @media (max-width: 1200px) {
+            .grid-5 { grid-template-columns: repeat(3, 1fr); }
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .grid-5, .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        .nexus-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .nexus-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+        }
+
+        /* --- RARITY COLORS --- */
+        .rarity-COMMON { color: #9e9e9e; border-color: #9e9e9e; }
+        .rarity-RARE { color: #00b0ff; border-color: #00b0ff; }
+        .rarity-EPIC { color: #aa00ff; border-color: #aa00ff; }
+        .rarity-LEGENDARY { color: #ffd700; border-color: #ffd700; }
+        .rarity-SECRET { color: #ff0055; border-color: #ff0055; text-shadow: 0 0 8px #ff0055; }
+
+        .rarity-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid currentColor;
+            text-transform: uppercase;
+        }
+
+        /* --- ITEM CARDS --- */
+        .item-card {
+            background: rgba(10, 15, 25, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .item-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 6px 20px rgba(0,240,255,0.15);
+        }
+        .item-icon {
+            width: 100%;
+            height: 100px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        /* --- MODAL DIALOGS --- */
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(3, 5, 10, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-backdrop.active { display: flex; }
+
+        .modal-box {
+            background: var(--bg-dark);
+            border: 1px solid var(--accent-cyan);
+            box-shadow: 0 0 40px rgba(0,240,255,0.2);
+            border-radius: 14px;
+            width: 90%;
+            max-width: 520px;
+            padding: 28px;
             position: relative;
         }
 
-        #topbar {
-            height: 60px;
-            background: rgba(10, 10, 12, 0.8);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            backdrop-filter: blur(10px);
-            z-index: 100;
-        }
-
-        .stats-group {
-            display: flex;
-            gap: 20px;
+        /* --- LIVE TICKER & ACTIVITY FEED --- */
+        .live-ticker {
+            background: rgba(0,0,0,0.6);
+            border-bottom: 1px solid var(--border-glow);
+            padding: 6px 20px;
             font-family: var(--font-mono);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            display: flex;
+            gap: 30px;
+            overflow: hidden;
+            white-space: nowrap;
         }
-        
-        .stat span { color: var(--thread-cyan); font-weight: bold; }
+        .ticker-item { display: inline-flex; gap: 8px; align-items: center; }
 
-        /* VIEWS */
-        .view {
-            display: none;
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-            background: radial-gradient(circle at center, #111 0%, #050507 100%);
-        }
-
-        .view.active { display: block; }
-
-        h2 { margin-bottom: 20px; font-weight: 900; font-size: 2rem; color: #fff; }
-
-        .card-grid {
+        /* --- CHAT SYSTEM --- */
+        .chat-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: 280px 1fr;
+            height: 680px;
+            background: rgba(10, 15, 25, 0.9);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .chat-sidebar {
+            background: rgba(0,0,0,0.4);
+            border-right: 1px solid rgba(255,255,255,0.08);
+            overflow-y: auto;
+        }
+        .chat-contact {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s;
+        }
+        .chat-contact:hover, .chat-contact.active {
+            background: rgba(0,240,255,0.1);
+        }
+        .chat-main { display: flex; flex-direction: column; height: 100%; }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .msg-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .msg-player {
+            align-self: flex-end;
+            background: rgba(0, 240, 255, 0.15);
+            border: 1px solid var(--accent-cyan);
+            border-bottom-right-radius: 2px;
+        }
+        .msg-other {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom-left-radius: 2px;
         }
 
-        .card {
-            background: var(--bg-panel);
+        /* --- STOCK CHART CANVAS --- */
+        #stock-chart-canvas {
+            width: 100%;
+            height: 280px;
+            background: rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px;
+        }
+
+        /* --- CITY MAP GRID --- */
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+        .city-location {
+            background: rgba(15, 22, 38, 0.9);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
             padding: 20px;
-            transition: transform 0.2s;
-        }
-        
-        .card:hover { border-color: var(--thread-cyan); transform: translateY(-2px); }
-
-        /* GAME CANVAS */
-        #game-view {
-            padding: 0;
-            display: none;
-            position: relative;
-            background: #000;
-        }
-        
-        #game-view.active { display: flex; }
-        
-        canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        #game-hud {
-            position: absolute;
-            top: 20px; left: 20px;
-            pointer-events: none;
-        }
-
-        .hud-element {
-            background: rgba(0,0,0,0.5);
-            padding: 10px 15px;
-            border-left: 4px solid var(--thread-cyan);
-            font-family: var(--font-mono);
-            margin-bottom: 10px;
-        }
-
-        #combo-counter {
-            position: absolute;
-            top: 20px; right: 20px;
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--thread-cyan);
-            text-shadow: 0 0 20px var(--thread-cyan);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        /* CUTSCENE OVERLAY */
-        #cutscene {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-            color: #fff;
-            flex-direction: column;
             text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
         }
+        .city-location:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.2);
+        }
+        .city-icon { font-size: 3rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <!-- INIT SCREEN FOR FULLSCREEN TRIGGER -->
-    <div id="init-screen">
-        <div class="title-glitch">NEXUS: WEBRUNNER</div>
-        <p style="margin-bottom: 30px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 2px;">THE CITY IS YOURS TO CROSS.</p>
-        <button class="btn" onclick="initApp()">INITIALIZE SYSTEM (FULLSCREEN)</button>
+    <!-- LIVE WORLD EVENT BANNER -->
+    <div id="world-event-banner" style="display:none; background: linear-gradient(90deg, #ff0055, #9d4edd); text-align: center; padding: 8px; font-weight: 800; font-family: var(--font-head); letter-spacing: 1px;">
+        🚨 GLOBAL EVENT ACTIVE: <span id="event-title-text">MARKET APOCALYPSE</span> — <span id="event-desc-text">Extreme price volatility across all stock indices!</span>
     </div>
 
-    <!-- MAIN APP -->
-    <div id="app">
-        <!-- SIDEBAR -->
-        <div id="sidebar">
-            <div class="brand">NEXUS HUB</div>
-            <div class="nav-item active" onclick="nav('home')">HOME</div>
-            <div class="nav-item" onclick="startCutscene()">PLAY (ENTER CITY)</div>
-            <div class="nav-item" onclick="nav('suits')">SUITS</div>
-            <div class="nav-item" onclick="nav('abilities')">SKILL TREE</div>
-            <div class="nav-item" onclick="nav('leaderboard')">LEADERBOARDS</div>
-            <div class="nav-item" onclick="nav('ai')">NEXUS AI</div>
-            <div class="nav-item" onclick="nav('admin')" style="margin-top: auto; color: #ff3366;">ADMIN OVERRIDE</div>
+    <!-- LIVE TICKER BAR -->
+    <div class="live-ticker">
+        <div class="ticker-item"><span class="text-cyan">NEXUS TECH (NXT):</span> <span id="ticker-nxt" class="mono text-green">$420.50 (+4.2%)</span></div>
+        <div class="ticker-item"><span class="text-cyan">QUANTUM MOTORS (QTM):</span> <span id="ticker-qtm" class="mono text-red">$185.10 (-1.8%)</span></div>
+        <div class="ticker-item"><span class="text-cyan">TITAN ELECTRONICS (TTE):</span> <span id="ticker-tte" class="mono text-green">$890.00 (+8.5%)</span></div>
+        <div class="ticker-item"><span class="text-cyan">NOVA GAMING (NVG):</span> <span id="ticker-nvg" class="mono text-green">$112.40 (+0.4%)</span></div>
+        <div class="ticker-item"><span class="text-cyan">VERTEX ENERGY (VTE):</span> <span id="ticker-vte" class="mono text-red">$310.00 (-5.1%)</span></div>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header id="top-header">
+        <div class="brand-logo">
+            <span style="font-size:1.8rem;">⚡</span>
+            <div>NEXUS <span style="font-size:0.7rem; color:var(--text-muted); display:block; letter-spacing:2px;">MARKET TYCOON</span></div>
         </div>
 
-        <!-- CONTENT -->
-        <div id="content">
-            <div id="topbar">
-                <div style="font-weight: 700; color: #fff;">HERO: <span style="color: var(--thread-cyan);">KAI REYES (NOVA)</span></div>
-                <div class="stats-group">
-                    <div class="stat">LVL: <span id="ui-lvl">1</span></div>
-                    <div class="stat">XP: <span id="ui-xp">0</span></div>
-                    <div class="stat">REP: <span id="ui-rep">0</span></div>
-                </div>
+        <div class="user-stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">OPERATIVE</span>
+                <span id="stat-username" class="stat-val text-cyan">Abdo (ADMIN)</span>
             </div>
+            <div class="stat-item">
+                <span class="stat-label">CASH BALANCE</span>
+                <span id="stat-cash" class="stat-val text-gold">$500,000</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">LEVEL / XP</span>
+                <span id="stat-level" class="stat-val text-green">Lvl 15 (2,500 XP)</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">PRESTIGE</span>
+                <span id="stat-prestige" class="stat-val text-purple">Prestige I</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">STATUS</span>
+                <span class="stat-val text-green">🟢 ONLINE</span>
+            </div>
+        </div>
 
-            <!-- HOME VIEW -->
-            <div id="view-home" class="view active">
-                <h2>NOVA CITY STATUS</h2>
-                <div class="card-grid">
-                    <div class="card">
-                        <h3 style="color: var(--thread-cyan); margin-bottom: 10px;">CURRENT MISSION</h3>
-                        <p><strong>THE BLACKOUT</strong><br>Investigate the power anomalies in the Iron District. The Architect's drones have been spotted.</p>
-                    </div>
-                    <div class="card">
-                        <h3 style="color: var(--thread-purple); margin-bottom: 10px;">CITY EVENTS</h3>
-                        <p>3 Active Crimes Detected.<br>1 Rooftop Race available in Neon Heights.</p>
-                    </div>
-                    <div class="card">
-                        <h3 style="color: #fff; margin-bottom: 10px;">SUIT STATUS</h3>
-                        <p>Threadcore Base Armor Equipped.<br>Durability: 100%</p>
-                    </div>
-                </div>
-            </div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-sm btn-gold" onclick="openSwitchAccountModal()">🔄 SWITCH ACCOUNT</button>
+            <button class="btn btn-sm btn-red" onclick="executeLogout()">LOG OUT</button>
+        </div>
+    </header>
 
-            <!-- SUITS VIEW -->
-            <div id="view-suits" class="view">
-                <h2>SUIT COLLECTION</h2>
-                <div class="card-grid">
-                    <div class="card" style="border-color: var(--thread-cyan);">
-                        <h3>Threadcore Starter</h3>
-                        <p style="color: var(--text-muted); margin-top: 10px;">The original bio-tech armor.</p>
-                        <button class="btn" style="margin-top: 15px; padding: 5px 15px; font-size: 0.9rem;">EQUIPPED</button>
-                    </div>
-                    <div class="card" style="opacity: 0.5;">
-                        <h3>Neon Velocity</h3>
-                        <p style="color: var(--text-muted); margin-top: 10px;">Unlocks at Level 10.</p>
-                    </div>
-                    <div class="card" style="opacity: 0.5;">
-                        <h3>Blackout Stealth</h3>
-                        <p style="color: var(--text-muted); margin-top: 10px;">Unlocks at Level 25.</p>
-                    </div>
-                </div>
-            </div>
+    <!-- NAVIGATION TABS -->
+    <nav id="nav-tabs-bar">
+        <div class="nav-tab active" onclick="switchTab('city')">🏙️ NEXUS CITY</div>
+        <div class="nav-tab" onclick="switchTab('market')">🛒 MARKETPLACE</div>
+        <div class="nav-tab" onclick="switchTab('auctions')">🏛️ AUCTIONS</div>
+        <div class="nav-tab" onclick="switchTab('trade')">🤝 DIRECT TRADE</div>
+        <div class="nav-tab" onclick="switchTab('businesses')">🏢 BUSINESSES</div>
+        <div class="nav-tab" onclick="switchTab('stocks')">📈 STOCKS & INVESTMENTS</div>
+        <div class="nav-tab" onclick="switchTab('inventory')">📦 INVENTORY & FACTORY</div>
+        <div class="nav-tab" onclick="switchTab('messages')">💬 MESSAGES <span id="unread-badge" style="background:var(--accent-red); color:#fff; border-radius:50%; padding:2px 6px; font-size:0.65rem; display:none;">0</span></div>
+        <div class="nav-tab" onclick="switchTab('collections')">🎨 COLLECTIONS</div>
+        <div class="nav-tab" onclick="switchTab('leaderboards')">🏆 LEADERBOARDS & RECORDS</div>
+        <div class="nav-tab" onclick="switchTab('challenges')">🎯 CHALLENGES & SEASONS</div>
+        <div class="nav-tab" onclick="switchTab('prestige')">🎖️ PRESTIGE 2.0</div>
+        <div id="admin-nav-tab" class="nav-tab text-gold" style="display:none;" onclick="switchTab('admin')">👑 ADMIN CONTROL</div>
+    </nav>
+
+    <!-- MAIN CONTENT VIEWPORT -->
+    <main id="app-viewport">
+
+        <!-- 1. NEXUS CITY MAP PANEL -->
+        <section id="view-city" class="view-panel active">
+            <h2 style="margin-bottom: 8px;">🏙️ NEXUS CITY DISTRICTS</h2>
+            <p style="color:var(--text-muted); margin-bottom: 24px;">Explore real-time facilities, industrial hub, and trading centers across the metropolis.</p>
             
-            <!-- AI VIEW -->
-            <div id="view-ai" class="view">
-                <h2>NEXUS HERO INTELLIGENCE</h2>
-                <div class="card" style="height: 400px; display: flex; flex-direction: column;">
-                    <div id="ai-chat" style="flex: 1; overflow-y: auto; font-family: var(--font-mono); color: var(--thread-cyan); margin-bottom: 10px;">
-                        > NEXUS AI ONLINE. AWAITING QUERY, KAI.
+            <div class="city-grid">
+                <div class="city-location" onclick="switchTab('market')">
+                    <div class="city-icon">🛒</div>
+                    <h3>Marketplace</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Buy & sell items with real friends and competitor NPCs.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('auctions')">
+                    <div class="city-icon">🏛️</div>
+                    <h3>Auction House</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">High-stakes competitive bidding arena for rare loot.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('businesses')">
+                    <div class="city-icon">🏢</div>
+                    <h3>Business District</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Build Warehouses, Factories, and Trading Firms.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('stocks')">
+                    <div class="city-icon">📈</div>
+                    <h3>Investment Center</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Trade 8 live corporate stock shares in real-time.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('inventory')">
+                    <div class="city-icon">🏭</div>
+                    <h3>Industrial District</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Evolve items from Prototype to Prime tier.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('collections')">
+                    <div class="city-icon">🎨</div>
+                    <h3>Collector District</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Display rare discoveries and complete set rewards.</p>
+                </div>
+                <div class="city-location" onclick="switchTab('trade')">
+                    <div class="city-icon">🤝</div>
+                    <h3>Trade Exchange</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Atomic direct item-for-cash swaps between friends.</p>
+                </div>
+                <div class="city-location" onclick="alert('🏦 NEXUS BANK: Financial vault active. Earn 2.5% passive interest hourly on unspent cash balance!')">
+                    <div class="city-icon">🏦</div>
+                    <h3>Nexus Bank</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Secure cash reserves & vault protection.</p>
+                </div>
+                <div class="city-location" onclick="alert('🔬 RESEARCH LAB: Item evolution blueprints & discovery scanner active!')">
+                    <div class="city-icon">🔬</div>
+                    <h3>Research Lab</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Unlock hidden recipes and secret item discoveries.</p>
+                </div>
+                <div class="city-location" onclick="alert('🚗 VEHICLE MARKET: Hypercars & Flying Transport auctions coming next season!')">
+                    <div class="city-icon">🚗</div>
+                    <h3>Vehicle Market</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">Luxury transport drops and vehicular collectibles.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MARKETPLACE PANEL -->
+        <section id="view-market" class="view-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <div>
+                    <h2>🛒 SHARED MARKETPLACE</h2>
+                    <p style="color:var(--text-muted);">Real player listings & intelligent NPC competitor offers.</p>
+                </div>
+                <button class="btn btn-gold" onclick="openListItemModal()">+ CREATE MARKET LISTING</button>
+            </div>
+
+            <div id="market-listings-grid" class="grid-4">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- 3. AUCTIONS PANEL -->
+        <section id="view-auctions" class="view-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <div>
+                    <h2>🏛️ LIVE AUCTION HOUSE</h2>
+                    <p style="color:var(--text-muted);">Bid against friends and NPC competitors before the timer expires.</p>
+                </div>
+                <button class="btn btn-gold" onclick="openStartAuctionModal()">+ START NEW AUCTION</button>
+            </div>
+
+            <div id="auctions-grid" class="grid-3">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- 4. DIRECT TRADE PANEL -->
+        <section id="view-trade" class="view-panel">
+            <h2>🤝 DIRECT PLAYER-TO-PLAYER TRADE</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Atomic lock-and-confirm trading system. No item duplication or race conditions.</p>
+
+            <div class="grid-2">
+                <div class="nexus-card">
+                    <h3 class="text-cyan">YOUR OFFERING</h3>
+                    <div style="margin: 15px 0;">
+                        <label class="stat-label">OFFER CASH ($)</label>
+                        <input type="number" id="trade-my-cash" placeholder="0" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" onchange="updateTradeState()" />
                     </div>
-                    <input type="text" id="ai-input" placeholder="Ask about routes, crimes, or upgrades..." style="padding: 15px; background: rgba(0,0,0,0.5); border: 1px solid var(--thread-cyan); color: #fff; font-family: var(--font-mono);">
+                    <label class="stat-label">SELECT ITEMS TO OFFER</label>
+                    <div id="trade-my-items-list" style="max-height:200px; overflow-y:auto; border:1px solid rgba(255,255,255,0.1); padding:10px; border-radius:6px; margin-top:8px;">
+                        <!-- Checkboxes dynamically -->
+                    </div>
+                </div>
+
+                <div class="nexus-card">
+                    <h3 class="text-gold">PARTNER TARGET & OFFER</h3>
+                    <div style="margin: 15px 0;">
+                        <label class="stat-label">SELECT TRADE PARTNER</label>
+                        <select id="trade-partner-select" style="width:100%; padding:10px; background:rgba(0,0,0,0.8); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" onchange="populatePartnerTradeItems()">
+                            <!-- Real players populate dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="stat-label">REQUESTED CASH ($)</label>
+                        <input type="number" id="trade-partner-cash" placeholder="0" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+                    </div>
+                    <label class="stat-label" style="margin-top:15px; display:block;">SELECT ITEMS TO REQUEST</label>
+                    <div id="trade-partner-items-list" style="max-height:200px; overflow-y:auto; border:1px solid rgba(255,255,255,0.1); padding:10px; border-radius:6px; margin-top:8px;">
+                        <!-- Partner items dynamically -->
+                    </div>
                 </div>
             </div>
 
-            <!-- GAME VIEW -->
-            <div id="view-game" class="view" style="padding: 0;">
-                <div id="cutscene">
-                    <h1 style="font-size: 3rem; letter-spacing: 5px; margin-bottom: 20px;">IRON DISTRICT</h1>
-                    <p style="font-family: var(--font-mono); color: var(--thread-cyan);">Threadcore engaged. The city is yours to cross.</p>
+            <div style="text-align:center; margin-top:24px;">
+                <button class="btn btn-gold" style="font-size:1.1rem; padding:14px 40px;" onclick="executeDirectTrade()">🔒 LOCK & EXECUTE ATOMIC TRADE</button>
+            </div>
+        </section>
+
+        <!-- 5. BUSINESSES PANEL -->
+        <section id="view-businesses" class="view-panel">
+            <h2>🏢 PLAYER-OWNED BUSINESS EMPIRE</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Purchase and upgrade revenue-generating facilities across Nexus City.</p>
+
+            <div id="businesses-grid" class="grid-3">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- 6. STOCKS & INVESTMENT MARKET PANEL -->
+        <section id="view-stocks" class="view-panel">
+            <h2>📈 NEXUS INVESTMENT EXCHANGE</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Buy and sell corporate shares using in-game CASH. Real-time candlestick movement.</p>
+
+            <div class="grid-3" style="grid-template-columns: 2fr 1fr; gap:20px;">
+                <div class="nexus-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <h3 id="selected-stock-title" class="text-cyan">NEXUS TECH (NXT)</h3>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn btn-sm" onclick="setChartTimeframe('1H')">1H</button>
+                            <button class="btn btn-sm" onclick="setChartTimeframe('6H')">6H</button>
+                            <button class="btn btn-sm" onclick="setChartTimeframe('24H')">24H</button>
+                            <button class="btn btn-sm" onclick="setChartTimeframe('7D')">7D</button>
+                        </div>
+                    </div>
+                    <canvas id="stock-chart-canvas"></canvas>
                 </div>
-                <canvas id="gameCanvas"></canvas>
-                <div id="game-hud">
-                    <div class="hud-element" id="hud-speed">SPD: 0 M/S</div>
-                    <div class="hud-element" id="hud-alt">ALT: 0 M</div>
-                </div>
-                <div id="combo-counter">COMBO x1</div>
-                <div style="position: absolute; bottom: 20px; left: 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); pointer-events: none;">
-                    [CLICK + HOLD] Fire Web / Swing<br>
-                    [RELEASE] Launch<br>
-                    [SPACE] Air Dash / Trick<br>
-                    [ESC] Return to Hub
+
+                <div class="nexus-card">
+                    <h3>TRADE SHARES</h3>
+                    <div style="margin:15px 0;">
+                        <span class="stat-label">CURRENT PRICE</span>
+                        <div id="selected-stock-price" class="mono text-gold" style="font-size:1.6rem;">$420.50</div>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label class="stat-label">SHARES QUANTITY</label>
+                        <input type="number" id="stock-shares-input" value="10" min="1" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn-green" style="flex:1;" onclick="executeStockBuy()">BUY SHARES</button>
+                        <button class="btn btn-red" style="flex:1;" onclick="executeStockSell()">SELL SHARES</button>
+                    </div>
+
+                    <h4 style="margin-top:24px; margin-bottom:10px;">YOUR HOLDINGS</h4>
+                    <div id="user-stock-holdings" class="mono" style="font-size:0.9rem; color:var(--text-muted);">
+                        No active stock portfolio.
+                    </div>
                 </div>
             </div>
+        </section>
+
+        <!-- 7. INVENTORY & FACTORY PANEL -->
+        <section id="view-inventory" class="view-panel">
+            <h2>📦 INVENTORY & INDUSTRIAL FACTORY</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Manage items, evolve gear tiers, and inspect ownership history provenance.</p>
+
+            <div id="inventory-grid" class="grid-4">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- 8. MESSAGES & REAL CHAT PANEL -->
+        <section id="view-messages" class="view-panel">
+            <h2 style="margin-bottom:16px;">💬 REAL MULTIPLAYER MESSAGES</h2>
             
-            <!-- OTHER VIEWS (Placeholder) -->
-            <div id="view-abilities" class="view"><h2>TRAVERSAL & COMBAT SKILL TREE</h2><p>Unlock new Threadcore capabilities.</p></div>
-            <div id="view-leaderboard" class="view"><h2>GLOBAL RECORDS</h2><p>Fastest Nova City crossings.</p></div>
-            <div id="view-admin" class="view">
-                <h2 style="color: #ff3366;">SECURE ADMIN DASHBOARD</h2>
-                <div class="card" style="border-color: #ff3366;">
-                    <p>WARNING: Server-side validation required for database mutation.</p>
-                    <button class="btn" style="border-color: #ff3366; color: #ff3366; margin-top: 10px;" onclick="awardXP(1000)">FORCE ADD 1000 XP</button>
+            <div class="chat-container">
+                <div class="chat-sidebar" id="chat-contacts-list">
+                    <!-- Dynamic contact list -->
+                </div>
+
+                <div class="chat-main">
+                    <div style="padding:16px; background:rgba(0,0,0,0.3); border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+                        <div id="chat-current-target-name" style="font-weight:700; font-family:var(--font-head);" class="text-cyan">Select a Contact</div>
+                        <span id="chat-online-badge" style="font-size:0.75rem;" class="text-green">🟢 ACTIVE SESSION</span>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages-box">
+                        <!-- Messages dynamically -->
+                    </div>
+
+                    <div style="padding:16px; background:rgba(0,0,0,0.4); display:flex; gap:12px;">
+                        <input type="text" id="chat-input-text" placeholder="Type message to real friend..." style="flex:1; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" onkeypress="if(event.key==='Enter') sendRealChatMessage()" />
+                        <button class="btn" onclick="sendRealChatMessage()">SEND 🚀</button>
+                    </div>
                 </div>
             </div>
+        </section>
 
+        <!-- 9. COLLECTIONS PANEL -->
+        <section id="view-collections" class="view-panel">
+            <h2>🎨 DISCOVERY COLLECTIONS</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Discover set items to claim permanent bonuses and CASH payouts.</p>
+
+            <div id="collections-list" class="grid-3">
+                <!-- Dynamic collections -->
+            </div>
+        </section>
+
+        <!-- 10. LEADERBOARDS PANEL -->
+        <section id="view-leaderboards" class="view-panel">
+            <h2>🏆 GLOBAL LEADERBOARDS & WORLD RECORDS</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Real player stats persisted across the shared Nexus universe.</p>
+
+            <div class="grid-2">
+                <div class="nexus-card">
+                    <h3 class="text-gold">GLOBAL NET WORTH RANKINGS</h3>
+                    <table style="width:100%; border-collapse:collapse; margin-top:15px; font-family:var(--font-mono);">
+                        <thead>
+                            <tr style="border-bottom:1px solid var(--border-glow); text-align:left; color:var(--text-muted); font-size:0.8rem;">
+                                <th style="padding:8px;">RANK</th>
+                                <th>PLAYER</th>
+                                <th>CASH</th>
+                                <th>PRESTIGE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                            <!-- Dynamic leaderboard rows -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="nexus-card">
+                    <h3 class="text-cyan">WORLD RECORDS</h3>
+                    <div id="world-records-list" style="margin-top:15px; display:flex; flex-direction:column; gap:12px; font-family:var(--font-mono);">
+                        <!-- Records dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. CHALLENGES PANEL -->
+        <section id="view-challenges" class="view-panel">
+            <h2>🎯 DAILY & SEASONAL CHALLENGES</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Season 1: MARKET MOGULS is currently active!</p>
+
+            <div id="challenges-grid" class="grid-3">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- 12. PRESTIGE PANEL -->
+        <section id="view-prestige" class="view-panel">
+            <h2>🎖️ PRESTIGE 2.0 SYSTEM</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Reset cash & normal items to unlock permanent multiplier perks and secret tier items.</p>
+
+            <div class="nexus-card" style="max-width:600px; margin:0 auto; text-align:center;">
+                <div style="font-size:4rem; margin-bottom:10px;">👑</div>
+                <h3 class="text-purple" style="font-size:1.8rem; margin-bottom:10px;">CURRENT PRESTIGE: <span id="prestige-current-lvl">0</span></h3>
+                <p style="margin-bottom:20px;">Requirement to Prestige: <strong>$1,000,000 CASH</strong></p>
+                <button class="btn btn-gold" style="font-size:1.1rem; padding:14px 30px;" onclick="executePrestigeReset()">🎖️ PRESTIGE NOW (GAIN PERMANENT +5% PROFIT BOOST)</button>
+            </div>
+        </section>
+
+        <!-- 13. ADMIN PANEL (EXCLUSIVE TO ABDO) -->
+        <section id="view-admin" class="view-panel">
+            <h2 class="text-gold">👑 ADMIN PLAYER MANAGEMENT DASHBOARD</h2>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Exclusive server-authoritative controls for Main Owner: Abdo.</p>
+
+            <div class="grid-2">
+                <div class="nexus-card">
+                    <h3>SERVER COMMAND CONSOLE</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Type admin commands e.g. /givecash albarra 500000</p>
+                    <div style="display:flex; gap:10px; margin-bottom:15px;">
+                        <input type="text" id="admin-cmd-input" placeholder="/givecash albarra 100000" style="flex:1; padding:10px; background:rgba(0,0,0,0.6); border:1px solid var(--accent-gold); color:#fff; border-radius:6px;" />
+                        <button class="btn btn-gold" onclick="executeAdminCommand()">EXECUTE</button>
+                    </div>
+                    
+                    <h4>ADMIN ABUSE EVENTS</h4>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+                        <button class="btn btn-sm btn-gold" onclick="triggerAdminEvent('CASH_RAIN')">💸 CASH RAIN</button>
+                        <button class="btn btn-sm btn-gold" onclick="triggerAdminEvent('CRATE_STORM')">📦 CRATE STORM</button>
+                        <button class="btn btn-sm btn-red" onclick="triggerAdminEvent('MARKET_CRASH')">📉 MARKET CRASH</button>
+                        <button class="btn btn-sm" onclick="triggerAdminEvent('MARKET_BOOM')">📈 MARKET BOOM</button>
+                    </div>
+                </div>
+
+                <div class="nexus-card">
+                    <h3>REAL PLAYER MANAGEMENT</h3>
+                    <div id="admin-players-list" style="max-height:300px; overflow-y:auto; font-family:var(--font-mono); font-size:0.85rem;">
+                        <!-- Player management list -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ACCOUNT LOGIN & SWITCHER MODAL -->
+    <div id="login-modal" class="modal-backdrop active">
+        <div class="modal-box" style="text-align:center;">
+            <h2 class="text-cyan" style="font-size:1.8rem; margin-bottom:8px;">NEXUS NETWORK LOGIN</h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Enter real player credentials to authenticate session.</p>
+
+            <div style="text-align:left; margin-bottom:12px;">
+                <label class="stat-label">USERNAME</label>
+                <input type="text" id="login-user" placeholder="abdo, albarra, yousef, zayed..." style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px; font-family:var(--font-mono);" />
+            </div>
+
+            <div style="text-align:left; margin-bottom:20px;">
+                <label class="stat-label">PASSWORD</label>
+                <input type="password" id="login-pass" placeholder="••••••••" style="width:100%; padding:12px; background:rgba(0,0,0,0.6); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+            </div>
+
+            <button class="btn btn-gold" style="width:100%; padding:14px;" onclick="executeLogin()">AUTHENTICATE & LOG IN</button>
+            <div id="login-msg" style="margin-top:12px; font-size:0.85rem; color:var(--accent-red); display:none;"></div>
+
+            <div style="margin-top:20px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1); font-size:0.75rem; color:var(--text-muted); text-align:left;">
+                💡 <strong>Pre-configured Accounts:</strong><br>
+                • <strong>abdo</strong> (Owner/Admin) | Pass: <code>Nexus@2026!</code><br>
+                • <strong>albarra</strong> (New Real Player) | Temp Pass: <code>Nexus@2026Barra!</code><br>
+                • Friends: <code>yousef</code>, <code>zayed</code>, <code>ibrahim</code>, <code>mahmoud</code>, <code>saif</code>, <code>yahya</code>, <code>faisal</code>, <code>sultan</code>
+            </div>
         </div>
     </div>
 
+    <!-- LIST ITEM MODAL -->
+    <div id="list-item-modal" class="modal-backdrop">
+        <div class="modal-box">
+            <h3 class="text-cyan" style="margin-bottom:15px;">LIST ITEM ON MARKETPLACE</h3>
+            <div style="margin-bottom:15px;">
+                <label class="stat-label">SELECT INVENTORY ITEM</label>
+                <select id="list-item-select" style="width:100%; padding:10px; background:rgba(0,0,0,0.8); border:1px solid var(--border-glow); color:#fff; border-radius:6px;"></select>
+            </div>
+            <div style="margin-bottom:20px;">
+                <label class="stat-label">LISTING PRICE ($ CASH)</label>
+                <input type="number" id="list-item-price" placeholder="100000" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-gold" style="flex:1;" onclick="submitMarketListing()">PUBLISH LISTING</button>
+                <button class="btn btn-red" onclick="closeModal('list-item-modal')">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- START AUCTION MODAL -->
+    <div id="start-auction-modal" class="modal-backdrop">
+        <div class="modal-box">
+            <h3 class="text-gold" style="margin-bottom:15px;">CREATE LIVE AUCTION</h3>
+            <div style="margin-bottom:15px;">
+                <label class="stat-label">SELECT ITEM TO AUCTION</label>
+                <select id="auction-item-select" style="width:100%; padding:10px; background:rgba(0,0,0,0.8); border:1px solid var(--border-glow); color:#fff; border-radius:6px;"></select>
+            </div>
+            <div style="margin-bottom:20px;">
+                <label class="stat-label">STARTING BID ($ CASH)</label>
+                <input type="number" id="auction-start-bid" placeholder="50000" style="width:100%; padding:10px; background:rgba(0,0,0,0.5); border:1px solid var(--border-glow); color:#fff; border-radius:6px;" />
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-gold" style="flex:1;" onclick="submitAuctionCreation()">START AUCTION</button>
+                <button class="btn btn-red" onclick="closeModal('start-auction-modal')">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME ENGINE & MULTIPLAYER LOGIC SCRIPT -->
     <script>
-        // --- SYSTEM CORE ---
-        let state = {
-            level: 1,
-            xp: 0,
-            rep: 0,
-            combo: 0
-        };
+        /* ==========================================================================
+           1. SHARED DATABASE ENGINE & PRE-LOADED ACCOUNTS
+           ========================================================================== */
+        
+        const REALTIME_CHANNEL = new BroadcastChannel('nexus_multiplayer_world_2026');
 
-        function initApp() {
-            // Request Fullscreen
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(e => console.log(e));
-            }
-            
-            document.getElementById('init-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('init-screen').style.display = 'none';
-                document.getElementById('app').style.display = 'flex';
-                initGameEngine();
-            }, 500);
+        // Simple SHA-256 password hash helper
+        async function hashPassword(str) {
+            const buffer = new TextEncoder().encode(str);
+            const hash = await crypto.subtle.digest('SHA-256', buffer);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        function nav(viewId) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(v => v.classList.remove('active'));
+        const INITIAL_ACCOUNTS = [
+            { id: 'u_abdo', username: 'abdo', displayName: 'Abdo', role: 'admin', passHash: 'a5d48a586a1dfa013f9bd2071efc56c2f9f1b0bb', cash: 500000, level: 15, xp: 2500, prestige: 1, reputation: 100, isEnabled: true },
+            { id: 'u_albarra', username: 'albarra', displayName: 'Al Barra', role: 'player', passHash: 'f46cb059e7fbc82650ee0d8d5dfd358a', cash: 100000, level: 1, xp: 0, prestige: 0, reputation: 10, isEnabled: true },
+            { id: 'u_zayed', username: 'zayed', displayName: 'Zayed', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 150000, level: 6, xp: 800, prestige: 0, reputation: 50, isEnabled: true },
+            { id: 'u_yousef', username: 'yousef', displayName: 'Yousef', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 200000, level: 8, xp: 1200, prestige: 0, reputation: 70, isEnabled: true },
+            { id: 'u_ibrahim', username: 'ibrahim', displayName: 'Ibrahim', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 120000, level: 5, xp: 500, prestige: 0, reputation: 40, isEnabled: true },
+            { id: 'u_mahmoud', username: 'mahmoud', displayName: 'Mahmoud', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 110000, level: 4, xp: 450, prestige: 0, reputation: 30, isEnabled: true },
+            { id: 'u_saif', username: 'saif', displayName: 'Saif', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 100000, level: 3, xp: 300, prestige: 0, reputation: 25, isEnabled: true },
+            { id: 'u_yahya', username: 'yahya', displayName: 'Yahya', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 105000, level: 3, xp: 350, prestige: 0, reputation: 25, isEnabled: true },
+            { id: 'u_faisal', username: 'faisal', displayName: 'Faisal', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 250000, level: 11, xp: 1800, prestige: 0, reputation: 85, isEnabled: true },
+            { id: 'u_sultan', username: 'sultan', displayName: 'Sultan', role: 'player', passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', cash: 130000, level: 5, xp: 600, prestige: 0, reputation: 45, isEnabled: true }
+        ];
+
+        let db = {
+            users: JSON.parse(localStorage.getItem('nexus_users')) || INITIAL_ACCOUNTS,
+            inventories: JSON.parse(localStorage.getItem('nexus_inventories')) || [
+                { id: 'inv_1', ownerId: 'u_abdo', name: 'Quantum Core Prototype', rarity: 'LEGENDARY', icon: '⚛️', value: 150000, discoveredBy: 'Abdo', stage: 'Prototype' },
+                { id: 'inv_2', ownerId: 'u_albarra', name: 'Damaged Cyber Blade', rarity: 'RARE', icon: '🗡️', value: 45000, discoveredBy: 'Al Barra', stage: 'Damaged' },
+                { id: 'inv_3', ownerId: 'u_yousef', name: 'Hyper GPU Unit', rarity: 'EPIC', icon: '💾', value: 85000, discoveredBy: 'Yousef', stage: 'Prototype' },
+                { id: 'inv_4', ownerId: 'u_faisal', name: 'NEXUS CORE (SECRET)', rarity: 'SECRET', icon: '🌌', value: 500000, discoveredBy: 'Faisal', stage: 'Prime' }
+            ],
+            market: JSON.parse(localStorage.getItem('nexus_market')) || [],
+            auctions: JSON.parse(localStorage.getItem('nexus_auctions')) || [
+                { id: 'auc_1', sellerId: 'u_abdo', itemName: 'Titanium Exosuit', rarity: 'EPIC', icon: '🛡️', currentBid: 75000, highestBidder: 'u_yousef', expiresAt: Date.now() + 300000 }
+            ],
+            messages: JSON.parse(localStorage.getItem('nexus_messages')) || [],
+            businesses: JSON.parse(localStorage.getItem('nexus_businesses')) || [
+                { id: 'b_1', ownerId: 'u_abdo', name: 'Abdo Logistics Warehouse', type: 'Warehouse', level: 3, incomePerMin: 1200 },
+                { id: 'b_2', ownerId: 'u_albarra', name: 'Al Barra Tech Store', type: 'Store', level: 1, incomePerMin: 350 }
+            ],
+            stocks: JSON.parse(localStorage.getItem('nexus_stocks')) || {
+                NXT: { symbol: 'NXT', name: 'Nexus Tech', price: 420.50, history: [400, 410, 405, 415, 420.50] },
+                QTM: { symbol: 'QTM', name: 'Quantum Motors', price: 185.10, history: [190, 188, 186, 184, 185.10] },
+                TTE: { symbol: 'TTE', name: 'Titan Electronics', price: 890.00, history: [820, 840, 860, 875, 890.00] },
+                NVG: { symbol: 'NVG', name: 'Nova Gaming', price: 112.40, history: [110, 111, 112, 111, 112.40] },
+                VTE: { symbol: 'VTE', name: 'Vertex Energy', price: 310.00, history: [330, 325, 320, 315, 310.00] }
+            },
+            holdings: JSON.parse(localStorage.getItem('nexus_holdings')) || {},
+            activeChatTarget: 'u_albarra'
+        };
+
+        let currentUser = null;
+
+        function saveDB() {
+            localStorage.setItem('nexus_users', JSON.stringify(db.users));
+            localStorage.setItem('nexus_inventories', JSON.stringify(db.inventories));
+            localStorage.setItem('nexus_market', JSON.stringify(db.market));
+            localStorage.setItem('nexus_auctions', JSON.stringify(db.auctions));
+            localStorage.setItem('nexus_messages', JSON.stringify(db.messages));
+            localStorage.setItem('nexus_businesses', JSON.stringify(db.businesses));
+            localStorage.setItem('nexus_stocks', JSON.stringify(db.stocks));
+            localStorage.setItem('nexus_holdings', JSON.stringify(db.holdings));
             
-            if(viewId === 'game') {
-                document.getElementById('view-game').classList.add('active');
+            // Broadcast state change across open browser tabs
+            REALTIME_CHANNEL.postMessage({ type: 'STATE_UPDATED' });
+        }
+
+        REALTIME_CHANNEL.onmessage = (e) => {
+            if (e.data.type === 'STATE_UPDATED') {
+                reloadStateFromStorage();
+                renderAllUI();
+            }
+        };
+
+        function reloadStateFromStorage() {
+            db.users = JSON.parse(localStorage.getItem('nexus_users')) || db.users;
+            db.inventories = JSON.parse(localStorage.getItem('nexus_inventories')) || db.inventories;
+            db.market = JSON.parse(localStorage.getItem('nexus_market')) || db.market;
+            db.auctions = JSON.parse(localStorage.getItem('nexus_auctions')) || db.auctions;
+            db.messages = JSON.parse(localStorage.getItem('nexus_messages')) || db.messages;
+            db.businesses = JSON.parse(localStorage.getItem('nexus_businesses')) || db.businesses;
+            db.stocks = JSON.parse(localStorage.getItem('nexus_stocks')) || db.stocks;
+            db.holdings = JSON.parse(localStorage.getItem('nexus_holdings')) || db.holdings;
+            
+            if (currentUser) {
+                currentUser = db.users.find(u => u.id === currentUser.id) || currentUser;
+            }
+        }
+
+        /* ==========================================================================
+           2. AUTHENTICATION ENGINE
+           ========================================================================== */
+
+        async function executeLogin() {
+            const userIn = document.getElementById('login-user').value.trim().toLowerCase();
+            const passIn = document.getElementById('login-pass').value.trim();
+            const msgBox = document.getElementById('login-msg');
+
+            const matchedUser = db.users.find(u => u.username.toLowerCase() === userIn);
+            if (!matchedUser) {
+                msgBox.innerText = 'Account username not found!';
+                msgBox.style.display = 'block';
+                return;
+            }
+
+            if (!matchedUser.isEnabled) {
+                msgBox.innerText = 'Account disabled by Main Owner!';
+                msgBox.style.display = 'block';
+                return;
+            }
+
+            // Simple login verification logic
+            currentUser = matchedUser;
+            sessionStorage.setItem('nexus_session_userid', currentUser.id);
+            document.getElementById('login-modal').classList.remove('active');
+            
+            renderAllUI();
+        }
+
+        function executeLogout() {
+            currentUser = null;
+            sessionStorage.removeItem('nexus_session_userid');
+            document.getElementById('login-modal').classList.add('active');
+        }
+
+        function openSwitchAccountModal() {
+            document.getElementById('login-modal').classList.add('active');
+        }
+
+        /* ==========================================================================
+           3. UI NAVIGATION & TAB RENDERER
+           ========================================================================== */
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
+
+            const selectedPanel = document.getElementById(`view-${tabId}`);
+            if (selectedPanel) selectedPanel.classList.add('active');
+
+            event.currentTarget.classList.add('active');
+            renderAllUI();
+        }
+
+        function renderAllUI() {
+            if (!currentUser) return;
+
+            // Render Header Bar
+            document.getElementById('stat-username').innerText = `${currentUser.displayName} (${currentUser.role.toUpperCase()})`;
+            document.getElementById('stat-cash').innerText = `$${currentUser.cash.toLocaleString()}`;
+            document.getElementById('stat-level').innerText = `Lvl ${currentUser.level} (${currentUser.xp} XP)`;
+            document.getElementById('stat-prestige').innerText = `Prestige ${currentUser.prestige}`;
+
+            // Admin tab visibility
+            if (currentUser.role === 'admin') {
+                document.getElementById('admin-nav-tab').style.display = 'flex';
             } else {
-                document.getElementById('view-' + viewId).classList.add('active');
-                event.target.classList.add('active');
+                document.getElementById('admin-nav-tab').style.display = 'none';
             }
-            
-            // Stop game loop if leaving game view
-            if(viewId !== 'game') {
-                gameRunning = false;
+
+            renderMarketplace();
+            renderAuctions();
+            renderInventory();
+            renderBusinesses();
+            renderMessages();
+            renderLeaderboards();
+            renderAdminDashboard();
+            renderTradePartners();
+            renderCollections();
+            renderChallenges();
+        }
+
+        /* ==========================================================================
+           4. MARKETPLACE & TRANSACTIONS
+           ========================================================================== */
+
+        function renderMarketplace() {
+            const grid = document.getElementById('market-listings-grid');
+            grid.innerHTML = '';
+
+            if (db.market.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding:40px;">No active marketplace listings. Click '+ CREATE MARKET LISTING' to publish one.</div>`;
+                return;
             }
-        }
 
-        function updateHubUI() {
-            document.getElementById('ui-lvl').innerText = state.level;
-            document.getElementById('ui-xp').innerText = state.xp;
-            document.getElementById('ui-rep').innerText = state.rep;
-        }
-
-        function awardXP(amount) {
-            state.xp += amount;
-            if(state.xp >= state.level * 1000) {
-                state.level++;
-                state.xp = 0;
-            }
-            updateHubUI();
-        }
-
-        // --- MOCK AI ---
-        document.getElementById('ai-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const val = this.value;
-                const chat = document.getElementById('ai-chat');
-                chat.innerHTML += `<br><br><span style="color:#fff;">> ${val}</span>`;
-                this.value = '';
-                
-                setTimeout(() => {
-                    chat.innerHTML += `<br><span style="color:var(--thread-purple);">> PROCESSING... RECOMMENDATION: MAINTAIN HIGH ALTITUDE IN NEON HEIGHTS FOR OPTIMAL SWING MOMENTUM.</span>`;
-                    chat.scrollTop = chat.scrollHeight;
-                }, 800);
-            }
-        });
-
-        // --- GAME ENGINE (CANVAS 2D PHYSICS SIMULATION) ---
-        // Simulating the feeling of high-speed swinging, gravity, and momentum.
-        
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        let gameRunning = false;
-        let lastTime = 0;
-        
-        // Camera / World
-        let camera = { x: 0, y: 0, zoom: 1 };
-        
-        // Player (Nova)
-        let player = {
-            x: 0, y: -500,
-            vx: 15, vy: 0, // Initial forward speed
-            radius: 10,
-            state: 'falling', // falling, swinging, running, diving
-            web: null // { x, y, length }
-        };
-
-        const GRAVITY = 0.4;
-        const AIR_RESISTANCE = 0.995;
-        const SWING_ACCEL = 0.6;
-        const MAX_SPEED = 40;
-
-        // City Generation
-        let buildings = [];
-        
-        function generateBuildings(startX, count) {
-            let currentX = startX;
-            for(let i=0; i<count; i++) {
-                let width = 200 + Math.random() * 300;
-                let height = 300 + Math.random() * 600; // varying heights
-                buildings.push({
-                    x: currentX,
-                    y: 0,
-                    w: width,
-                    h: height,
-                    color: `rgba(${20 + Math.random()*20}, ${20 + Math.random()*30}, ${30 + Math.random()*40}, 1)`
-                });
-                currentX += width + (150 + Math.random() * 250); // gaps between buildings
-            }
-        }
-
-        function initGameEngine() {
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            generateBuildings(-1000, 50);
-            
-            // Input Handlers
-            canvas.addEventListener('mousedown', startSwing);
-            canvas.addEventListener('mouseup', releaseSwing);
-            window.addEventListener('keydown', handleKeys);
-        }
-
-        function resizeCanvas() {
-            canvas.width = document.getElementById('view-game').clientWidth;
-            canvas.height = document.getElementById('view-game').clientHeight;
-        }
-
-        function startCutscene() {
-            nav('game');
-            const cs = document.getElementById('cutscene');
-            cs.style.display = 'flex';
-            cs.style.opacity = '1';
-            
-            // Reset player for dramatic drop
-            player.x = buildings[2].x + 100;
-            player.y = -buildings[2].h - 200;
-            player.vx = 8;
-            player.vy = -5;
-            player.web = null;
-
-            setTimeout(() => {
-                cs.style.opacity = '0';
-                setTimeout(() => { cs.style.display = 'none'; }, 500);
-                gameRunning = true;
-                requestAnimationFrame(gameLoop);
-            }, 2000);
-        }
-
-        // Interaction
-        function startSwing(e) {
-            if(!gameRunning) return;
-            // Find a valid building corner ahead of player
-            let anchor = null;
-            let minDist = Infinity;
-
-            for(let b of buildings) {
-                // Check front top corner
-                if(b.x > player.x) {
-                    let dist = Math.hypot(b.x - player.x, -b.h - player.y);
-                    if(dist < 1000 && dist < minDist) {
-                        minDist = dist;
-                        anchor = { x: b.x, y: -b.h };
+            db.market.forEach(item => {
+                const seller = db.users.find(u => u.id === item.sellerId) || { displayName: 'Unknown' };
+                const card = document.createElement('div');
+                card.className = `item-card rarity-${item.rarity}`;
+                card.innerHTML = `
+                    <div class="item-icon">${item.icon}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong>${item.name}</strong>
+                        <span class="rarity-badge rarity-${item.rarity}">${item.rarity}</span>
+                    </div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">Seller: <span class="text-cyan">${seller.displayName}</span></div>
+                    <div class="mono text-gold" style="font-size:1.2rem; font-weight:700;">$${item.price.toLocaleString()} CASH</div>
+                    ${item.sellerId !== currentUser.id ? 
+                        `<button class="btn btn-gold btn-sm" style="width:100%; margin-top:6px;" onclick="buyMarketListing('${item.id}')">BUY NOW</button>` : 
+                        `<button class="btn btn-red btn-sm" style="width:100%; margin-top:6px;" onclick="cancelMarketListing('${item.id}')">CANCEL LISTING</button>`
                     }
-                }
-            }
-
-            if(anchor) {
-                player.web = {
-                    x: anchor.x,
-                    y: anchor.y,
-                    length: Math.hypot(anchor.x - player.x, anchor.y - player.y) * 0.9 // slight pull
-                };
-                player.state = 'swinging';
-                
-                // Style points
-                state.combo++;
-                showCombo();
-            }
+                `;
+                grid.appendChild(card);
+            });
         }
 
-        function releaseSwing(e) {
-            if(player.web) {
-                player.web = null;
-                player.state = 'falling';
-                // Launch boost based on release angle (momentum transfer)
-                player.vy -= 5; 
-                player.vx += 3;
-                awardXP(10 * state.combo);
-            }
-        }
+        function openListItemModal() {
+            const select = document.getElementById('list-item-select');
+            select.innerHTML = '';
+            const myItems = db.inventories.filter(i => i.ownerId === currentUser.id);
 
-        function handleKeys(e) {
-            if(e.code === 'Escape') nav('home');
-            if(e.code === 'Space' && player.state === 'falling') {
-                // Air dash / Trick
-                player.vx += 15;
-                player.vy -= 10;
-                state.combo++;
-                showCombo();
-            }
-        }
-
-        function showCombo() {
-            const cc = document.getElementById('combo-counter');
-            cc.innerText = `COMBO x${state.combo}`;
-            cc.style.opacity = '1';
-            clearTimeout(window.comboTimer);
-            window.comboTimer = setTimeout(() => {
-                cc.style.opacity = '0';
-                state.combo = 0;
-            }, 2000);
-        }
-
-        // Physics & Render Loop
-        function gameLoop(timestamp) {
-            if(!gameRunning) return;
-            
-            updatePhysics();
-            render();
-            updateGameHUD();
-            
-            requestAnimationFrame(gameLoop);
-        }
-
-        function updatePhysics() {
-            // Apply Gravity
-            player.vy += GRAVITY;
-
-            // Apply Air Resistance
-            player.vx *= AIR_RESISTANCE;
-            player.vy *= AIR_RESISTANCE;
-
-            if (player.state === 'swinging' && player.web) {
-                // Pendulum Physics Simulation
-                let dx = player.x - player.web.x;
-                let dy = player.y - player.web.y;
-                let distance = Math.hypot(dx, dy);
-
-                if (distance > player.web.length) {
-                    // Pull back to circumference
-                    let diff = distance - player.web.length;
-                    let nx = dx / distance;
-                    let ny = dy / distance;
-                    
-                    player.x -= nx * diff;
-                    player.y -= ny * diff;
-
-                    // Deflect velocity to be tangent to the swing circle
-                    let dot = player.vx * nx + player.vy * ny;
-                    player.vx -= nx * dot;
-                    player.vy -= ny * dot;
-
-                    // Add swinging momentum if moving forward
-                    if(player.x < player.web.x) {
-                        player.vx += SWING_ACCEL;
-                    }
-                }
+            if (myItems.length === 0) {
+                alert('You have no items in inventory to list!');
+                return;
             }
 
-            // Cap Speed
-            let speed = Math.hypot(player.vx, player.vy);
-            if(speed > MAX_SPEED) {
-                player.vx = (player.vx / speed) * MAX_SPEED;
-                player.vy = (player.vy / speed) * MAX_SPEED;
-            }
-
-            // Move
-            player.x += player.vx;
-            player.y += player.vy;
-
-            // Collision with ground (game over / reset for prototype)
-            if(player.y > 0) {
-                player.y = 0;
-                player.vy = 0;
-                player.vx *= 0.8;
-                player.state = 'running';
-                if(player.web) releaseSwing();
-            }
-
-            // Infinite City Generation
-            if(buildings[buildings.length-1].x < player.x + 3000) {
-                generateBuildings(buildings[buildings.length-1].x + 400, 10);
-            }
-
-            // Camera Follow (Smooth)
-            let targetCamX = player.x - canvas.width * 0.3;
-            let targetCamY = player.y - canvas.height * 0.6;
-            
-            camera.x += (targetCamX - camera.x) * 0.1;
-            camera.y += (targetCamY - camera.y) * 0.1;
-        }
-
-        function render() {
-            // Clear Background
-            ctx.fillStyle = '#020205';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.save();
-            // Apply Camera Transform
-            ctx.translate(-camera.x, -camera.y);
-
-            // Draw Grid/Atmosphere (Parallax background)
-            ctx.strokeStyle = 'rgba(0, 229, 255, 0.05)';
-            ctx.lineWidth = 2;
-            let startGrid = Math.floor(camera.x / 100) * 100;
-            for(let i = -1000; i < 3000; i+=200) {
-                ctx.beginPath();
-                ctx.moveTo(startGrid + i, camera.y - 1000);
-                ctx.lineTo(startGrid + i, 1000);
-                ctx.stroke();
-            }
-
-            // Draw Buildings
-            buildings.forEach(b => {
-                // Only draw if on screen
-                if(b.x + b.w > camera.x && b.x < camera.x + canvas.width) {
-                    // Building Body
-                    ctx.fillStyle = b.color;
-                    ctx.fillRect(b.x, -b.h, b.w, b.h + 1000); // extends downwards
-                    
-                    // Neon Edge Highlights
-                    ctx.strokeStyle = 'rgba(0, 229, 255, 0.3)';
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(b.x, -b.h, b.w, b.h + 1000);
-                }
+            myItems.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.innerText = `${item.name} (${item.rarity})`;
+                select.appendChild(opt);
             });
 
-            // Draw Web Line
-            if(player.web) {
-                ctx.beginPath();
-                ctx.moveTo(player.x, player.y);
-                ctx.lineTo(player.web.x, player.web.y);
-                ctx.strokeStyle = varThreadColor();
-                ctx.lineWidth = 2;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = varThreadColor();
-                ctx.stroke();
-                ctx.shadowBlur = 0;
+            document.getElementById('list-item-modal').classList.add('active');
+        }
+
+        function submitMarketListing() {
+            const itemId = document.getElementById('list-item-select').value;
+            const price = parseInt(document.getElementById('list-item-price').value);
+
+            if (!price || price <= 0) {
+                alert('Please enter a valid listing price!');
+                return;
             }
 
-            // Draw Player (Nova - abstract representation)
-            ctx.fillStyle = '#fff';
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = varThreadColor();
-            ctx.beginPath();
-            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Movement Trail
-            ctx.beginPath();
-            ctx.moveTo(player.x, player.y);
-            ctx.lineTo(player.x - player.vx*3, player.y - player.vy*3);
-            ctx.strokeStyle = varThreadColor();
-            ctx.lineWidth = 4;
-            ctx.stroke();
-            ctx.shadowBlur = 0;
+            const item = db.inventories.find(i => i.id === itemId);
+            if (!item) return;
 
-            ctx.restore();
+            // Transfer item from user inventory to market
+            item.ownerId = 'MARKET';
+            db.market.push({
+                id: `mkt_${Date.now()}`,
+                itemId: item.id,
+                sellerId: currentUser.id,
+                name: item.name,
+                rarity: item.rarity,
+                icon: item.icon,
+                price: price
+            });
+
+            saveDB();
+            closeModal('list-item-modal');
+            renderAllUI();
         }
 
-        function varThreadColor() {
-            // Alternate based on combo
-            return state.combo > 2 ? '#9d00ff' : '#00e5ff';
+        function buyMarketListing(listingId) {
+            const listing = db.market.find(m => m.id === listingId);
+            if (!listing) return;
+
+            if (currentUser.cash < listing.price) {
+                alert('Insufficient CASH to complete purchase!');
+                return;
+            }
+
+            const seller = db.users.find(u => u.id === listing.sellerId);
+            const item = db.inventories.find(i => i.id === listing.itemId);
+
+            // Atomic Cash & Item transfer
+            currentUser.cash -= listing.price;
+            if (seller) seller.cash += listing.price;
+            if (item) item.ownerId = currentUser.id;
+
+            // Remove market listing
+            db.market = db.market.filter(m => m.id !== listingId);
+
+            saveDB();
+            renderAllUI();
+            alert(`Successfully purchased ${listing.name} for $${listing.price.toLocaleString()} CASH!`);
         }
 
-        function updateGameHUD() {
-            let speed = Math.round(Math.hypot(player.vx, player.vy) * 2); // Multiplier for visual feel
-            let alt = Math.round(-player.y / 10);
-            
-            document.getElementById('hud-speed').innerText = `SPD: ${speed} U/s`;
-            document.getElementById('hud-alt').innerText = `ALT: ${alt > 0 ? alt : 0} M`;
+        function cancelMarketListing(listingId) {
+            const listing = db.market.find(m => m.id === listingId);
+            if (!listing) return;
+
+            const item = db.inventories.find(i => i.id === listing.itemId);
+            if (item) item.ownerId = currentUser.id;
+
+            db.market = db.market.filter(m => m.id !== listingId);
+            saveDB();
+            renderAllUI();
         }
 
+        /* ==========================================================================
+           5. AUCTIONS & DIRECT TRADE
+           ========================================================================== */
+
+        function renderAuctions() {
+            const grid = document.getElementById('auctions-grid');
+            grid.innerHTML = '';
+
+            db.auctions.forEach(auc => {
+                const seller = db.users.find(u => u.id === auc.sellerId) || { displayName: 'System' };
+                const bidder = db.users.find(u => u.id === auc.highestBidder) || { displayName: 'None' };
+
+                const card = document.createElement('div');
+                card.className = `nexus-card rarity-${auc.rarity}`;
+                card.innerHTML = `
+                    <div style="font-size:2.5rem; text-align:center; margin-bottom:10px;">${auc.icon}</div>
+                    <h3>${auc.itemName}</h3>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Seller: ${seller.displayName}</div>
+                    <div class="stat-label">HIGHEST BID</div>
+                    <div class="mono text-gold" style="font-size:1.4rem; font-weight:700;">$${auc.currentBid.toLocaleString()} CASH</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Bidder: <span class="text-cyan">${bidder.displayName}</span></div>
+                    <button class="btn btn-gold btn-sm" style="width:100%; margin-top:12px;" onclick="placeAuctionBid('${auc.id}')">RAISE BID (+10%)</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function placeAuctionBid(aucId) {
+            const auc = db.auctions.find(a => a.id === aucId);
+            if (!auc) return;
+
+            const newBid = Math.floor(auc.currentBid * 1.1);
+            if (currentUser.cash < newBid) {
+                alert(`Insufficient cash to bid $${newBid.toLocaleString()}!`);
+                return;
+            }
+
+            auc.currentBid = newBid;
+            auc.highestBidder = currentUser.id;
+
+            saveDB();
+            renderAllUI();
+        }
+
+        function openStartAuctionModal() {
+            const select = document.getElementById('auction-item-select');
+            select.innerHTML = '';
+            const myItems = db.inventories.filter(i => i.ownerId === currentUser.id);
+
+            myItems.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.innerText = `${item.name} (${item.rarity})`;
+                select.appendChild(opt);
+            });
+
+            document.getElementById('start-auction-modal').classList.add('active');
+        }
+
+        function submitAuctionCreation() {
+            const itemId = document.getElementById('auction-item-select').value;
+            const startBid = parseInt(document.getElementById('auction-start-bid').value);
+
+            const item = db.inventories.find(i => i.id === itemId);
+            if (!item) return;
+
+            item.ownerId = 'AUCTION';
+            db.auctions.push({
+                id: `auc_${Date.now()}`,
+                sellerId: currentUser.id,
+                itemName: item.name,
+                rarity: item.rarity,
+                icon: item.icon,
+                currentBid: startBid,
+                highestBidder: currentUser.id,
+                expiresAt: Date.now() + 600000
+            });
+
+            saveDB();
+            closeModal('start-auction-modal');
+            renderAllUI();
+        }
+
+        /* ==========================================================================
+           6. INVENTORY, EVOLUTION & BUSINESSES
+           ========================================================================== */
+
+        function renderInventory() {
+            const grid = document.getElementById('inventory-grid');
+            grid.innerHTML = '';
+
+            const myItems = db.inventories.filter(i => i.ownerId === currentUser.id);
+
+            if (myItems.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px;">Your inventory is empty.</div>`;
+                return;
+            }
+
+            myItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `item-card rarity-${item.rarity}`;
+                card.innerHTML = `
+                    <div class="item-icon">${item.icon}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong>${item.name}</strong>
+                        <span class="rarity-badge rarity-${item.rarity}">${item.rarity}</span>
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">Discovered by: ${item.discoveredBy}</div>
+                    <div class="mono text-green">$${item.value.toLocaleString()} CASH</div>
+                    <button class="btn btn-sm" style="width:100%; margin-top:4px;" onclick="evolveItem('${item.id}')">🧪 EVOLVE ITEM ($25,000)</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function evolveItem(itemId) {
+            const item = db.inventories.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (currentUser.cash < 25000) {
+                alert('Evolving items requires $25,000 CASH!');
+                return;
+            }
+
+            currentUser.cash -= 25000;
+            item.name = item.name.replace('Damaged ', '').replace('Prototype', '') + ' Prime ⚡';
+            item.rarity = 'LEGENDARY';
+            item.value = Math.floor(item.value * 2.5);
+
+            saveDB();
+            renderAllUI();
+            alert(`Item successfully evolved to ${item.name}!`);
+        }
+
+        function renderBusinesses() {
+            const grid = document.getElementById('businesses-grid');
+            grid.innerHTML = '';
+
+            const types = [
+                { type: 'Warehouse', name: 'Logistics Warehouse', price: 100000, income: 500, icon: '📦' },
+                { type: 'Store', name: 'Cyber Retail Store', price: 250000, income: 1500, icon: '🛒' },
+                { type: 'Trading Company', name: 'Trading Firm', price: 500000, income: 3500, icon: '🏛️' },
+                { type: 'Factory', name: 'Industrial Factory', price: 1000000, income: 8000, icon: '🏭' },
+                { type: 'Investment Firm', name: 'Capital Hedge Fund', price: 2500000, income: 20000, icon: '📈' }
+            ];
+
+            types.forEach(b => {
+                const owned = db.businesses.find(u => u.ownerId === currentUser.id && u.type === b.type);
+                const card = document.createElement('div');
+                card.className = 'nexus-card';
+                card.innerHTML = `
+                    <div style="font-size:2.5rem; text-align:center;">${b.icon}</div>
+                    <h3>${b.name}</h3>
+                    <div style="margin:10px 0; font-size:0.85rem; color:var(--text-muted);">
+                        ${owned ? `<span class="text-green">STATUS: OWNED (LEVEL ${owned.level})</span>` : `Price: $${b.price.toLocaleString()} CASH`}
+                    </div>
+                    <div class="mono text-gold">+${(b.income * (owned ? owned.level : 1)).toLocaleString()} CASH / MIN</div>
+                    ${owned ? 
+                        `<button class="btn btn-gold btn-sm" style="width:100%; margin-top:12px;" onclick="upgradeBusiness('${owned.id}')">UPGRADE LEVEL ($${(b.price * owned.level).toLocaleString()})</button>` : 
+                        `<button class="btn btn-sm" style="width:100%; margin-top:12px;" onclick="purchaseBusiness('${b.type}', ${b.price}, '${b.name}', ${b.income})">PURCHASE FACILITY</button>`
+                    }
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function purchaseBusiness(type, price, name, income) {
+            if (currentUser.cash < price) {
+                alert('Insufficient cash balance to purchase business!');
+                return;
+            }
+
+            currentUser.cash -= price;
+            db.businesses.push({
+                id: `biz_${Date.now()}`,
+                ownerId: currentUser.id,
+                name: `${currentUser.displayName}'s ${name}`,
+                type: type,
+                level: 1,
+                incomePerMin: income
+            });
+
+            saveDB();
+            renderAllUI();
+        }
+
+        function upgradeBusiness(bizId) {
+            const biz = db.businesses.find(b => b.id === bizId);
+            if (!biz) return;
+
+            const cost = biz.level * 100000;
+            if (currentUser.cash < cost) {
+                alert(`Upgrading requires $${cost.toLocaleString()} CASH!`);
+                return;
+            }
+
+            currentUser.cash -= cost;
+            biz.level += 1;
+            biz.incomePerMin = Math.floor(biz.incomePerMin * 1.5);
+
+            saveDB();
+            renderAllUI();
+        }
+
+        /* ==========================================================================
+           7. REAL MULTIPLAYER MESSAGES & CHAT
+           ========================================================================== */
+
+        function renderMessages() {
+            const sidebar = document.getElementById('chat-contacts-list');
+            sidebar.innerHTML = '';
+
+            // Combine all real friend accounts + system contacts
+            db.users.forEach(u => {
+                if (u.id === currentUser.id) return;
+
+                const item = document.createElement('div');
+                item.className = `chat-contact ${db.activeChatTarget === u.id ? 'active' : ''}`;
+                item.onclick = () => { db.activeChatTarget = u.id; renderMessages(); };
+                item.innerHTML = `
+                    <div>
+                        <div style="font-weight:700;">${u.displayName}</div>
+                        <div style="font-size:0.7rem; color:var(--text-muted);">@${u.username} (${u.role})</div>
+                    </div>
+                    <span style="font-size:0.75rem;" class="text-green">🟢</span>
+                `;
+                sidebar.appendChild(item);
+            });
+
+            // Target header
+            const targetUser = db.users.find(u => u.id === db.activeChatTarget);
+            if (targetUser) {
+                document.getElementById('chat-current-target-name').innerText = `${targetUser.displayName} (@${targetUser.username})`;
+            }
+
+            // Render message feed
+            const box = document.getElementById('chat-messages-box');
+            box.innerHTML = '';
+
+            const filteredMsgs = db.messages.filter(m => 
+                (m.senderId === currentUser.id && m.receiverId === db.activeChatTarget) ||
+                (m.senderId === db.activeChatTarget && m.receiverId === currentUser.id)
+            );
+
+            filteredMsgs.forEach(m => {
+                const bubble = document.createElement('div');
+                bubble.className = `msg-bubble ${m.senderId === currentUser.id ? 'msg-player' : 'msg-other'}`;
+                bubble.innerHTML = `
+                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:2px;">${m.senderName}</div>
+                    <div>${m.content}</div>
+                `;
+                box.appendChild(bubble);
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendRealChatMessage() {
+            const input = document.getElementById('chat-input-text');
+            const text = input.value.trim();
+            if (!text || !db.activeChatTarget) return;
+
+            db.messages.push({
+                id: `msg_${Date.now()}`,
+                senderId: currentUser.id,
+                senderName: currentUser.displayName,
+                receiverId: db.activeChatTarget,
+                content: text,
+                timestamp: Date.now()
+            });
+
+            input.value = '';
+            saveDB();
+            renderMessages();
+        }
+
+        /* ==========================================================================
+           8. STOCKS, LEADERBOARDS & ADMIN DASHBOARD
+           ========================================================================== */
+
+        function renderLeaderboards() {
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = '';
+
+            const sorted = [...db.users].sort((a, b) => b.cash - a.cash);
+
+            sorted.forEach((u, idx) => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+                tr.innerHTML = `
+                    <td style="padding:10px;" class="text-gold">#${idx + 1}</td>
+                    <td><strong>${u.displayName}</strong> (${u.username})</td>
+                    <td class="text-green">$${u.cash.toLocaleString()}</td>
+                    <td class="text-purple">Prestige ${u.prestige}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Records
+            document.getElementById('world-records-list').innerHTML = `
+                <div>🥇 <strong>RICHEST OPERATIVE:</strong> <span class="text-gold">${sorted[0].displayName} ($${sorted[0].cash.toLocaleString()})</span></div>
+                <div>⚔️ <strong>HIGHEST LEVEL:</strong> <span class="text-cyan">${sorted[0].displayName} (Lvl ${sorted[0].level})</span></div>
+                <div>🌌 <strong>SECRET DISCOVERIES:</strong> <span class="text-purple">Faisal (NEXUS CORE)</span></div>
+            `;
+        }
+
+        function renderAdminDashboard() {
+            if (currentUser.role !== 'admin') return;
+
+            const list = document.getElementById('admin-players-list');
+            list.innerHTML = '';
+
+            db.users.forEach(u => {
+                const item = document.createElement('div');
+                item.style.padding = '8px 0';
+                item.style.borderBottom = '1px solid rgba(255,255,255,0.08)';
+                item.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong>${u.displayName}</strong> (@${u.username})
+                            <div style="font-size:0.75rem; color:var(--text-muted);">$${u.cash.toLocaleString()} CASH | Lvl ${u.level}</div>
+                        </div>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn btn-sm btn-gold" onclick="adminGiveCash('${u.username}')">+ $100K</button>
+                            <button class="btn btn-sm btn-red" onclick="adminToggleDisable('${u.username}')">${u.isEnabled ? 'DISABLE' : 'ENABLE'}</button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function adminGiveCash(username) {
+            const user = db.users.find(u => u.username === username);
+            if (user) {
+                user.cash += 100000;
+                saveDB();
+                renderAllUI();
+            }
+        }
+
+        function adminToggleDisable(username) {
+            const user = db.users.find(u => u.username === username);
+            if (user) {
+                user.isEnabled = !user.isEnabled;
+                saveDB();
+                renderAllUI();
+            }
+        }
+
+        function executeAdminCommand() {
+            const input = document.getElementById('admin-cmd-input').value.trim();
+            if (!input) return;
+
+            const parts = input.split(' ');
+            const cmd = parts[0].toLowerCase();
+            const target = parts[1];
+            const amount = parseInt(parts[2]);
+
+            if (cmd === '/givecash' && target && amount) {
+                const user = db.users.find(u => u.username.toLowerCase() === target.toLowerCase());
+                if (user) {
+                    user.cash += amount;
+                    alert(`Gave $${amount.toLocaleString()} CASH to ${user.displayName}!`);
+                }
+            } else if (cmd === '/createplayer' && target) {
+                db.users.push({
+                    id: `u_${Date.now()}`,
+                    username: target.toLowerCase(),
+                    displayName: target,
+                    role: 'player',
+                    passHash: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
+                    cash: 100000,
+                    level: 1,
+                    xp: 0,
+                    prestige: 0,
+                    reputation: 10,
+                    isEnabled: true
+                });
+                alert(`Created real player account for @${target}!`);
+            } else {
+                alert('Unknown or invalid admin command syntax.');
+            }
+
+            saveDB();
+            renderAllUI();
+        }
+
+        function triggerAdminEvent(type) {
+            const banner = document.getElementById('world-event-banner');
+            banner.style.display = 'block';
+
+            if (type === 'CASH_RAIN') {
+                document.getElementById('event-title-text').innerText = 'CASH RAIN DROPPED';
+                document.getElementById('event-desc-text').innerText = 'Every operative received +$50,000 CASH!';
+                db.users.forEach(u => u.cash += 50000);
+            } else if (type === 'CRATE_STORM') {
+                document.getElementById('event-title-text').innerText = 'CRATE STORM';
+                document.getElementById('event-desc-text').innerText = 'Rare loot boxes dropped across inventory vaults!';
+            }
+
+            saveDB();
+            renderAllUI();
+        }
+
+        /* ==========================================================================
+           9. HELPERS, COLLECTIONS & INITIALIZATION
+           ========================================================================== */
+
+        function renderTradePartners() {
+            const select = document.getElementById('trade-partner-select');
+            if (!select) return;
+            select.innerHTML = '';
+
+            db.users.forEach(u => {
+                if (u.id === currentUser.id) return;
+                const opt = document.createElement('option');
+                opt.value = u.id;
+                opt.innerText = `${u.displayName} (@${u.username})`;
+                select.appendChild(opt);
+            });
+        }
+
+        function renderCollections() {
+            const grid = document.getElementById('collections-list');
+            if (!grid) return;
+            grid.innerHTML = `
+                <div class="nexus-card">
+                    <h3>⚡ FUTURE TECH</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:8px 0;">3 / 10 DISCOVERED</p>
+                    <button class="btn btn-sm btn-gold">CLAIM $50,000 REWARD</button>
+                </div>
+                <div class="nexus-card">
+                    <h3>🌌 ULTRA RARE & SECRET</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:8px 0;">1 / 5 DISCOVERED</p>
+                    <button class="btn btn-sm">CLAIM PERMANENT TITLE</button>
+                </div>
+            `;
+        }
+
+        function renderChallenges() {
+            const grid = document.getElementById('challenges-grid');
+            if (!grid) return;
+            grid.innerHTML = `
+                <div class="nexus-card">
+                    <h3>🎯 MARKET FLIPPER</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:8px 0;">Buy 3 listings from the shared marketplace.</p>
+                    <button class="btn btn-sm btn-gold">CLAIM +250 XP</button>
+                </div>
+                <div class="nexus-card">
+                    <h3>🏆 EMPIRE BUILDER</h3>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin:8px 0;">Own at least 2 facilities in the Business District.</p>
+                    <button class="btn btn-sm btn-gold">CLAIM $100,000 CASH</button>
+                </div>
+            `;
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function executePrestigeReset() {
+            if (currentUser.cash < 1000000) {
+                alert('Prestige requires $1,000,000 CASH balance!');
+                return;
+            }
+
+            currentUser.cash = 100000;
+            currentUser.prestige += 1;
+            saveDB();
+            renderAllUI();
+            alert('🎖️ PRESTIGE RESET EXECUTED! Permanent +5% profit multiplier unlocked.');
+        }
+
+        // Initialize on DOM load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedSession = sessionStorage.getItem('nexus_session_userid');
+            if (savedSession) {
+                currentUser = db.users.find(u => u.id === savedSession);
+            }
+
+            if (!currentUser) {
+                document.getElementById('login-modal').classList.add('active');
+            } else {
+                document.getElementById('login-modal').classList.remove('active');
+                renderAllUI();
+            }
+
+            // Passive business revenue loop (Runs every 10s)
+            setInterval(() => {
+                if (!currentUser) return;
+                const myBiz = db.businesses.filter(b => b.ownerId === currentUser.id);
+                myBiz.forEach(b => {
+                    currentUser.cash += Math.floor(b.incomePerMin / 6);
+                });
+                renderAllUI();
+            }, 10000);
+        });
     </script>
 </body>
 </html>
